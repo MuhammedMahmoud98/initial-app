@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "gate-portal": {
+    "unified-qr-code": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/gate-portal",
+            "outputPath": "dist/unified-qr-code",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -101,10 +101,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "gate-portal:build:production"
+              "buildTarget": "unified-qr-code:build:production"
             },
             "development": {
-              "buildTarget": "gate-portal:build:development"
+              "buildTarget": "unified-qr-code:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -112,7 +112,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "gate-portal:build"
+            "buildTarget": "unified-qr-code:build"
           }
         },
         "test": {

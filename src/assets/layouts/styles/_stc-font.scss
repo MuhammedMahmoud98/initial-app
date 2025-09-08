@@ -1,0 +1,61 @@
+@font-face {
+    font-family: 'STCForward-ExtraBold';
+    src: local('STC Forward ExtraBold'), local('STCForward-ExtraBold'),
+        url('../fonts/STCForward-ExtraBold.woff2') format('woff2'),
+        url('../fonts/STCForward-ExtraBold.woff') format('woff'),
+        url('../fonts/STCForward-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'STCForward-Bold';
+    src: local('STC Forward Bold'), local('STCForward-Bold'),
+        url('../fonts/STCForward-Bold.woff2') format('woff2'),
+        url('../fonts/STCForward-Bold.woff') format('woff'),
+        url('../fonts/../fonts/STCForward-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'STCForward-Medium';
+    src: local('STCForward-Medium'), local('STCForward-Medium'),
+        url('../fonts/STCForward-Medium.woff2') format('woff2'),
+        url('../fonts/STCForward-Medium.woff') format('woff'),
+        url('../fonts/STCForward-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'STCForward-Regular';
+    src: local('STC Forward Regular'), local('STCForward-Regular'),
+        url('../fonts/STCForward-Regular.woff2') format('woff2'),
+        url('../fonts/STCForward-Regular.woff') format('woff'),
+        url('../fonts/STCForward-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'STCForward-Light';
+    src: local('STC Forward Light'), local('STCForward-Light'),
+        url('../fonts/STCForward-Light.woff2') format('woff2'),
+        url('../fonts/STCForward-Light.woff') format('woff'),
+        url('../fonts/STCForward-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'STCForward-Thin';
+    src: local('STC Forward Thin'), local('STCForward-Thin'),
+        url('../fonts/STCForward-Thin.woff2') format('woff2'),
+        url('../fonts/STCForward-Thin.woff') format('woff'),
+        url('../fonts/STCForward-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+}

@@ -1,0 +1,27 @@
+<div
+  class="app-list--container"
+  [ngClass]="{ 'app-list--container--active': showApp() }"
+  (mouseenter)="showApp.set(true)"
+  (mouseleave)="showApp.set(false)"
+>
+  <div class="app-list--active">
+    <ul class="list-unstyled">
+      @for (item of (isMygateProduction() ? navItems() : navDesktopItems()); let i = $index; track i) {
+        <li>
+          <a [href]="item.url" target="_self">
+            <span class="app-icon">
+              <img [ngSrc]="item.iconUrl"
+                   width="20"
+                   height="20"
+                   [loading]="'eager'"
+                   fetchpriority="high"
+                   alt="app-icon"
+                   (error)="handleBrokenImage($event);" />
+            </span>
+            <span class="app-label">{{ item.name }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+</div>

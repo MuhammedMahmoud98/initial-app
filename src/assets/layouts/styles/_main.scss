@@ -1,0 +1,44 @@
+$large-font-size: 16px;
+$default-font-size: 14px;
+$small-font-size: 12px;
+
+@media only screen and (min-width: 1920px) {
+  :root {
+    font-size: $large-font-size;
+  }
+}
+
+@media only screen and (min-width: 1366px) and (max-width: 1920px) {
+  :root {
+    font-size: $default-font-size;
+  }
+}
+
+@media only screen and (max-width: 1366px) {
+  :root {
+    font-size: $small-font-size;
+  }
+}
+
+body {
+  background-color: var(--surface-main-bg);
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  margin: 0;
+  min-height: 100%;
+  padding: 0;
+}
+
+input {
+  &[type="text"] {
+    font-family: var(--font-family);
+  }
+}
+
+.dark-mode {
+  body {
+    background-color: var(--p-surface-950);
+  }
+}

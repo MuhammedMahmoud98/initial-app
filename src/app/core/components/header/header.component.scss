@@ -1,0 +1,25 @@
+.navbar {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    height: 100%;
+    background: #fff;
+
+    &__logo {
+        margin-inline-end: auto;
+
+        img {
+            height: 25px;
+            margin: 16px 2px;
+        }
+    }
+}
+
+.info-bar {
+    display: flex;
+
+    &__item {
+        display: flex;
+        border-right: 1px solid #f3f3f3;
+    }
+}

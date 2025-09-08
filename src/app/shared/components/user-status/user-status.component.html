@@ -1,0 +1,11 @@
+<div class="empty-state">
+    @if (iconUrl()) {
+    <span class="empty-state__icon" [style]="{'background-image': 'url(' + iconUrl() + ')'}"></span>
+    }
+    @if (titleKey()) {
+    <h2 class="empty-state__title m-0">{{ titleKey() | translate }}</h2>
+    }
+    @if (descriptionKey()) {
+    <p class="empty-state__description m-0">{{ descriptionKey() | translate }}</p>
+    }
+</div>

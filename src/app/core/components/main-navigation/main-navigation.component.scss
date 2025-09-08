@@ -1,0 +1,25 @@
+.main-navigation {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--gray-50);
+
+  &__link {
+    padding: 0.5rem 1rem;
+    color: var(--silver-500);
+    text-decoration: none;
+    font-family: var(--font-medium);
+
+    &:hover {
+      &:not(.main-navigation__link--active) {
+        color: var(--silver-600);
+      }
+    }
+  }
+
+  &__link--active {
+    color: var(--primary-500);
+    font-weight: var(--btn-default-font-weight);
+    border-bottom: 2px solid var(--primary-500);
+    font-family: var(--font-regular);
+  }
+}

@@ -1,0 +1,35 @@
+.p-confirmdialog {
+  padding: 0.3rem;
+
+  .p-dialog-title {
+    color: var(--onyx-500);
+  }
+
+  .p-dialog-header-actions {
+    .p-iconwrapper {
+      color: var(--onyx-900);
+      filter: drop-shadow(2px 2px 6px black)
+    }
+  }
+
+  .p-confirmdialog-message {
+    padding: 0 0.9rem 1.4rem 0;
+    color: var(--silver-500);
+  }
+}
+
+.p-dialog-close-button {
+  background-color: var(--silver-200) !important;
+  border-radius: 31px;
+  width: 10px;
+  height: 10px;
+
+  svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  &:hover {
+    background-color: var(--silver-300) !important;
+  }
+}

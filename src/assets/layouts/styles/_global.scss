@@ -1,0 +1,36 @@
+.m-0 {
+    margin: 0 !important;
+}
+
+.header-button {
+    background: transparent !important;
+    color: #8e9aa0 !important;
+    border: none !important;
+    font-size: 24px !important;
+}
+
+.header-button__menu {
+    top: 100%;
+}
+
+.rtl {
+    direction: rtl !important;
+}
+
+.ltr {
+    direction: ltr !important;
+}
+
+.d-none {
+    display: none !important;
+}
+
+.table-header-bg {
+  background: var(--table-header-bg) !important;
+  color: var(--onyx-500) !important;
+}
+
+.blur-content {
+  filter: blur(5px);
+  pointer-events: none;
+}

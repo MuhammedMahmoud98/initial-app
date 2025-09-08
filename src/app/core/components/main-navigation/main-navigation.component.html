@@ -1,0 +1,12 @@
+<nav class="main-navigation">
+  @for (route of mainRoutes(); track route) {
+    <a
+      class="main-navigation__link"
+      [routerLink]="route.path"
+      routerLinkActive="main-navigation__link--active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      {{ route.title | translate }}
+    </a>
+  }
+</nav>

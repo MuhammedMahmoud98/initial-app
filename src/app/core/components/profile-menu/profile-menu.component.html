@@ -1,0 +1,18 @@
+<div
+  class="profile-container"
+  [dir]="localizationService.isRTL() ? 'rtl' : 'ltr'"
+  id="menuContainer"
+>
+  <p-menu
+    styleClass="header-button__menu"
+    #menu
+    [model]="menuItems"
+    [popup]="true"
+    appendTo="body"
+  />
+  <p-button
+    styleClass="header-button"
+    (click)="menu.toggle($event)"
+    icon="pi pi-user"
+  />
+</div>

@@ -1,0 +1,58 @@
+<div class="skeleton-loader">
+  <!-- TABS -->
+  <div class="skeleton-loader__tabs">
+    <p-skeleton width="7rem" />
+    <p-skeleton width="4rem" />
+    <p-skeleton width="7rem" />
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="skeleton-loader__disclaimer">
+    <p-skeleton [shape]="'circle'" width="2rem" height="2rem" />
+    <p-skeleton width="10rem" />
+  </div>
+
+  <!-- FILTERS -->
+  <div class="skeleton-loader__filters">
+    <div class="flex flex-wrap gap-3 w-full lg:w-auto">
+      <p-skeleton height="1.5rem" class="w-full lg:w-6rem" />
+      <p-skeleton height="1.5rem" class="w-full lg:w-15rem" />
+      <p-skeleton height="1.5rem" class="w-full lg:w-6rem" />
+      <p-skeleton height="1.5rem" class="w-full lg:w-10rem" />
+      <p-skeleton height="1.5rem" class="w-full lg:w-10rem" />
+      <p-skeleton height="1.5rem" class="w-full lg:w-10rem" />
+    </div>
+
+    <div class="w-full lg:w-10rem">
+      <p-skeleton height="1.5rem" class="w-full lg:w-10rem" />
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="skeleton-loader__table">
+    <div class="skeleton-loader__table-header p-2 border-round-md flex align-items-center justify-content-around">
+      <p-skeleton width="6rem" />
+      <p-skeleton width="6rem" />
+      <p-skeleton width="6rem" />
+      <p-skeleton width="6rem" />
+      <p-skeleton width="6rem" />
+      <p-skeleton width="6rem" />
+    </div>
+
+    @for (row of Array.from({length: 15}); track row) {
+      <div class="flex">
+        @for (width of randomHeight(); track randomWidth) {
+          <div class="col-2 text-center flex align-items-center justify-content-center">
+            <p-skeleton [width]="randomWidth(width)" />
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="skeleton-loader__buttons flex gap-2 align-items-center justify-content-end">
+    <p-skeleton width="6rem" />
+    <p-skeleton width="6rem" />
+  </div>
+</div>

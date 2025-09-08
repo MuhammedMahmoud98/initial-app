@@ -1,0 +1,26 @@
+.empty-state {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    &__icon {
+        padding: 33px;
+        border-radius: 50%;
+        width: 131px;
+        height: 131px;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    &__title {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #181C32;
+    }
+
+    &__description {
+        color: var(--gray-500);
+        font-size: 1.2rem;
+    }
+}

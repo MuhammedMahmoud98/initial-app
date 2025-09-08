@@ -1,0 +1,19 @@
+branch_name="$(git rev-parse --abbrev-ref HEAD)"
+regex="^((feature|feat|chore|fix|bug|enhance|release)\/([a-z0-9]+[-])*[a-z0-9]+)$"
+max_length=80
+
+if [[ ! $branch_name =~ $regex ]] || [ ${#branch_name} -gt $max_length ]; then
+  echo "\n"
+  echo "Branch name '$branch_name' violates the push policy."
+  echo "\n"
+  echo "The branch name must conform to the following rules:"
+  echo "1. start with either 'feat', 'fix' or 'chore' followed by '/'"
+  echo "2. followed by either:"
+  echo "  2 a. story reference (preferred)"
+  echo "  2 b. concise work description, dasherized (if no story available)"
+  echo "3. be at most $max_length characters long"
+  echo "\n"
+  echo "EXAMPLES: feat/something or chore/bump-version"
+  echo "\n"
+  exit 1
+fi

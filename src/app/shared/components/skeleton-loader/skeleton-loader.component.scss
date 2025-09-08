@@ -1,0 +1,47 @@
+.skeleton-loader {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto auto 1fr auto;
+  gap: 1rem;
+  padding: 1rem;
+
+  &__tabs {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid var(--gray-200);
+    //padding-bottom: 1rem;
+
+    padding: 0.4rem 0.7rem 1rem;
+  }
+
+  &__disclaimer {
+    background-color: var(--gray-100);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__filters {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  &__table {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    overflow: auto;
+
+    &-header {
+      background-color: var(--gray-1002);
+    }
+  }
+}

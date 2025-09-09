@@ -13,5 +13,5 @@ export const environment = {
   emcProjectId: 331,
   mygateprod: false,
   chatHost: 'wss://chatdev.hubplatforms.com/ws-xmpp',
-  baseHref: '/gate-portal',
+  baseHref: '/qr-code',
 };

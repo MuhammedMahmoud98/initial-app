@@ -1,0 +1,4 @@
+export enum MAIN_ROUTES {
+  CREATED_LOCATIONS = 'created-locations',
+  LOCATION_TYPES = 'location-types'
+}

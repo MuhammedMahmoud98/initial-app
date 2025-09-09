@@ -1,13 +1,23 @@
-<div class="gate-container">
-    <header class="thrift-container__header">
+<div class="qr-container">
+  <header class="qr-container__header">
     <app-header />
   </header>
-  <aside class="thrift-container__sidebar">
+  <aside class="qr-container__sidebar">
     <app-apps-list />
   </aside>
 
-  <main class="gate-container__main">
+  <main class="qr-container__main">
+    <app-sub-header />
     <!-- MAIN ROUTES -->
-    <router-outlet></router-outlet>
+    <section class="mx-0 lg:mx-5">
+      <div class="core-tabs-list">
+        <app-core-tabs-list />
+      </div>
+      <router-outlet></router-outlet>
+
+      <!--    GLOBAL TOASTER AND CONFIRMATION DIALOGS -->
+      <p-confirm-dialog [style]="{'width': '500px'}" />
+      <p-toast />
+    </section>
   </main>
 </div>

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import {MAIN_ROUTES} from './shared/enums/shared.enum';
 
 export const routes: Routes = [
   {
@@ -7,20 +8,20 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'home',
+        redirectTo: MAIN_ROUTES.CREATED_LOCATIONS,
         pathMatch: 'full',
       },
-      // {
-      //   path: 'home',
-      //   loadComponent: () =>
-      //     import(
-      //       './features/home/home.component'
-      //     ).then((m) => m.HomeComponent),
-      // },
-      
-      
+      {
+        path: MAIN_ROUTES.CREATED_LOCATIONS,
+        loadComponent: () =>
+          import(
+            './features/created-locations/created-locations.component'
+          ).then((m) => m.CreatedLocationsComponent),
+      },
+
+
     ],
   },
-  
+
   { path: '**', redirectTo: '/' },
 ];

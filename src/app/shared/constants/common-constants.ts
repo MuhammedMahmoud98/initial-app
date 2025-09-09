@@ -1,4 +1,6 @@
 import {TokenLessUrls} from '../types/common-types.model';
+import {MAIN_ROUTES} from '../enums/shared.enum';
+import {CoreAppRoutes} from '../models';
 
 export const COMMON_CONSTANTS = {
     TOASTER_LIFE_TIME: 5000,
@@ -6,7 +8,19 @@ export const COMMON_CONSTANTS = {
     SEARCH_RESET_LENGTH: 0,
     SEARCH_MAX_LENGTH: 20,
     TOKEN_LESS_URLS: ['validate', 'refresh_token'] as TokenLessUrls[],
-}
+};
+
+
+export const CORE_APP_ROUTES: CoreAppRoutes[] = [
+  {
+    path: MAIN_ROUTES.CREATED_LOCATIONS,
+    title: 'createdLocations',
+  },
+  {
+    path: MAIN_ROUTES.LOCATION_TYPES,
+    title: 'locationTypes',
+  }
+];
 
 
 

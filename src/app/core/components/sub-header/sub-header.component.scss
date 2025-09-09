@@ -1,0 +1,12 @@
+:host {
+  height: 100%;
+  width: 100%;
+}
+
+.sub-header {
+  background-color: var(--primary-500);
+  height: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

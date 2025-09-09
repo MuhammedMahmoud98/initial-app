@@ -1,0 +1,7 @@
+<div class="hub-custom-tabs">
+  @for (tab of tabsList(); track tab) {
+    <a [routerLink]="'/' + tab.path" [routerLinkActive]="'active-route'" class="hub-custom-tabs__item">
+      {{tab.title | translate}}
+    </a>
+  }
+</div>

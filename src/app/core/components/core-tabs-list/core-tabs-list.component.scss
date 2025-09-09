@@ -1,0 +1,51 @@
+:host {
+  display: block;
+  width: inherit;
+}
+
+.hub-custom-tabs {
+  border-bottom: 1px solid var(--onyx-300);
+  padding: 0.5rem 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &__item {
+    color: var(--silver-600);
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -14px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--primary-500);
+      transition: width 0.3s ease;
+      z-index: 100;
+    }
+
+    &:hover,
+    &.active-route {
+      color: var(--primary-500);
+
+      &::after {
+        width: 100%;
+      }
+    }
+  }
+}
+

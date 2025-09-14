@@ -1,10 +1,11 @@
 import { Routes } from '@angular/router';
 import {MAIN_ROUTES} from './shared/enums/shared.enum';
+import {thriftGuard} from './core/guards/thrift.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    canActivate: [],
+    canActivate: [thriftGuard],
     children: [
       {
         path: '',
@@ -18,10 +19,14 @@ export const routes: Routes = [
             './features/created-locations/created-locations.component'
           ).then((m) => m.CreatedLocationsComponent),
       },
-
-
     ],
   },
-
+  {
+    path: 'un-authorized',
+    loadComponent: () =>
+      import(
+        './features/auth/components/not-authorized/not-authorized.component'
+        ).then((m) => m.NotAuthorizedComponent),
+  },
   { path: '**', redirectTo: '/' },
 ];

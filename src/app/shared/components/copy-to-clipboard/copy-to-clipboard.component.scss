@@ -1,0 +1,40 @@
+.hub-clipboard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  background-color: var(--silver-100);
+  color: var(--onyx-500);
+  padding: 0.5rem;
+  position: relative;
+  border-radius: var(--btn-border-radius);
+
+  .hub-clipboard__message {
+    position: absolute;
+    display: inline-block;
+    top: -35px;
+    background-color: var(--onyx-500);
+    color: var(--gray-100);
+    padding: 0.5rem;
+    inset-inline-end: 0;
+    border-radius: var(--btn-border-radius);
+
+    &:after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      inset-inline-start: 42%;
+      background-color: var(--onyx-500);
+      height: 8px;
+      width: 8px;
+      transform: rotate(45deg);
+    }
+
+    &-arrow {
+      position: absolute;
+    }
+  }
+}

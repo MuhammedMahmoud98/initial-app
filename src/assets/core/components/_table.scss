@@ -1,21 +1,14 @@
-table {
-  table-layout: fixed;
-}
-
-th {
-  white-space: nowrap !important;
-  //width: 400px !important;
-}
-
-td {
-  padding-block: 0 !important;
-}
-
 .p-datatable-thead {
   > tr {
     > th {
-      background-color: var(--gray-100) !important;
+      background-color: var(--silver-100) !important;
       width: 220px !important;
+
+      &:first-child {
+        &:has(p-tableHeaderCheckbox) {
+          width: 20px !important;
+        }
+      }
     }
   }
 }

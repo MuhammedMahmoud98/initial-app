@@ -1,0 +1,31 @@
+@if (status() === 'success') {
+  <div class="success-status">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M6 2H2V6H6V2Z" stroke="#00C48C"/>
+      <path d="M6 10H2V14H6V10Z" stroke="#00C48C"/>
+      <path d="M14 10H10V14H14V10Z" stroke="#00C48C"/>
+      <path d="M14 2H10V6H14V2Z" stroke="#00C48C"/>
+      <path d="M8 2.3999L8 8.3999" stroke="#00C48C"/>
+      <path d="M8 10V14" stroke="#00C48C"/>
+      <path d="M8 8H2" stroke="#00C48C"/>
+      <path d="M14 8H10" stroke="#00C48C"/>
+    </svg>
+
+    <span>generated</span>
+  </div>
+} @else if (status() === 'danger') {
+  <div class="danger-status">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M6 2H2V6H6V2Z" stroke="#FF375E"/>
+      <path d="M6 10H2V14H6V10Z" stroke="#FF375E"/>
+      <path d="M14 10H10V14H14V10Z" stroke="#FF375E"/>
+      <path d="M14 2H10V6H14V2Z" stroke="#FF375E"/>
+      <path d="M8 2.3999L8 8.3999" stroke="#FF375E"/>
+      <path d="M8 10V14" stroke="#FF375E"/>
+      <path d="M8 8H2" stroke="#FF375E"/>
+      <path d="M14 8H10" stroke="#FF375E"/>
+    </svg>
+
+    <span>not generated</span>
+  </div>
+}

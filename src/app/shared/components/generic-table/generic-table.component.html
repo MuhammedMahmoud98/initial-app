@@ -1,0 +1,50 @@
+<div class="generic-table">
+  <p-table
+    [columns]="columns()"
+    [value]="items()"
+    [scrollHeight]="'flex'"
+    [dir]="'auto'"
+    [(selection)]="selectedLocations"
+    [rowTrackBy]="trackByCode"
+    [rows]="10"
+    [paginator]="true"
+    dataKey="code"
+    >
+    <ng-template #header let-columns>
+      <tr>
+        <!-- TABLE HEADER CHECKBOX -->
+        @if (hasCheckBoxes()) {
+          <th>
+            <p-tableHeaderCheckbox />
+          </th>
+        }
+
+        @for (col of columns; track col?.field) {
+          <th [style.width]="col?.columnWidth" >
+            {{ col.field }}
+          </th>
+        }
+      </tr>
+    </ng-template>
+    <ng-template #body let-rowData let-columns="columns">
+      <tr>
+        <!-- TABLE BODY CHECKBOX -->
+        @if (hasCheckBoxes()) {
+          <td>
+            <p-tableCheckbox [value]="rowData" />
+          </td>
+        }
+
+        @for (col of columns; track col.field) {
+          @if (col?.template) {
+            <td>
+              <ng-container *ngTemplateOutlet="col.template; context: {$implicit: rowData}"/>
+            </td>
+          } @else {
+            <td>{{rowData[col?.field]}}</td>
+          }
+        }
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

@@ -371,8 +371,16 @@ const stcPreset = definePreset(Aura, {
       shadow: 'none',
     },
     datatable: {
-      header: {
-        cell: {
+      colorScheme: {
+        header: {
+          cell: {
+            padding: '1rem'
+          },
+      },
+        body: {
+          cell: {
+            padding: '0.5rem 1rem'
+          },
         }
       }
     },
@@ -398,6 +406,30 @@ const stcPreset = definePreset(Aura, {
         },
       }
     },
+    // checkbox.checked.background
+    checkbox: {
+      border: {
+        color: 'var(--silver-400)',
+        radius: 'var(--btn-border-radius)'
+      },
+      checked: {
+        background: 'var(--secondary-500)',
+        border: {
+          color: 'var(--secondary-500)',
+        },
+        hover: {
+          background: 'var(--secondary-500)',
+          border: {
+            color: 'var(--secondary-500)',
+          },
+        }
+      },
+      hover: {
+        border: {
+          color: 'var(--secondary-500)'
+        }
+      }
+    }
   },
 } as AuraBaseDesignTokens);
 

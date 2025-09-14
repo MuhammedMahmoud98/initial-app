@@ -34,3 +34,29 @@
   filter: blur(5px);
   pointer-events: none;
 }
+
+%table-status {
+  padding: 0.7rem 1rem;
+  border: var(--btn-border-radius);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+}
+
+.success-status {
+  @extend %table-status;
+
+  background-color: var(--oases-100);
+  color: var(--oases-500);
+  border: 1px solid var(--oases-300);
+}
+
+.danger-status {
+  @extend %table-status;
+
+  background-color: var(--secondary-100);
+  color: var(--secondary-500);
+  border: 1px solid var(--secondary-300);
+}

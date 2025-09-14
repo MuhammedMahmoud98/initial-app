@@ -9,15 +9,18 @@
   <main class="qr-container__main">
     <app-sub-header />
     <!-- MAIN ROUTES -->
-    <section class="mx-0 lg:mx-5">
-      <div class="core-tabs-list">
-        <app-core-tabs-list />
-      </div>
-      <router-outlet></router-outlet>
-
-      <!--    GLOBAL TOASTER AND CONFIRMATION DIALOGS -->
-      <p-confirm-dialog [style]="{'width': '500px'}" />
-      <p-toast />
-    </section>
+    @if (hasCredentials()) {
+      <section class="mx-0 lg:mx-5">
+        <div class="core-tabs-list">
+          <app-core-tabs-list />
+        </div>
+        <router-outlet/>
+      </section>
+    } @else {
+      <router-outlet/>
+    }
   </main>
+  <!--    GLOBAL TOASTER AND CONFIRMATION DIALOGS -->
+  <p-confirm-dialog [style]="{'width': '500px'}" />
+  <p-toast />
 </div>

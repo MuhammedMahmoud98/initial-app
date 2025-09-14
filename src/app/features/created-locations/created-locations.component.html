@@ -1,1 +1,27 @@
-<p>created-locations works!</p>
+<div class="hub-created-locations">
+  <app-generic-table
+    [columns]="createTableColumns()"
+    [items]="mockItems()"
+    [hasCheckBoxes]="true"
+  />
+
+  <button (click)="testCell()">TEST CELL</button>
+</div>
+
+
+<!-- CUSTOM CELLS GOES HERE.. -->
+
+<!-- QR STATUS CUSTOM COLUMN -->
+<ng-template #qrStatusCustomColumn let-row>
+  @let location = genericCasting(row);
+
+  <app-custom-status [status]="location?.qrCode ? 'success' : 'danger'" />
+</ng-template>
+
+
+<!-- CODE CUSTOM COLUMN -->
+<ng-template #codeCustomColumn let-row>
+  @let location = genericCasting(row);
+
+  <app-copy-to-clipboard [textToBeCopied]="location.typeCode + location.code"/>
+</ng-template>

@@ -159,24 +159,24 @@ const stcPreset = definePreset(Aura, {
           },
         },
         contrast: {
-          background: 'var(--gray-100)',
+          background: 'var(--gray-0)',
           color: 'var(--onyx-500)',
           border: {
-            color: 'null',
+            color: 'var(--silver-300)',
           },
 
           hover: {
-            background: 'var(--gray-200)',
+            background: 'var(--silver-100)',
             color: '#000',
             border: {
-              color: 'null',
+              color: 'var(--silver-300)',
             },
           },
           active: {
-            background: 'var(--gray-300)',
+            background: 'var(--silver-300)',
             color: 'var(--onyx-500)',
             border: {
-              color: 'null',
+              color: 'var(--silver-300)',
             },
           },
           focus: {
@@ -371,8 +371,17 @@ const stcPreset = definePreset(Aura, {
       shadow: 'none',
     },
     datatable: {
-      header: {
-        cell: {
+      colorScheme: {
+        header: {
+          cell: {
+            padding: '1rem',
+            color: 'var(--silver-600)',
+          },
+      },
+        body: {
+          cell: {
+            padding: '0.5rem 1rem'
+          },
         }
       }
     },
@@ -398,6 +407,43 @@ const stcPreset = definePreset(Aura, {
         },
       }
     },
+    checkbox: {
+      border: {
+        color: 'var(--silver-400)',
+        radius: 'var(--btn-border-radius)'
+      },
+      checked: {
+        background: 'var(--secondary-500)',
+        border: {
+          color: 'var(--secondary-500)',
+        },
+        hover: {
+          background: 'var(--secondary-500)',
+          border: {
+            color: 'var(--secondary-500)',
+          },
+        }
+      },
+      hover: {
+        border: {
+          color: 'var(--secondary-500)'
+        }
+      }
+    },
+    paginator: {
+      nav: {
+        button: {
+          color: 'var(--onyx-500)',
+          selected: {
+            background: 'var(--primary-500)',
+            color: 'var(--gray-0)'
+          },
+          border: {
+            radius: 'var(--stc-radius)'
+          }
+        }
+      }
+    }
   },
 } as AuraBaseDesignTokens);
 

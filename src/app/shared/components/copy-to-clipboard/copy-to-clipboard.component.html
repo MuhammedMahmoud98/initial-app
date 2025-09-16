@@ -1,0 +1,18 @@
+<button class="hub-clipboard" (click)="copyToClipboard()">
+  {{textToBeCopied()}}
+
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M4.33301 4.14412V2.60442V1.66675L5.27051 1.66692H13.3955L14.333 1.66675V2.60442V10.7294V11.6669H13.3955H11.8384" stroke="#717E86" stroke-linecap="square"/>
+    <path d="M10.7295 4.33324H2.60449H1.66699V5.27074V13.3957V14.3332H2.60449H9.12949H9.66699C10.7716 14.3332 11.667 13.4378 11.667 12.3332V11.7957V5.27074V4.33301L10.7295 4.33324Z" stroke="#717E86"/>
+  </svg>
+
+  <!-- COPIED MESSAGE -->
+  @if (isCopiedSignal()) {
+    <div [@fadeInOut] class="hub-clipboard__message">
+      {{copiedMessageSignal()}}
+
+    <!-- ARROW DOWN -->
+      <div class="hub-clipboard__message-arrow"></div>
+    </div>
+  }
+</button>

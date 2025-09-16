@@ -1,0 +1,49 @@
+.p-paginator {
+  justify-content: flex-start !important;
+  margin-top: 12px;
+}
+
+.p-paginator-current {
+  order: 2;
+  margin-inline-start: auto;
+}
+
+.p-paginator-prev {
+  background: url('/assets/images/prev-arrow.svg') no-repeat center !important;
+  width: 20px !important;
+  height: 20px !important;
+
+  .p-paginator-prev-icon {
+    display: none !important;
+  }
+}
+
+.p-paginator-next {
+  background: url('/assets/images/next-arrow.svg') no-repeat center !important;
+  width: 20px !important;
+  height: 20px !important;
+
+  .p-paginator-next-icon {
+    display: none !important;
+  }
+}
+
+.p-paginator-first {
+  background: url('/assets/images/first-arrow.svg') no-repeat center !important;
+  width: 20px !important;
+  height: 20px !important;
+
+  .p-paginator-first-icon {
+    display: none !important;
+  }
+}
+
+.p-paginator-last {
+  background: url('/assets/images/last-arrow.svg') no-repeat center !important;
+  width: 20px !important;
+  height: 20px !important;
+
+  .p-paginator-last-icon {
+    display: none !important;
+  }
+}

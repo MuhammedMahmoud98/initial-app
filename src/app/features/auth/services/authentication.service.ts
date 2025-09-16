@@ -22,6 +22,7 @@ export class AuthenticationService {
 
   unAuthorizedChecked = signal(false);
 
+
   // ***** HELPERS METHODS ***** //
   getAccessToken(): string {
     return this.cookiesService.get('token');

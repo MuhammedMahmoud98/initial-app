@@ -1,0 +1,28 @@
+.hub-bulk-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  &__counters-wrapper {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    font-size: 14px;
+    color: var(--onyx-500);
+    line-height: 1;
+
+    .all-records {
+      outline: none;
+      border: none;
+      background-color: transparent;
+      padding: 0;
+      font-size: 14px;
+    }
+  }
+}
+
+.un-select-color {
+  color: var(--silver-600) !important;
+}

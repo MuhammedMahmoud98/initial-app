@@ -1,0 +1,10 @@
+<div class="input-container">
+  <img class="search-icon" [ngSrc]="'assets/images/search-icon.svg'" width="20" height="20" [loading]="'lazy'" alt="search-icon">
+  <input type="text" pInputText [formControl]="searchControl" [autocomplete]="'off'" name="search-input" (paste)="onPaste()" (keydown.enter)="$event.preventDefault()" class="qr-input" [placeholder]="'search' | translate" />
+
+  @if (searchControl.value) {
+    <button class="clear-button" type="button" (click)="resetSearch()">
+      <i class="pi pi-times"></i>
+    </button>
+  }
+</div>

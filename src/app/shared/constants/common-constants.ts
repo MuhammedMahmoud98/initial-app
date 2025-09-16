@@ -5,9 +5,10 @@ import {CoreAppRoutes} from '../models';
 export const COMMON_CONSTANTS = {
     TOASTER_LIFE_TIME: 5000,
     CLIPBOARD_LIFETIME: 2000,
-    SEARCH_TYPING_LENGTH: 3,
+    SEARCH_TYPING_LENGTH: 2,
     SEARCH_RESET_LENGTH: 0,
     SEARCH_MAX_LENGTH: 20,
+    ROWS_PER_PAGE: 8,
     TOKEN_LESS_URLS: ['validate', 'refresh_token'] as TokenLessUrls[],
 };
 

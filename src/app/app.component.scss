@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: 50px 1fr; /* Sidebar and content */
   grid-template-rows: 60px 1fr; /* Header and main content */
-  height: 100vh;
+  min-height: 100vh;
 
   &__header {
     grid-column: 1 / 3;
@@ -26,6 +26,7 @@
     grid-template-columns: 1fr;
     grid-template-rows: 16vh auto;
     gap: var(--layout-gap);
+    overflow-x: hidden;
 
     &__loading-layer {
       position: absolute;

@@ -15,13 +15,21 @@ import {CreatedLocation, CreatedLocationColumnType} from './models/created-locat
 import {genericCasting} from '../../shared/helpers/helpers';
 import {CustomStatusComponent} from '../../shared/components/custom-status/custom-status.component';
 import {CopyToClipboardComponent} from '../../shared/components/copy-to-clipboard/copy-to-clipboard.component';
+import {TableActionBulkComponent} from '../../shared/components/table-action-bulk/table-action-bulk.component';
+import {Button} from 'primeng/button';
+import {GenericTableCacheService} from '../../shared/services';
+import {HubFiltersComponent} from '../../shared/components/hub-filters/hub-filters.component';
+import {ConfirmationService} from 'primeng/api';
 
 @Component({
   selector: 'app-created-locations',
   imports: [
     GenericTableComponent,
     CustomStatusComponent,
-    CopyToClipboardComponent
+    CopyToClipboardComponent,
+    TableActionBulkComponent,
+    Button,
+    HubFiltersComponent
   ],
   standalone: true,
   templateUrl: './created-locations.component.html',
@@ -31,9 +39,14 @@ import {CopyToClipboardComponent} from '../../shared/components/copy-to-clipboar
 export class CreatedLocationsComponent {
   // INJECTIONS
   readonly #pdfMakerService: PdfMakerService = inject(PdfMakerService);
+  readonly genericTableCacheService: GenericTableCacheService = inject(GenericTableCacheService);
+  protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
 
   // SIGNALS
   columns: WritableSignal<TableColumn<CreatedLocation>[]> = signal([]);
+  selectedItemsCounter = signal(0);
+  totalAvailableItems = signal(3400);
+  isApplyingBulkSelection = signal(false);
 
   // VIEW CHILDREN
   qrStatusCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('qrStatusCustomColumn');
@@ -61,10 +74,6 @@ export class CreatedLocationsComponent {
     } catch (error) {
       console.error('Error generating PDF:', error);
     }
-  }
-
-  testCell(): void {
-    console.log(this.codeCustomColumn());
   }
 
 
@@ -300,7 +309,7 @@ export class CreatedLocationsComponent {
           'typeCode': 'IL'
         },
         {
-          'id': 19,
+          'id': 20,
           'district': 'KL',
           'category': 'Office',
           'building': 'Innovation Center',
@@ -312,4 +321,18 @@ export class CreatedLocationsComponent {
           'typeCode': 'IL'
         }]}.content
   })
+
+  onSelectedItemsChange(selectedItemsIds: number[]) {
+    this.selectedItemsCounter.set(selectedItemsIds.length);
+    console.log(selectedItemsIds, 'FROM CREATED LOCATIONS');
+  }
+
+  testtt() {
+    this.confirmationService.confirm({
+      message: 'Are you sure?',
+      header: 'Confirmation',
+      closable: false,
+      closeOnEscape: true,
+    })
+  }
 }

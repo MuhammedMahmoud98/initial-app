@@ -11,6 +11,7 @@ export interface CreatedLocation {
   qrCode:    string;
   typeTitle: string;
   typeCode:  string;
+  isSelected?: boolean;
 }
 
 export type CustomCreatedLocationColumn = CreatedLocation

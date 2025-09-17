@@ -22,6 +22,7 @@ export interface User {
   roles: Role[];
   delegationStartDate: string;
   delegationEndDate: string;
+  'is-qr-code-admin': boolean;
 }
 
 export interface Role {

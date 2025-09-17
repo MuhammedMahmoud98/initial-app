@@ -20,11 +20,12 @@ export class UserService {
       '{id}',
       userId.toString(),
     );
+    const params = new HttpParams().append('whitelist', 'qr-code');
     const headers = new HttpHeaders({
       'third-party-token': this.getMygateGateAuthToken() || '',
     });
 
-    return this.http.get<{ data: User }>(newUrl, { headers }).pipe(
+    return this.http.get<{ data: User }>(newUrl, { headers, params }).pipe(
       switchMap((response) => {
         this.currentUser.set(response.data);
         return of(response.data);

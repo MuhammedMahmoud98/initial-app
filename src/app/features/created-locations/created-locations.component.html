@@ -47,14 +47,20 @@
 <!--    <button (click)="testtt()">test</button>-->
   }
   <!-- CREATED LOCATIONS TABLE -->
-  <div class="overflow-auto">
-    <app-generic-table
-      [columns]="createTableColumns()"
-      [items]="mockItems()"
-      [hasCheckBoxes]="true"
-      (selectedItems)="onSelectedItemsChange($event)"
-    />
-  </div>
+<!--  <div class="overflow-auto">-->
+<!--    <app-generic-table-->
+<!--      [columns]="createTableColumns()"-->
+<!--      [items]="mockItems()"-->
+<!--      [hasCheckBoxes]="true"-->
+<!--      (selectedItems)="onSelectedItemsChange($event)"-->
+<!--    />-->
+<!--  </div>-->
+
+  <app-component-state
+    [iconUrl]="'assets/images/location-state.svg'"
+    [mainTitle]="'no locations created yet'"
+    [subTitle]="'create locations to see them listed here'"
+  />
 
 <!--  <button (click)="testCell()">TEST CELL</button>-->
 </div>

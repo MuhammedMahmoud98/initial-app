@@ -10,11 +10,14 @@
     <app-sub-header />
     <!-- MAIN ROUTES -->
     @if (hasCredentials()) {
-      <section class="mx-0 lg:mx-5 overflow-auto">
+      <section class="mx-0 lg:mx-5">
         <div class="core-tabs-list">
           <app-core-tabs-list />
         </div>
-        <router-outlet/>
+
+        <div class="core-content">
+          <router-outlet/>
+        </div>
       </section>
     } @else {
       <router-outlet/>

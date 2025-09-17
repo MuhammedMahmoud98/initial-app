@@ -28,6 +28,10 @@
     gap: var(--layout-gap);
     overflow-x: hidden;
 
+    .sections-wrapper {
+      min-height: calc(100% - 60px);
+    }
+
     &__loading-layer {
       position: absolute;
       inset: 0;
@@ -45,6 +49,11 @@
       &::-webkit-scrollbar {
         display: none;
       }
+    }
+
+    .core-content {
+      height: calc(100% - 60px);
+      max-height: fit-content;
     }
   }
 }

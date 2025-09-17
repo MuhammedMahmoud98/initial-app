@@ -8,7 +8,7 @@
   [rows]="rowsCounter"
   [paginator]="true"
   [showCurrentPageReport]="true"
-  [currentPageReportTemplate]="`Showing ${items()?.length} of {totalRecords}`"
+  [currentPageReportTemplate]="`Showing ${items().length} of {totalRecords}`"
   dataKey="code"
 >
   <ng-template #header let-columns>

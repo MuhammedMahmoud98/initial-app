@@ -1,0 +1,16 @@
+<div class="hub-component-state">
+  <div class="hub-component-state__wrapper">
+    <div class="icon-box">
+      @if (iconUrl()) {
+        <img [ngSrc]="iconUrl()" [width]="60" [height]="60" priority alt="state-icon">
+      } @else {
+        <ng-content/>
+      }
+    </div>
+
+    <div class="content-box">
+      <h4>{{mainTitle() | lowercase}}</h4>
+      <p>{{subTitle() | lowercase}}</p>
+    </div>
+  </div>
+</div>

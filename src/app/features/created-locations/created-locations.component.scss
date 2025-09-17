@@ -1,3 +1,7 @@
+:host {
+  height: 100%;
+}
+
 .hub-created-locations {
   background-color: var(--gray-0);
   padding: 1rem;
@@ -5,4 +9,5 @@
   flex-direction: column;
   gap: 1rem;
   overflow: auto;
+  height: 100%;
 }

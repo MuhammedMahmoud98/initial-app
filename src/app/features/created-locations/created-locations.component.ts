@@ -20,6 +20,7 @@ import {Button} from 'primeng/button';
 import {GenericTableCacheService} from '../../shared/services';
 import {HubFiltersComponent} from '../../shared/components/hub-filters/hub-filters.component';
 import {ConfirmationService} from 'primeng/api';
+import {ComponentStateComponent} from '../../shared/components/component-state/component-state.component';
 
 @Component({
   selector: 'app-created-locations',
@@ -29,7 +30,8 @@ import {ConfirmationService} from 'primeng/api';
     CopyToClipboardComponent,
     TableActionBulkComponent,
     Button,
-    HubFiltersComponent
+    HubFiltersComponent,
+    ComponentStateComponent
   ],
   standalone: true,
   templateUrl: './created-locations.component.html',

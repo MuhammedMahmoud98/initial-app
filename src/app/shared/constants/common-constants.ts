@@ -8,7 +8,7 @@ export const COMMON_CONSTANTS = {
     SEARCH_TYPING_LENGTH: 2,
     SEARCH_RESET_LENGTH: 0,
     SEARCH_MAX_LENGTH: 20,
-    ROWS_PER_PAGE: 8,
+    ROWS_PER_PAGE: 20,
     TOKEN_LESS_URLS: ['validate', 'refresh_token'] as TokenLessUrls[],
 };
 

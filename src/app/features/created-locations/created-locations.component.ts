@@ -19,8 +19,12 @@ import {TableActionBulkComponent} from '../../shared/components/table-action-bul
 import {Button} from 'primeng/button';
 import {GenericTableCacheService} from '../../shared/services';
 import {HubFiltersComponent} from '../../shared/components/hub-filters/hub-filters.component';
-import {ConfirmationService} from 'primeng/api';
-import {ComponentStateComponent} from '../../shared/components/component-state/component-state.component';
+import {ConfirmationService, MessageService} from 'primeng/api';
+import {HubFilters} from '../../shared/components/hub-filters/models/hub-filters.model';
+import {DialogService} from 'primeng/dynamicdialog';
+import {LoadingDialogComponent} from '../../shared/dialogs/loading-dialog/loading-dialog.component';
+import {LoadingDialogService} from '../../shared/services/loading-dialog.service';
+import {tap} from 'rxjs';
 
 @Component({
   selector: 'app-created-locations',
@@ -31,8 +35,8 @@ import {ComponentStateComponent} from '../../shared/components/component-state/c
     TableActionBulkComponent,
     Button,
     HubFiltersComponent,
-    ComponentStateComponent
   ],
+  providers: [DialogService],
   standalone: true,
   templateUrl: './created-locations.component.html',
   styleUrl: './created-locations.component.scss',
@@ -43,6 +47,9 @@ export class CreatedLocationsComponent {
   readonly #pdfMakerService: PdfMakerService = inject(PdfMakerService);
   readonly genericTableCacheService: GenericTableCacheService = inject(GenericTableCacheService);
   protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
+  readonly #dialogService: DialogService = inject(DialogService);
+  readonly loadingDialogService = inject(LoadingDialogService);
+  readonly #messageService: MessageService = inject(MessageService);
 
   // SIGNALS
   columns: WritableSignal<TableColumn<CreatedLocation>[]> = signal([]);
@@ -336,5 +343,32 @@ export class CreatedLocationsComponent {
       closable: false,
       closeOnEscape: true,
     })
+  }
+
+  onFilterValueChanges($event: HubFilters) {
+    console.log($event, 'FILTER VALUE CHANGED')
+  }
+
+  openDialog(): void {
+    const dialogRef = this.#dialogService.open(LoadingDialogComponent, {
+      showHeader: false,
+      modal: true,
+      width: '400px',
+      height: '400px'
+    });
+
+    this.loadingDialogService.setProgressValue(this.loadingDialogService.progressValue() + 20);
+
+    setTimeout(() => {
+      dialogRef.close();
+    }, 3000);
+
+    dialogRef.onClose.pipe(
+      tap(() => this.openToaster())
+    ).subscribe();
+  }
+
+  openToaster(): void {
+    this.#messageService.add({severity:'success', summary: 'Success', detail: 'Message Content', life: 30000000});
   }
 }

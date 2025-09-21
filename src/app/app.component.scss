@@ -55,6 +55,10 @@
       height: calc(100% - 60px);
       max-height: fit-content;
     }
+
+    router-outlet {
+      display: contents;
+    }
   }
 }
 

@@ -12,3 +12,9 @@ export interface LocationBase<T> {
   totalElements:           number;
   totalPages:              number;
 }
+
+export interface ItemFilter {
+  page: number;
+  size: number;
+  filter?: string;
+}

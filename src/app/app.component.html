@@ -10,7 +10,7 @@
     <app-sub-header />
     <!-- MAIN ROUTES -->
     @if (hasCredentials()) {
-      <section class="mx-0 lg:mx-5">
+      <section class="mx-0 lg:mx-5 overflow-auto">
         <div class="core-tabs-list">
           <app-core-tabs-list />
         </div>
@@ -20,7 +20,9 @@
         </div>
       </section>
     } @else {
-      <router-outlet/>
+      <section class="mx-0 lg:mx-5 overflow-auto">
+        <router-outlet/>
+      </section>
     }
   </main>
   <!--    GLOBAL TOASTER AND CONFIRMATION DIALOGS -->

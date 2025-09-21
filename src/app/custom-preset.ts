@@ -363,9 +363,18 @@ const stcPreset = definePreset(Aura, {
         },
       },
     },
+    toast: {
+      border: {
+        radius: 'var(--stc-radius)',
+      }
+    },
     inputtext: {
       borderRadius: 'var(--stc-radius)',
-      shadow: 'none'
+      shadow: 'none',
+      padding: {
+        x: '1.2rem',
+        y: '.81rem',
+      }
     },
     multiselect: {
       shadow: 'none',
@@ -388,6 +397,11 @@ const stcPreset = definePreset(Aura, {
     confirmdialog: {
       icon: {
         color: 'var(--primary-500)',
+      }
+    },
+    dialog: {
+      border: {
+        radius: 'var(--stc-radius)',
       }
     },
     progressspinner: {

@@ -1,3 +1,5 @@
+@use "mixins" as *;
+
 :host {
  height: 100%;
 }
@@ -37,7 +39,15 @@
       align-items: center;
       gap: 0.6rem;
 
-      h4, p {
+      h4 {
+        @include font-size($size: xl);
+
+        margin: 0;
+      }
+
+      p {
+        @include font-size($size: lg);
+
         margin: 0;
       }
     }

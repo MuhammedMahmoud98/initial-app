@@ -1,14 +1,18 @@
 <div class="hub-created-locations">
+  <!-- FILTERS -->
+  <div [hidden]="genericTableCacheService.selectedItemsCounter()">
+    <app-hub-filters (filterValues)="onFilterValueChanges($event)"/>
+  </div>
 
-  @if (genericTableCacheService.selectedItemsCounter()) {
-    <!-- TABLE BULK ACTIONS -->
+  <!-- BULK ACTIONS -->
+  <div [hidden]="!genericTableCacheService.selectedItemsCounter()">
     <app-table-action-bulk
       [selectedItemsCounter]="selectedItemsCounter()"
       [totalAvailableItems]="totalAvailableItems()"
       (isApplyingBulkSelection)="isApplyingBulkSelection.set($event)"
     >
       <!-- GENERATE QR CODE BUTTON -->
-      <p-button styleClass="w-full md:w-auto" [label]="'generate QR code'" [severity]="'contrast'">
+      <p-button styleClass="w-full md:w-auto" (onClick)="openDialog()" [label]="'generate QR code'" [severity]="'contrast'">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
           <path d="M7.5 2.5H2.5V7.5H7.5V2.5Z" stroke="#1D252D"/>
           <path d="M7.5 12.5H2.5V17.5H7.5V12.5Z" stroke="#1D252D"/>
@@ -42,27 +46,18 @@
         </svg>
       </p-button>
     </app-table-action-bulk>
-  } @else {
-    <app-hub-filters/>
-<!--    <button (click)="testtt()">test</button>-->
-  }
+  </div>
+
   <!-- CREATED LOCATIONS TABLE -->
-<!--  <div class="overflow-auto">-->
-<!--    <app-generic-table-->
-<!--      [columns]="createTableColumns()"-->
-<!--      [items]="mockItems()"-->
-<!--      [hasCheckBoxes]="true"-->
-<!--      (selectedItems)="onSelectedItemsChange($event)"-->
-<!--    />-->
-<!--  </div>-->
-
-  <app-component-state
-    [iconUrl]="'assets/images/location-state.svg'"
-    [mainTitle]="'no locations created yet'"
-    [subTitle]="'create locations to see them listed here'"
-  />
-
-<!--  <button (click)="testCell()">TEST CELL</button>-->
+  <div class="overflow-x-auto overflow-y-hidden">
+    <app-generic-table
+      [columns]="createTableColumns()"
+      [items]="mockItems()"
+      [hasCheckBoxes]="true"
+      (selectedItems)="onSelectedItemsChange($event)"
+    />
+  </div>
+  <button (click)="openToaster()">TEST CELL</button>
 </div>
 
 

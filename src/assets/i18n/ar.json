@@ -1,3 +1,5 @@
 {
-  
+  "paginationReport": "{{itemsLength}} من {{totalRecords}}",
+  "notAccessTitle": "",
+  "notAccessSubtitle": ""
 }

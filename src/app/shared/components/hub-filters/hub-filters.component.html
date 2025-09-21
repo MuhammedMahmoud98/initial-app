@@ -1,7 +1,7 @@
 <div class="qr-filters">
-  <form>
+  <form [formGroup]="form">
     <div class="w-full sm:w-25rem">
-      <app-qr-search/>
+      <app-qr-search formControlName="filter"/>
     </div>
   </form>
 </div>

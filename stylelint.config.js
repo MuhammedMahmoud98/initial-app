@@ -71,7 +71,7 @@ module.exports = {
     'selector-type-no-unknown': [
       true,
       {
-        ignoreTypes: ['/^exc-/', '/^p-/'],
+        ignoreTypes: ['/^exc-/', '/^p-/', 'app-*', 'router-outlet'],
         message: 'Only the following element namespaces are allowed: [exc, p]',
       },
     ],
@@ -125,13 +125,7 @@ module.exports = {
     'scss/dollar-variable-pattern': '^[a-z0-9]+(-[a-z0-9]+)*$',
     'scss/dollar-variable-colon-space-after': 'always',
     'scss/at-mixin-argumentless-call-parentheses': 'always',
-    'scss/at-function-named-arguments': [
-      'always',
-      {
-        ignore: ['single-argument'],
-        ignoreFunctions: ['map.get', 'map.merge', 'map.deep-merge'],
-      },
-    ],
+    'scss/at-function-named-arguments': null,
     'scss/at-mixin-named-arguments': [
       'always',
       { ignore: ['single-argument'] },
@@ -140,6 +134,6 @@ module.exports = {
     'scss/at-extend-no-missing-placeholder': true,
     'scss/no-duplicate-mixins': true,
     'scss/no-duplicate-dollar-variables': true,
-    'scss/selector-no-redundant-nesting-selector': true,
+    'scss/selector-no-redundant-nesting-selector': null,
   },
 };

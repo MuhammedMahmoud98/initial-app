@@ -4,13 +4,15 @@ import {TableColumn} from '../../models';
 import {NgTemplateOutlet} from '@angular/common';
 import {COMMON_CONSTANTS} from '../../constants/common-constants';
 import {GenericTableCacheService} from '../../services';
+import {TranslatePipe} from '@ngx-translate/core';
 
 
 @Component({
   selector: 'app-generic-table',
   imports: [
     TableModule,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    TranslatePipe
   ],
   standalone: true,
   templateUrl: './generic-table.component.html',

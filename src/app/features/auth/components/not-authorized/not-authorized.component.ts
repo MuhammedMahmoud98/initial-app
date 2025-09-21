@@ -4,12 +4,12 @@ import {
   inject,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserStatusComponent } from '../../../../shared/components/user-status/user-status.component';
 import { AuthenticationService } from '../../services/authentication.service';
+import {ComponentStateComponent} from '../../../../shared/components/component-state/component-state.component';
 
 @Component({
   selector: 'app-not-authorized',
-  imports: [UserStatusComponent],
+  imports: [ComponentStateComponent],
   templateUrl: './not-authorized.component.html',
   styleUrl: './not-authorized.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

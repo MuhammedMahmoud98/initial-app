@@ -8,12 +8,14 @@ import {
   InputSignal, Signal
 } from '@angular/core';
 import {LowerCasePipe, NgOptimizedImage} from '@angular/common';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-component-state',
   imports: [
     NgOptimizedImage,
-    LowerCasePipe
+    LowerCasePipe,
+    TranslatePipe
   ],
   standalone: true,
   templateUrl: './component-state.component.html',

@@ -1,0 +1,15 @@
+$font-sizes: (
+  sm: 0.875rem,  // 14px
+  md: 1rem,      // 16px
+  lg: 1.25rem,   // 20px
+  xl: 1.5rem     // 24px
+);
+
+
+@mixin font-size($size) {
+  @if map-has-key($font-sizes, $size) {
+    font-size: map-get($font-sizes, $size);
+  } @else {
+    @warn "Unknown font-size `#{$size}`. Available: #{map-keys($font-sizes)}";
+  }
+}

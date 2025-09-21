@@ -1,4 +1,6 @@
 {
   "createdLocations": "created locations",
-  "locationTypes": "location types"
+  "locationTypes": "location types",
+  "notAccessTitle": "unauthorized access",
+  "notAccessSubtitle": "please use the authorized service account"
 }

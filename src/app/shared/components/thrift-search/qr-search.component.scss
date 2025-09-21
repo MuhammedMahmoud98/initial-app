@@ -1,6 +1,6 @@
 .input-container {
   position: relative;
-  height: 41.59px;
+  //height: 41.59px;
 
   .search-icon {
     position: absolute;
@@ -15,7 +15,8 @@
     border: 1px solid #f3f3f3;
     padding-inline-start: 40px;
     transition: outline-color, border-color 0.2s ease;
-    padding-block: 10px !important;
+    //padding-block: 10px !important;
+
     color: var(--gray-700);
 
     &:focus, &:active {
@@ -31,7 +32,7 @@
     height: 20px;
     border-radius: 50%;
     position: absolute;
-    top: 0.457rem;
+    top: 0.9rem;
     inset-inline-end: 1rem;
     color: var(--silver-400);
     background-color: transparent;

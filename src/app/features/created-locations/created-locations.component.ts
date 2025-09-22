@@ -1,4 +1,5 @@
 import {
+  afterNextRender, AfterRenderRef,
   ChangeDetectionStrategy,
   Component, computed,
   inject,
@@ -56,6 +57,9 @@ export class CreatedLocationsComponent {
   selectedItemsCounter = signal(0);
   totalAvailableItems = signal(3400);
   isApplyingBulkSelection = signal(false);
+  nCounter = signal(0);
+
+  items = signal<CreatedLocation[]>([]);
 
   // VIEW CHILDREN
   qrStatusCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('qrStatusCustomColumn');
@@ -63,6 +67,10 @@ export class CreatedLocationsComponent {
 
   // CASTING
   protected readonly genericCasting = genericCasting<CreatedLocation>;
+
+  init: AfterRenderRef = afterNextRender(() => {
+    this.items.set(this.mockItems());
+  });
 
   createTableColumns(): CreatedLocationColumnType[] {
     return [
@@ -329,7 +337,253 @@ export class CreatedLocationsComponent {
           'typeTitle': 'Innovation Lab',
           'typeCode': 'IL'
         }]}.content
-  })
+  });
+
+  mockItems2 = computed(() => {
+    return [
+      {
+        id: 21,
+        district: 'Johor',
+        category: 'Office',
+        building: 'Harbor Tower',
+        floor: '10',
+        zone: 'South',
+        code: 'LOC021',
+        qrCode: '',
+        typeTitle: 'Operations Office',
+        typeCode: 'OO'
+      },
+      {
+        id: 22,
+        district: 'Penang',
+        category: 'Retail',
+        building: 'Island Mall',
+        floor: '2',
+        zone: 'North',
+        code: 'LOC022',
+        qrCode: '',
+        typeTitle: 'Retail Branch',
+        typeCode: 'RB'
+      },
+      {
+        id: 23,
+        district: 'Selangor',
+        category: 'Warehouse',
+        building: 'Mega Storage B',
+        floor: '1',
+        zone: 'East',
+        code: 'LOC023',
+        qrCode: '',
+        typeTitle: 'Storage Hub',
+        typeCode: 'SH'
+      },
+      {
+        id: 24,
+        district: 'Kedah',
+        category: 'Manufacturing',
+        building: 'Industrial Zone Plant 1',
+        floor: '1',
+        zone: 'West',
+        code: 'LOC024',
+        qrCode: '',
+        typeTitle: 'Production Plant',
+        typeCode: 'PP'
+      },
+      {
+        id: 25,
+        district: 'Sabah',
+        category: 'Office',
+        building: 'Seaside Tower',
+        floor: '5',
+        zone: 'Central',
+        code: 'LOC025',
+        qrCode: '',
+        typeTitle: 'Branch Office',
+        typeCode: 'BO'
+      },
+      {
+        id: 26,
+        district: 'Sarawak',
+        category: 'Warehouse',
+        building: 'Logistics Park',
+        floor: '2',
+        zone: 'South',
+        code: 'LOC026',
+        qrCode: '',
+        typeTitle: 'Distribution Hub',
+        typeCode: 'DH'
+      },
+      {
+        id: 27,
+        district: 'KL',
+        category: 'Retail',
+        building: 'Downtown Plaza',
+        floor: '1',
+        zone: 'Central',
+        code: 'LOC027',
+        qrCode: '',
+        typeTitle: 'Showroom',
+        typeCode: 'SR'
+      },
+      {
+        id: 28,
+        district: 'Perak',
+        category: 'Office',
+        building: 'Techno Tower',
+        floor: '9',
+        zone: 'North',
+        code: 'LOC028',
+        qrCode: '',
+        typeTitle: 'IT Office',
+        typeCode: 'IT'
+      },
+      {
+        id: 29,
+        district: 'Melaka',
+        category: 'Retail',
+        building: 'Heritage Square',
+        floor: '2',
+        zone: 'East',
+        code: 'LOC029',
+        qrCode: '',
+        typeTitle: 'Retail Store',
+        typeCode: 'RS'
+      },
+      {
+        id: 30,
+        district: 'Negeri Sembilan',
+        category: 'Warehouse',
+        building: 'Supply Depot',
+        floor: '1',
+        zone: 'West',
+        code: 'LOC030',
+        qrCode: '',
+        typeTitle: 'Supply Chain Hub',
+        typeCode: 'SCH'
+      },
+      {
+        id: 31,
+        district: 'Pahang',
+        category: 'Manufacturing',
+        building: 'Automotive Plant',
+        floor: '3',
+        zone: 'South',
+        code: 'LOC031',
+        qrCode: '',
+        typeTitle: 'Assembly Plant',
+        typeCode: 'AP'
+      },
+      {
+        id: 32,
+        district: 'Terengganu',
+        category: 'Retail',
+        building: 'Coastal Mall',
+        floor: '2',
+        zone: 'North',
+        code: 'LOC032',
+        qrCode: '',
+        typeTitle: 'Outlet Store',
+        typeCode: 'OS'
+      },
+      {
+        id: 33,
+        district: 'Kelantan',
+        category: 'Warehouse',
+        building: 'Central Storage',
+        floor: '1',
+        zone: 'Central',
+        code: 'LOC033',
+        qrCode: '',
+        typeTitle: 'Bulk Storage',
+        typeCode: 'BS'
+      },
+      {
+        id: 34,
+        district: 'Perlis',
+        category: 'Office',
+        building: 'State Tower',
+        floor: '6',
+        zone: 'East',
+        code: 'LOC034',
+        qrCode: '',
+        typeTitle: 'Admin Office',
+        typeCode: 'AO'
+      },
+      {
+        id: 35,
+        district: 'Johor',
+        category: 'Retail',
+        building: 'Southern Galleria',
+        floor: '4',
+        zone: 'South',
+        code: 'LOC035',
+        qrCode: '',
+        typeTitle: 'Flagship Store',
+        typeCode: 'FS'
+      },
+      {
+        id: 36,
+        district: 'Penang',
+        category: 'Manufacturing',
+        building: 'Electronics Plant',
+        floor: '2',
+        zone: 'North',
+        code: 'LOC036',
+        qrCode: '',
+        typeTitle: 'Electronics Facility',
+        typeCode: 'EF'
+      },
+      {
+        id: 37,
+        district: 'KL',
+        category: 'Office',
+        building: 'Capital Tower',
+        floor: '20',
+        zone: 'Central',
+        code: 'LOC037',
+        qrCode: '',
+        typeTitle: 'Headquarters',
+        typeCode: 'HQ'
+      },
+      {
+        id: 38,
+        district: 'Sarawak',
+        category: 'Retail',
+        building: 'Borneo Mall',
+        floor: '1',
+        zone: 'East',
+        code: 'LOC038',
+        qrCode: '',
+        typeTitle: 'Retail Outlet',
+        typeCode: 'RO'
+      },
+      {
+        id: 39,
+        district: 'Sabah',
+        category: 'Warehouse',
+        building: 'Freight Hub',
+        floor: '1',
+        zone: 'West',
+        code: 'LOC039',
+        qrCode: '',
+        typeTitle: 'Freight Storage',
+        typeCode: 'FS'
+      },
+      {
+        id: 40,
+        district: 'Selangor',
+        category: 'Office',
+        building: 'Innovation Tower',
+        floor: '11',
+        zone: 'North',
+        code: 'LOC040',
+        qrCode: '',
+        typeTitle: 'Innovation Office',
+        typeCode: 'IO'
+      }
+    ];
+  });
+
 
   onSelectedItemsChange(selectedItemsIds: number[]) {
     this.selectedItemsCounter.set(selectedItemsIds.length);
@@ -370,5 +624,20 @@ export class CreatedLocationsComponent {
 
   openToaster(): void {
     this.#messageService.add({severity:'success', summary: 'Success', detail: 'Message Content', life: 30000000});
+  }
+
+  onPageChange($event: number) {
+    if (this.nCounter() % 2 === 0) {
+      this.items.set(this.mockItems());
+    } else {
+      this.items.set(this.mockItems2());
+    }
+    this.nCounter.set(this.nCounter() + 1);
+    console.log(this.nCounter(), 'N VALUE');
+    if (this.genericTableCacheService.isSelectingBulkAction()) {
+      console.log(this.genericTableCacheService.isSelectingBulkAction(), 'BULK STATUS');
+      this.genericTableCacheService.isSelectingBulkAction.set(true);
+      console.log($event, 'PAGE CHANGED');
+    }
   }
 }

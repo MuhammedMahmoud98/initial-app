@@ -24,5 +24,9 @@ export class TableActionBulkComponent {
 
   applyHugeBulkSelection(): void {
     this.genericTableCacheService.isSelectingBulkAction.set(!this.genericTableCacheService.isSelectingBulkAction());
+
+    if (!this.genericTableCacheService.isSelectingBulkAction()) {
+      this.genericTableCacheService.clearUnSelectedCache();
+    }
   }
 }

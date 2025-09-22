@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, effect, inject, input, InputSignal, output} from '@angular/core';
-import {TableModule} from 'primeng/table';
+import {TableModule, TablePageEvent} from 'primeng/table';
 import {TableColumn} from '../../models';
 import {NgTemplateOutlet} from '@angular/common';
 import {COMMON_CONSTANTS} from '../../constants/common-constants';
@@ -25,12 +25,14 @@ export class GenericTableComponent<T extends {id: number}> {
   // INPUTS
   columns: InputSignal<TableColumn<T>[]> = input.required();
   items: InputSignal<T[]> = input.required();
+  totalRecords: InputSignal<number> = input(1150);
   hasCheckBoxes: InputSignal<boolean> = input(false);
 
   // EFFECTS
   onApplyingBulkSelection = effect(() => {
     if (this.genericTableCacheService.isSelectingBulkAction()) {
-      this.selectedLocations = this.items();
+      // this.selectedLocations = this.items().filter(i => this.selectedIds.includes(i.id));
+      this.selectedLocations = this.items().filter((item): boolean => !this.genericTableCacheService.unSelectedItemsCache().includes(item.id));
       this.genericTableCacheService.selectedItemsCounter.set(this.genericTableCacheService.totalAvailableItems());
     } else {
       this.selectedLocations = [];
@@ -40,6 +42,7 @@ export class GenericTableComponent<T extends {id: number}> {
 
   // OUTPUTS
   selectedItems = output<number[]>();
+  currentPage = output<number>();
 
   // VARIABLES
   selectedLocations!: T[];
@@ -56,6 +59,21 @@ export class GenericTableComponent<T extends {id: number}> {
     if (this.hasCheckBoxes()) {
       this.selectedItems.emit(selectedItemsEmitter);
       this.genericTableCacheService.handleSelectedItemsCounter(selectedItemsEmitter.length, this.items().length);
+      if (this.genericTableCacheService.isSelectingBulkAction()) {
+        this.genericTableCacheService.updateUnSelected(this.items(), selectedItemsEmitter);
+        console.log(this.genericTableCacheService.unSelectedItemsCache(), 'unSelectedItemsCache');
+      }
     }
+  }
+
+  onPageChange($event: TablePageEvent) {
+    const {rows, first} = $event;
+    const currentPage = (first / rows) + 1;
+    console.log(currentPage);
+    this.currentPage.emit(currentPage);
+  }
+
+  onMainCheckboxChanged($event: Event) {
+    console.log($event);
   }
 }

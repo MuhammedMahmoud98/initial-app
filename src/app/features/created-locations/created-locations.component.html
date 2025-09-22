@@ -52,12 +52,13 @@
   <div class="overflow-x-auto overflow-y-hidden">
     <app-generic-table
       [columns]="createTableColumns()"
-      [items]="mockItems()"
+      [items]="items()"
       [hasCheckBoxes]="true"
       (selectedItems)="onSelectedItemsChange($event)"
+      (currentPage)="onPageChange($event)"
     />
   </div>
-  <button (click)="openToaster()">TEST CELL</button>
+<!--  <button (click)="openToaster()">TEST CELL</button>-->
 </div>
 
 

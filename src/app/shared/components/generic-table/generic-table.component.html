@@ -2,21 +2,25 @@
   [columns]="columns()"
   [value]="items()"
   [scrollHeight]="'flex'"
+  [scrollable]="true"
   [(selection)]="selectedLocations"
   (selectionChange)="onSelectionChange($event)"
-  [rowTrackBy]="trackByCode"
+  (onPage)="onPageChange($event)"
   [rows]="rowsCounter"
+  [rowTrackBy]="trackByCode"
+  [totalRecords]="totalRecords()"
   [paginator]="true"
+  [lazy]="true"
   [showCurrentPageReport]="true"
   [currentPageReportTemplate]="`paginationReport` | translate:{itemsLength: items().length, totalRecords: '{totalRecords}'}"
-  dataKey="code"
+  dataKey="id"
 >
   <ng-template #header let-columns>
     <tr>
       <!-- TABLE HEADER CHECKBOX -->
       @if (hasCheckBoxes()) {
         <th>
-          <p-tableHeaderCheckbox />
+          <p-tableHeaderCheckbox (change)="onMainCheckboxChanged($event)" />
         </th>
       }
 

@@ -1,6 +1,6 @@
 import { environment } from '../../environment/environment';
 
-const serverUrl = '/v1/private/hub-locations'
+const serverUrl = environment.host + '/v1/private/hub-locations'
 
 export const API_CONSTANTS = {
   loginAPI: '/auth/login', // TODO REPLACE WITH YOUR LOGIN API

@@ -5,7 +5,7 @@ import {Injectable, signal} from '@angular/core';
 })
 export class GenericTableCacheService {
   selectedItemsCounter = signal(0);
-  totalAvailableItems = signal(3400);
+  totalAvailableItems = signal(0);
   unSelectedItemsCache = signal<number[]>([]);
 
   // CHECK IF USER SELECT ALL RECORDS IN DB
@@ -14,6 +14,13 @@ export class GenericTableCacheService {
 
   resetSelectedItems(): void {
     this.selectedItemsCounter.set(0);
+  }
+
+  resetCache(): void {
+    this.selectedItemsCounter.set(0);
+    this.totalAvailableItems.set(0);
+    this.unSelectedItemsCache.set([]);
+    this.isSelectingBulkAction.set(false);
   }
 
   handleSelectedItemsCounter(selectedItemsLength = 0): void {

@@ -69,7 +69,7 @@ export class GenericTableComponent<T extends {id: number}> {
 
   onPageChange($event: TablePageEvent) {
     const {rows, first} = $event;
-    const currentPage = (first / rows) + 1;
+    const currentPage = (first / rows);
     console.log(currentPage);
     this.currentPage.emit(currentPage);
   }

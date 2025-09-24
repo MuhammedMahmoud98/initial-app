@@ -52,8 +52,15 @@
     }
 
     .core-content {
-      height: calc(100% - 60px);
-      max-height: fit-content;
+      /* stylelint-disable-next-line selector-type-no-unknown */
+      &:not(:has(app-component-state)) {
+        max-height: fit-content;
+      }
+
+      /* stylelint-disable-next-line selector-type-no-unknown */
+      &:has(app-component-state) {
+        height: calc(100% - 60px);
+      }
     }
 
     router-outlet {

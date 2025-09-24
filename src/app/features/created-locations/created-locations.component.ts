@@ -2,17 +2,17 @@ import {
   afterNextRender, AfterRenderRef,
   ChangeDetectionStrategy,
   Component, computed,
-  inject,
+  inject, OnDestroy,
   signal,
   TemplateRef,
   viewChild,
   WritableSignal
 } from '@angular/core';
 import {PdfMakerService} from '../../core/services';
-import {mockPDFRecords} from '../../shared/constants/common-constants';
+import {INITIAL_FILTER_PAYLOAD, mockPDFRecords} from '../../shared/constants/common-constants';
 import {GenericTableComponent} from '../../shared/components/generic-table/generic-table.component';
-import {TableColumn} from '../../shared';
-import {CreatedLocation, CreatedLocationColumnType} from './models/created-location.model';
+import {ItemFilter, TableColumn} from '../../shared';
+import {CreatedLocation, CreatedLocationColumnType, CreatedLocationResponse} from './models/created-location.model';
 import {genericCasting} from '../../shared/helpers/helpers';
 import {CustomStatusComponent} from '../../shared/components/custom-status/custom-status.component';
 import {CopyToClipboardComponent} from '../../shared/components/copy-to-clipboard/copy-to-clipboard.component';
@@ -25,7 +25,10 @@ import {HubFilters} from '../../shared/components/hub-filters/models/hub-filters
 import {DialogService} from 'primeng/dynamicdialog';
 import {LoadingDialogComponent} from '../../shared/dialogs/loading-dialog/loading-dialog.component';
 import {LoadingDialogService} from '../../shared/services/loading-dialog.service';
-import {tap} from 'rxjs';
+import {catchError, EMPTY, tap} from 'rxjs';
+import {LocationsService} from './services/locations.service';
+import {TitleWithIconComponent} from '../../shared/components/title-with-icon/title-with-icon.component';
+import {ComponentStateComponent} from '../../shared/components/component-state/component-state.component';
 
 @Component({
   selector: 'app-created-locations',
@@ -36,6 +39,8 @@ import {tap} from 'rxjs';
     TableActionBulkComponent,
     Button,
     HubFiltersComponent,
+    TitleWithIconComponent,
+    ComponentStateComponent,
   ],
   providers: [DialogService],
   standalone: true,
@@ -43,11 +48,12 @@ import {tap} from 'rxjs';
   styleUrl: './created-locations.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreatedLocationsComponent {
+export class CreatedLocationsComponent implements OnDestroy {
   // INJECTIONS
   readonly #pdfMakerService: PdfMakerService = inject(PdfMakerService);
   readonly genericTableCacheService: GenericTableCacheService = inject(GenericTableCacheService);
   protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
+  readonly #locationsService: LocationsService = inject(LocationsService);
   readonly #dialogService: DialogService = inject(DialogService);
   readonly loadingDialogService = inject(LoadingDialogService);
   readonly #messageService: MessageService = inject(MessageService);
@@ -55,26 +61,32 @@ export class CreatedLocationsComponent {
   // SIGNALS
   columns: WritableSignal<TableColumn<CreatedLocation>[]> = signal([]);
   selectedItemsCounter = signal(0);
-  totalAvailableItems = signal(3400);
-  isApplyingBulkSelection = signal(false);
-  nCounter = signal(0);
-
   items = signal<CreatedLocation[]>([]);
+  locationsPayload = signal<ItemFilter>(INITIAL_FILTER_PAYLOAD);
+  // SIGNAL STATES
+  isEmptyState = signal(false);
+  isErrorState = signal(false);
+  isApplyingFilter = signal(false);
 
   // VIEW CHILDREN
   qrStatusCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('qrStatusCustomColumn');
   codeCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('codeCustomColumn');
+  districtCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('districtCustomColumn');
 
   // CASTING
   protected readonly genericCasting = genericCasting<CreatedLocation>;
 
   init: AfterRenderRef = afterNextRender(() => {
-    this.items.set(this.mockItems());
+    this.getCreatedLocations();
   });
+
+  ngOnDestroy(): void {
+    this.genericTableCacheService.resetCache();
+  }
 
   createTableColumns(): CreatedLocationColumnType[] {
     return [
-      {field: 'district'},
+      {field: 'district', template: this.districtCustomColumn()},
       {field: 'category'},
       {field: 'building'},
       {field: 'floor'},
@@ -82,6 +94,31 @@ export class CreatedLocationsComponent {
       {field: 'code', template: this.codeCustomColumn()},
       {field: '', template: this.qrStatusCustomColumn(), columnWidth: '200px'},
     ]
+  }
+
+  getCreatedLocations(): void {
+    this.#locationsService.getCreatedLocations(this.locationsPayload()).pipe(
+      tap((createdLocations: CreatedLocationResponse) => {
+        console.log(createdLocations, 'CREATED LOCATIONS FROM API');
+        if (createdLocations) {
+          this.genericTableCacheService.totalAvailableItems.set(createdLocations.totalElements);
+          this.items.set(createdLocations.content);
+          this.isEmptyState.set(false);
+          this.isErrorState.set(false);
+        } else {
+          this.handleEmptyState();
+        }
+      }),
+      catchError(() => {
+        this.handleErrorState();
+        return EMPTY;
+      }),
+    ).subscribe();
+  }
+
+  updateFilterPayload(newFilters: HubFilters | ItemFilter): void {
+    this.locationsPayload.update((current) => ({...current, ...newFilters}));
+    console.log(this.locationsPayload(), 'UPDATED PAYLOAD');
   }
 
   async printMock() {
@@ -599,8 +636,10 @@ export class CreatedLocationsComponent {
     })
   }
 
-  onFilterValueChanges($event: HubFilters) {
-    console.log($event, 'FILTER VALUE CHANGED')
+  onFilterValueChanges(filterValues: HubFilters) {
+    this.isApplyingFilter.set(!!filterValues.filter);
+    this.updateFilterPayload(filterValues);
+    this.getCreatedLocations();
   }
 
   openDialog(): void {
@@ -626,18 +665,21 @@ export class CreatedLocationsComponent {
     this.#messageService.add({severity:'success', summary: 'Success', detail: 'Message Content', life: 30000000});
   }
 
-  onPageChange($event: number) {
-    if (this.nCounter() % 2 === 0) {
-      this.items.set(this.mockItems());
-    } else {
-      this.items.set(this.mockItems2());
-    }
-    this.nCounter.set(this.nCounter() + 1);
-    console.log(this.nCounter(), 'N VALUE');
-    if (this.genericTableCacheService.isSelectingBulkAction()) {
-      console.log(this.genericTableCacheService.isSelectingBulkAction(), 'BULK STATUS');
-      this.genericTableCacheService.isSelectingBulkAction.set(true);
-      console.log($event, 'PAGE CHANGED');
-    }
+  onPageChange(currentPage: number) {
+    console.log(currentPage, 'CURRENT PAGE FROM CREATED LOCATIONS');
+    this.updateFilterPayload({page: currentPage} as ItemFilter);
+    this.getCreatedLocations();
+  }
+
+  handleEmptyState(): void {
+    this.isEmptyState.set(true);
+    this.isErrorState.set(false);
+    this.genericTableCacheService.totalAvailableItems.set(0);
+  }
+
+  handleErrorState(): void {
+    this.isErrorState.set(true);
+    this.isEmptyState.set(false);
+    this.genericTableCacheService.totalAvailableItems.set(0);
   }
 }

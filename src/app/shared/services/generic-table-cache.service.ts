@@ -16,9 +16,9 @@ export class GenericTableCacheService {
     this.selectedItemsCounter.set(0);
   }
 
-  handleSelectedItemsCounter(selectedItemsLength: number, pageTotalRecordsLength: number): void {
+  handleSelectedItemsCounter(selectedItemsLength = 0): void {
     if (this.isSelectingBulkAction()) {
-      const recordsEquation: number = this.totalAvailableItems() - (pageTotalRecordsLength - selectedItemsLength);
+      const recordsEquation: number = this.totalAvailableItems() - this.unSelectedItemsCache().length;
       return this.selectedItemsCounter.set(recordsEquation);
     }
 
@@ -33,18 +33,20 @@ export class GenericTableCacheService {
 
     const unselected: number[] = itemIds.filter(id => !selectedSet.has(id));
 
-    const isReselectedIds =   unselected.length === 0 && this.unSelectedItemsCache().some(id => selectedIds.includes(id));
+    const isReselectedIds =   unselected.length === 0 || this.unSelectedItemsCache().some(id => selectedIds.includes(id));
     if (isReselectedIds) {
       // remove re-selected ids from cache
       const filtered = this.unSelectedItemsCache().filter(
         id => !selectedIds.includes(id)
       );
       this.unSelectedItemsCache.set(filtered);
+      this.handleSelectedItemsCounter();
       return;
     }
 
     const merged = new Set([...this.unSelectedItemsCache(), ...unselected]);
     this.unSelectedItemsCache.set([...merged]);
+    this.handleSelectedItemsCounter();
   }
 
   clearUnSelectedCache(): void {

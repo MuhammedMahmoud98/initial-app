@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, input, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {GenericTableCacheService} from '../../services';
 
 @Component({
@@ -12,15 +12,6 @@ import {GenericTableCacheService} from '../../services';
 export class TableActionBulkComponent {
   // INJECTIONS
   readonly genericTableCacheService: GenericTableCacheService = inject(GenericTableCacheService);
-  // INPUTS
-  selectedItemsCounter = input(0);
-  totalAvailableItems = input(0);
-
-  // OUTPUTS
-  isApplyingBulkSelection = output<boolean>();
-
-  // SIGNALS
-
 
   applyHugeBulkSelection(): void {
     this.genericTableCacheService.isSelectingBulkAction.set(!this.genericTableCacheService.isSelectingBulkAction());

@@ -29,8 +29,8 @@
     &::after {
       content: "";
       position: absolute;
-      bottom: -14px;
-      left: 0;
+      bottom: -1rem;
+      inset-inline-start: 0;
       width: 0;
       height: 2px;
       background-color: var(--primary-500);

@@ -12,5 +12,11 @@
       <h4>{{mainTitle() | translate | lowercase}}</h4>
       <p>{{subTitle() | translate | lowercase}}</p>
     </div>
+
+    @if (showReloadButton()) {
+      <div class="action-box">
+        <p-button [label]="'reload'" [severity]="'secondary'" (onClick)="reloadPage()"/>
+      </div>
+    }
   </div>
 </div>

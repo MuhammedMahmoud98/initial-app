@@ -2,5 +2,6 @@
   "createdLocations": "created locations",
   "locationTypes": "location types",
   "notAccessTitle": "unauthorized access",
-  "notAccessSubtitle": "please use the authorized service account"
+  "notAccessSubtitle": "please use the authorized service account",
+  "paginationReport": "{{itemsLength}} from {{totalRecords}}"
 }

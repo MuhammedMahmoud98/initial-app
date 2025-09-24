@@ -31,9 +31,9 @@ export class GenericTableComponent<T extends {id: number}> {
   // EFFECTS
   onApplyingBulkSelection = effect(() => {
     if (this.genericTableCacheService.isSelectingBulkAction()) {
-      // this.selectedLocations = this.items().filter(i => this.selectedIds.includes(i.id));
       this.selectedLocations = this.items().filter((item): boolean => !this.genericTableCacheService.unSelectedItemsCache().includes(item.id));
-      this.genericTableCacheService.selectedItemsCounter.set(this.genericTableCacheService.totalAvailableItems());
+      // this.genericTableCacheService.selectedItemsCounter.set(this.genericTableCacheService.totalAvailableItems());
+      this.genericTableCacheService.handleSelectedItemsCounter();
     } else {
       this.selectedLocations = [];
       this.genericTableCacheService.selectedItemsCounter.set(0);
@@ -58,17 +58,18 @@ export class GenericTableComponent<T extends {id: number}> {
 
     if (this.hasCheckBoxes()) {
       this.selectedItems.emit(selectedItemsEmitter);
-      this.genericTableCacheService.handleSelectedItemsCounter(selectedItemsEmitter.length, this.items().length);
       if (this.genericTableCacheService.isSelectingBulkAction()) {
         this.genericTableCacheService.updateUnSelected(this.items(), selectedItemsEmitter);
         console.log(this.genericTableCacheService.unSelectedItemsCache(), 'unSelectedItemsCache');
       }
+
+      this.genericTableCacheService.handleSelectedItemsCounter(selectedItemsEmitter.length);
     }
   }
 
   onPageChange($event: TablePageEvent) {
     const {rows, first} = $event;
-    const currentPage = (first / rows) + 1;
+    const currentPage = (first / rows);
     console.log(currentPage);
     this.currentPage.emit(currentPage);
   }

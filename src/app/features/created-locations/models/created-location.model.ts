@@ -9,6 +9,7 @@ export interface CreatedLocation {
   zone:      string;
   code:      string;
   qrCode:    string;
+  serial:    string;
   typeTitle: string;
   typeCode:  string;
   isSelected?: boolean;

@@ -96,7 +96,7 @@
 <ng-template #codeCustomColumn let-row>
   @let location = genericCasting(row);
 
-  <app-copy-to-clipboard [textToBeCopied]="location.typeCode + location.code"/>
+  <app-copy-to-clipboard [textToBeCopied]="location.code"/>
 </ng-template>
 
 
@@ -106,4 +106,12 @@
   @let location = genericCasting(row);
 
   <app-title-with-icon [itemTitle]="location.district"/>
+</ng-template>
+
+
+<!-- LOCATION TYPE CUSTOM COLUMN -->
+<ng-template #locationTypeCustomColumn let-row>
+  @let location = genericCasting(row);
+
+  <div>{{location.typeCode + '-' + location?.code}}</div>
 </ng-template>

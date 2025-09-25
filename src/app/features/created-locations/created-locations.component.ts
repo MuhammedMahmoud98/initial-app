@@ -72,6 +72,7 @@ export class CreatedLocationsComponent implements OnDestroy {
   qrStatusCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('qrStatusCustomColumn');
   codeCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('codeCustomColumn');
   districtCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('districtCustomColumn');
+  locationTypeCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('locationTypeCustomColumn');
 
   // CASTING
   protected readonly genericCasting = genericCasting<CreatedLocation>;
@@ -91,6 +92,8 @@ export class CreatedLocationsComponent implements OnDestroy {
       {field: 'building'},
       {field: 'floor'},
       {field: 'zone'},
+      {field: 'serial'},
+      {field: 'type', template: this.locationTypeCustomColumn()},
       {field: 'code', template: this.codeCustomColumn()},
       {field: '', template: this.qrStatusCustomColumn(), columnWidth: '200px'},
     ]

@@ -21,7 +21,7 @@ export const thriftGuard: CanActivateFn = (route) => {
       authService.handleMyGateCookies();
     } else {
       authService.unAuthorizedChecked.set(true);
-      router.navigate(['/un-authorized']);
+      router.navigate(['/un-authorized']); // TODO:: REDIRECT TO LOGIN PAGE BASED ON ENVIRONMENT..
     }
 
     return false;

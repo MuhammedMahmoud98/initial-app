@@ -13,4 +13,5 @@ import {NgOptimizedImage} from '@angular/common';
 })
 export class TitleWithIconComponent {
   itemTitle = input<string | undefined>();
+  iconUrl = input.required<string>();
 }

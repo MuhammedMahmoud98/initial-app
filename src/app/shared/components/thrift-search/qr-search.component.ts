@@ -110,10 +110,11 @@ export class QrSearchComponent implements ControlValueAccessor, OnInit {
   }
 
   resetSearch() {
-    this.searchControl.setValue('');
+    this.searchControl.setValue('', { emitEvent: true });
     this.searchControl.markAsPristine();
     this.searchControl.markAsUntouched();
-    this.searchControl.updateValueAndValidity({ emitEvent: false });
+    this.searchControl.updateValueAndValidity({ emitEvent: true });
+    this.handleSearchLogic(''); // Ensure event is triggered
   }
 
   private handleSearchLogic(searchValue: string): void {

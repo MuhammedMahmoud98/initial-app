@@ -93,10 +93,8 @@ const stcPreset = definePreset(Aura, {
               color: 'var(--primary-500)',
             }
           },
-          borderRadius: 'var(--btn-border-radius)',
           handle: {
             checkedColor: 'white',
-            borderRadius: '0',
             disabledBackground: 'var(--gray-0)',
           },
           checked: {
@@ -105,6 +103,11 @@ const stcPreset = definePreset(Aura, {
               background: 'var(--secondary-600)',
             },
           },
+          focus: {
+            ring: {
+              color: 'var(--secondary-500)',
+            }
+          }
         },
       },
     },

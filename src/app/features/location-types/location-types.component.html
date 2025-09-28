@@ -1,0 +1,88 @@
+<div class="hub-locations-types">
+  <!-- FILTERS -->
+  <app-hub-filters (filterValues)="onFilterValueChanges($event)"/>
+
+  @if ((!isApplyingFilter() && isEmptyState() && !items().length)) {
+    <app-component-state
+      [mainTitle]="'no locations found yet!'"
+      [subTitle]="'start by creating a new location to manage and track your records here'"
+      [iconUrl]="'assets/images/location-state.svg'"
+      [showReloadButton]="true"
+    />
+  } @else {
+
+    @if (!isEmptyState() && !isErrorState()) {
+      <div class="overflow-x-auto overflow-y-hidden">
+        <app-generic-table
+          [columns]="createTableColumns()"
+          [items]="items()"
+          [totalRecords]="genericTableCacheService.totalAvailableItems()"
+          [hasCheckBoxes]="false"
+          (currentPage)="onPageChange($event)"
+        />
+      </div>
+    } @else if (isEmptyState() && !isErrorState()) {
+      <app-component-state
+        [mainTitle]="'no locations types available'"
+        [subTitle]="'add a location type to categories locations effectively'"
+        [iconUrl]="'assets/images/location-state.svg'"
+      />
+    } @else if (isErrorState() && !isEmptyState()) {
+      <app-component-state
+        [mainTitle]="'an error occurred'"
+        [subTitle]="'data could not be retrieved, kindly try again later'"
+        [iconUrl]="'assets/images/refresh-state.svg'"
+        [showReloadButton]="true"
+      />
+    }
+  }
+</div>
+
+<!-- NAME CUSTOM COLUMN -->
+<ng-template #nameCustomColumn let-row>
+  @let location = genericCasting(row);
+
+  <app-title-with-icon [itemTitle]="location.name" [iconUrl]="'assets/images/location-state.svg'"/>
+</ng-template>
+
+<!-- SERVICE CUSTOM COLUMN -->
+<ng-template #serviceCustomColumn let-row>
+  @let locationType = genericCasting(row);
+
+  <app-text-with-bg-color
+    [textItems]="locationType.services"
+    [mapTextKey]="'serviceType'"
+    [bgColor]="'var(--silver-100)'"
+    [textColor]="'var(--onyx-500)'"
+  />
+</ng-template>
+
+<!-- CODE CUSTOM COLUMN -->
+<ng-template #codeCustomColumn let-row>
+  @let locationType = genericCasting(row);
+
+  <app-text-with-bg-color
+    [textItems]="locationType.code"
+    [bgColor]="'var(--monlight-100)'"
+    [textColor]="'var(--primary-500)'"
+  />
+</ng-template>
+
+
+<!-- CATEGORY CUSTOM COLUMN -->
+<ng-template #categoryCustomColumn let-row>
+  @let locationType = genericCasting(row);
+
+  <app-text-with-bg-color
+    [textItems]="locationType.category"
+    [bgColor]="'var(--silver-100)'"
+    [textColor]="'var(--onyx-500)'"
+  />
+</ng-template>
+
+<!-- LOCATION TYPE SERVICES CUSTOM COLUMN -->
+<ng-template #locationTypeServicesCustomColumn let-row>
+  @let locationType = genericCasting(row);
+
+  <app-service-availability [services]="locationType.services" (onToggleService)="updateLocationService($event, row)" />
+</ng-template>

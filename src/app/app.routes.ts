@@ -19,6 +19,13 @@ export const routes: Routes = [
             './features/created-locations/created-locations.component'
           ).then((m) => m.CreatedLocationsComponent),
       },
+      {
+        path: MAIN_ROUTES.LOCATION_TYPES,
+        loadComponent: () =>
+          import(
+            './features/location-types/location-types.component'
+          ).then((m) => m.LocationTypesComponent)
+      }
     ],
   },
   {

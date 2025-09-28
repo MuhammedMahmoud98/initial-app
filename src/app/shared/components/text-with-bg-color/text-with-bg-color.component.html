@@ -1,0 +1,16 @@
+<div class="text-container">
+  @if (!isArray()) {
+    <div class="text-container__item" [style]="{'background-color': bgColor(), 'color': textColor()}">
+      {{textItems()}}
+    </div>
+  } @else {
+
+    @let textItemsIterator = genericCasting(isArray() ? textItems(): []);
+
+    @for (item of textItemsIterator; track item) {
+      <div class="text-container__item" [style]="{'background-color': bgColor(), 'color': textColor()}">
+        {{isObject(item) ? item?.[mapTextKey()] : item}}
+      </div>
+    }
+  }
+</div>

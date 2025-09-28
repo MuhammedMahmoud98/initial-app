@@ -58,6 +58,7 @@
         <app-generic-table
           [columns]="createTableColumns()"
           [items]="items()"
+          [totalRecords]="genericTableCacheService.totalAvailableItems()"
           [hasCheckBoxes]="true"
           (selectedItems)="onSelectedItemsChange($event)"
           (currentPage)="onPageChange($event)"
@@ -101,11 +102,10 @@
 
 
 <!-- DISTRICT CUSTOM COLUMN -->
-
 <ng-template #districtCustomColumn let-row>
   @let location = genericCasting(row);
 
-  <app-title-with-icon [itemTitle]="location.district"/>
+  <app-title-with-icon [itemTitle]="location.district" [iconUrl]="'assets/images/widget.svg'"/>
 </ng-template>
 
 

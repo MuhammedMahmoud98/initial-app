@@ -8,7 +8,7 @@
   [rows]="rowsCounter"
   [rowTrackBy]="trackByCode"
   [totalRecords]="totalRecords()"
-  [paginator]="true"
+  [paginator]="totalRecords() > 50"
   [lazy]="true"
   [showCurrentPageReport]="true"
   [currentPageReportTemplate]="`paginationReport` | translate:{itemsLength: items().length, totalRecords: '{totalRecords}'}"
@@ -25,7 +25,7 @@
 
       @for (col of columns; track col?.field) {
         <th [style.width]="col?.columnWidth">
-          {{ col.field }}
+          {{ col.field | translate }}
         </th>
       }
     </tr>

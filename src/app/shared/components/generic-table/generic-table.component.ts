@@ -25,7 +25,7 @@ export class GenericTableComponent<T extends {id: number}> {
   // INPUTS
   columns: InputSignal<TableColumn<T>[]> = input.required();
   items: InputSignal<T[]> = input.required();
-  totalRecords: InputSignal<number> = input(1150);
+  totalRecords: InputSignal<number> = input(0);
   hasCheckBoxes: InputSignal<boolean> = input(false);
 
   // EFFECTS

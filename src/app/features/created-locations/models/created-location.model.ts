@@ -15,7 +15,7 @@ export interface CreatedLocation {
   isSelected?: boolean;
 }
 
-export type CustomCreatedLocationColumn = CreatedLocation
+export type CustomCreatedLocationColumn = CreatedLocation;
 
 export type CreatedLocationColumnType = TableColumn<CustomCreatedLocationColumn>;
 

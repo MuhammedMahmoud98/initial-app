@@ -1,7 +1,7 @@
 <div class="text-container">
   @if (!isArray()) {
     <div class="text-container__item" [style]="{'background-color': bgColor(), 'color': textColor()}">
-      {{textItems()}}
+      {{textItems() ?? '-'}}
     </div>
   } @else {
 
@@ -11,6 +11,8 @@
       <div class="text-container__item" [style]="{'background-color': bgColor(), 'color': textColor()}">
         {{isObject(item) ? item?.[mapTextKey()] : item}}
       </div>
+    } @empty {
+      -
     }
   }
 </div>

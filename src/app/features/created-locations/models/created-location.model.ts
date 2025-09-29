@@ -20,3 +20,15 @@ export type CustomCreatedLocationColumn = CreatedLocation;
 export type CreatedLocationColumnType = TableColumn<CustomCreatedLocationColumn>;
 
 export type CreatedLocationResponse = LocationBase<CreatedLocation>;
+
+
+export interface GenerateQrPayload {
+  all: boolean;
+  filter?: string;
+  selectedLocationIds?: number[];
+  excludedLocationIds?: number[];
+}
+
+export interface GenerateQrResponse {
+  message: string;
+}

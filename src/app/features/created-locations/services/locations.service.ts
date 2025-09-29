@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {API_CONSTANTS, ItemFilter} from '../../../shared';
 import {Observable} from 'rxjs';
-import {CreatedLocationResponse} from '../models/created-location.model';
+import {CreatedLocationResponse, GenerateQrPayload, GenerateQrResponse} from '../models/created-location.model';
 import {LocationTypesResponse} from '../models/location-types.model';
 import {
   LocationServiceBody,
@@ -30,5 +30,36 @@ export class LocationsService {
     const url: string = API_CONSTANTS.LOCATION_TYPE_SERVICES.replace('{id}', payload.id.toString()).replace('{serviceId}', payload.serviceId.toString());
 
     return this.#httpClient.post<LocationServiceResponse>(url, body);
+  }
+
+  generateQRCode(payload: GenerateQrPayload): Observable<GenerateQrResponse> {
+    let customPayload!: Partial<GenerateQrPayload>;
+    if (payload.all) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const {selectedLocationIds, ...rest} = payload;
+      customPayload = rest;
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const {excludedLocationIds, ...rest} = payload;
+      customPayload = rest;
+    }
+
+    console.log(payload.all ? customPayload : payload, 'QR PAYLOAD');
+    return this.#httpClient.post<GenerateQrResponse>(API_CONSTANTS.GENERATE_QR, customPayload);
+  }
+
+  deleteQRCode(payload: GenerateQrPayload): Observable<GenerateQrResponse> {
+    let customPayload!: Partial<GenerateQrPayload>;
+    if (payload.all) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const {selectedLocationIds, ...rest} = payload;
+      customPayload = rest;
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const {excludedLocationIds, ...rest} = payload;
+      customPayload = rest;
+    }
+
+    return this.#httpClient.post<GenerateQrResponse>(API_CONSTANTS.DELETE_LOCATIONS, customPayload);
   }
 }

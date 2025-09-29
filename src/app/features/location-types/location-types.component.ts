@@ -38,6 +38,7 @@ import {
   ServiceAvailabilityComponent
 } from '../../shared/components/service-availability/service-availability.component';
 import {ComponentStateComponent} from '../../shared/components/component-state/component-state.component';
+import {SkeletonLoaderComponent} from '../../shared/components/skeleton-loader/skeleton-loader.component';
 
 @Component({
   selector: 'app-location-types',
@@ -48,6 +49,7 @@ import {ComponentStateComponent} from '../../shared/components/component-state/c
     TitleWithIconComponent,
     ServiceAvailabilityComponent,
     ComponentStateComponent,
+    SkeletonLoaderComponent,
   ],
   providers: [DialogService],
   standalone: true,
@@ -70,6 +72,8 @@ export class LocationTypesComponent implements OnDestroy {
   isApplyingFilter = signal(false);
   isEmptyState = signal(false);
   isErrorState = signal(false);
+  isLoading = signal(true);
+
   // SUBJECTS
   private toggle$ = new Subject<LocationServiceEvent>();
 
@@ -96,6 +100,7 @@ export class LocationTypesComponent implements OnDestroy {
   getLocationTypes(): void {
     this.#locationsService.getLocationTypes(this.locationTypesPayload()).pipe(
       tap((locationTypesResponse: LocationTypeResponse) => {
+        this.isLoading.set(false);
         if (locationTypesResponse) {
           this.genericTableCacheService.totalAvailableItems.set(locationTypesResponse.totalElements);
           this.items.set(locationTypesResponse.content);
@@ -106,6 +111,7 @@ export class LocationTypesComponent implements OnDestroy {
         }
       }),
       catchError(() => {
+        this.isLoading.set(false);
         this.handleErrorState();
         return EMPTY;
       })

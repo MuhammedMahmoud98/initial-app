@@ -279,6 +279,9 @@ const stcPreset = definePreset(Aura, {
       colorScheme: {
         light: {
           background: 'var(--skeleton-bg)',
+          border: {
+            radius: 'var(--stc-radius)'
+          }
         },
         dark: {
           background: '{surface.800}',

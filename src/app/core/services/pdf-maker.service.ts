@@ -102,8 +102,13 @@ export class PdfMakerService {
       } as unknown as never);
     });
 
+    // pageSize: {
+    //   width: 5 * 72,   // 360 pt
+    //     height: 7 * 72   // 360 pt
+    // }
+
     const docDefinition = {
-      pageSize: 'A4',
+      pageSize: 'A4', // TODO:: IF SIZE INCLUDES *; RETURN OBJECT WITH WIDTH AND HEIGHT
       pageMargins: [40, 60, 40, 50],
       content: content,
       styles: {

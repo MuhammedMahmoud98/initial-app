@@ -18,5 +18,9 @@
   "no locations found yet": "لم يتم العثور على موقع بعد",
   "start by creating a new location to manage and track your records here": "ابدأ بإنشاء موقع جديد لإدارة وتتبع سجلاتك هنا",
   "data could not be retrieved": "تعذر استرجاع البيانات",
-  "kindly try again later": "يرجى المحاولة مرة أخرى لاحقًا"
+  "kindly try again later": "يرجى المحاولة مرة أخرى لاحقًا",
+  "cancel": "إلغاء",
+  "confirm": "تأكيد",
+  "qrConfirmMessageHeader": "بمجرد إنشاء رمز الاستجابة السريعة، لن يكون سجل الموقع قابلاً للحذف",
+  "qrConfirmMessageBody": "، هل أنت متأكد أنك تريد المتابعة؟"
 }

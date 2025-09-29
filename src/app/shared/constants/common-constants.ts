@@ -7,7 +7,7 @@ export const COMMON_CONSTANTS = {
     CLIPBOARD_LIFETIME: 2000,
     SEARCH_TYPING_LENGTH: 2,
     SEARCH_RESET_LENGTH: 0,
-    SEARCH_MAX_LENGTH: 20,
+    SEARCH_MAX_LENGTH: 40,
     ROWS_PER_PAGE: 50,
     TOKEN_LESS_URLS: ['validate', 'refresh_token'] as TokenLessUrls[],
 };

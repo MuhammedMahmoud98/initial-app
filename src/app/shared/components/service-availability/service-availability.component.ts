@@ -5,12 +5,16 @@ import {
 } from '../../../features/location-types/models/location-types.model';
 import {ToggleSwitch} from 'primeng/toggleswitch';
 import {FormsModule} from '@angular/forms';
+import {TextWithBgColorComponent} from '../text-with-bg-color/text-with-bg-color.component';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-service-availability',
   imports: [
     ToggleSwitch,
-    FormsModule
+    FormsModule,
+    TextWithBgColorComponent,
+    TranslatePipe
   ],
   standalone: true,
   templateUrl: './service-availability.component.html',

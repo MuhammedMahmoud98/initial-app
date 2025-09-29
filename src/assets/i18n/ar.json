@@ -1,5 +1,22 @@
 {
   "paginationReport": "{{itemsLength}} من {{totalRecords}}",
+  "createdLocations": "الأماكن",
+  "locationTypes": "أنواع الأماكن",
   "notAccessTitle": "",
-  "notAccessSubtitle": ""
+  "notAccessSubtitle": "",
+  "typeName": "اسم نوع المكان",
+  "classification": "كود نوع المكان",
+  "typeCode": "تصنيف المكان",
+  "availableServices": "الخدمات المتاحة",
+  "availability": "التوفر",
+  "emptyServicesMsg": "لا توجد خدمات متاحه",
+  "searchPlaceholder": "بحث بالكود",
+  "noLocationsTypeAvailable": "لا توجد أنواع مواقع متاحة",
+  "locationTypeSubTitleEmpty": "أضف نوع موقع لتصنيف المواقع بشكل فعال",
+  "there is a network error": "هناك خطأ في الشبكة",
+  "please check your network or contact system admin": "يرجى التحقق من شبكتك أو الاتصال بمسؤول النظام",
+  "no locations found yet": "لم يتم العثور على موقع بعد",
+  "start by creating a new location to manage and track your records here": "ابدأ بإنشاء موقع جديد لإدارة وتتبع سجلاتك هنا",
+  "data could not be retrieved": "تعذر استرجاع البيانات",
+  "kindly try again later": "يرجى المحاولة مرة أخرى لاحقًا"
 }

@@ -5,5 +5,11 @@
 
       <p-toggleswitch [(ngModel)]="service.available" (ngModelChange)="onToggleService.emit({serviceId: service.id, isAvailable: $event})"/>
     </div>
+  } @empty {
+    <app-text-with-bg-color
+      [textItems]="'emptyServicesMsg' | translate"
+      [bgColor]="'var(--silver-100)'"
+      [textColor]="'var(--onyx-500)'"
+    />
   }
 </div>

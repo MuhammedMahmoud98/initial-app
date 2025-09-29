@@ -115,10 +115,10 @@ export class LocationTypesComponent implements OnDestroy {
 
   createTableColumns(): LocationColumnType[] {
     return [
-      {field: 'name', template: this.nameCustomColumn()},
-      {field: 'category', template: this.categoryCustomColumn()},
-      {field: 'code', template: this.codeCustomColumn()},
-      {field: 'services', template: this.serviceCustomColumn()},
+      {field: 'name', alias: 'typeName', template: this.nameCustomColumn()},
+      {field: 'category', alias: 'classification', template: this.categoryCustomColumn()},
+      {field: 'code', alias: 'typeCode', template: this.codeCustomColumn()},
+      {field: 'services', alias: 'availableServices', template: this.serviceCustomColumn()},
       {field: 'availability', template: this.locationTypeServicesCustomColumn()},
     ]
   }

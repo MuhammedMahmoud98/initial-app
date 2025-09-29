@@ -25,7 +25,7 @@
 
       @for (col of columns; track col?.field) {
         <th [style.width]="col?.columnWidth">
-          {{ col.field | translate }}
+          {{ (col.alias ?? col.field) | translate }}
         </th>
       }
     </tr>

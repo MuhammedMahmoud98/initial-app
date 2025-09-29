@@ -7,6 +7,7 @@ export class GenericTableCacheService {
   selectedItemsCounter = signal(0);
   totalAvailableItems = signal(0);
   unSelectedItemsCache = signal<number[]>([]);
+  selectedItemsCache = signal<number[]>([]);
 
   // CHECK IF USER SELECT ALL RECORDS IN DB
   isSelectingBulkAction = signal(false);
@@ -20,6 +21,7 @@ export class GenericTableCacheService {
     this.selectedItemsCounter.set(0);
     this.totalAvailableItems.set(0);
     this.unSelectedItemsCache.set([]);
+    this.selectedItemsCache.set([]);
     this.isSelectingBulkAction.set(false);
   }
 

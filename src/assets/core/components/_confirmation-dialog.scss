@@ -3,6 +3,7 @@
   border-radius: var(--stc-radius) !important;
 
   .p-dialog-title {
+    font-family: STCForward-Light, sans-serif;
     color: var(--onyx-500);
   }
 
@@ -15,7 +16,7 @@
 
   .p-confirmdialog-message {
     padding: 0 0.9rem 1.4rem 0;
-    color: var(--silver-500);
+    color: var(--silver-600);
   }
 }
 

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, input} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {ProgressCircleComponent} from '../../components/progress-circle/progress-circle.component';
 import {LoadingDialogService} from '../../services/loading-dialog.service';
@@ -17,4 +17,7 @@ import {LoadingDialogService} from '../../services/loading-dialog.service';
 export class LoadingDialogComponent {
   // INJECTIONS
   readonly loadingDialogService = inject(LoadingDialogService);
+
+  // INPUTS
+  loadingTitle = input<string>('');
 }

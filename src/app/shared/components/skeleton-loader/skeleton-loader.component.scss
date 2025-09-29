@@ -5,7 +5,6 @@
   grid-template-columns: 1fr;
   grid-template-rows: auto auto auto 1fr auto;
   gap: 1rem;
-  padding: 1rem;
 
   &__tabs {
     display: flex;
@@ -18,12 +17,12 @@
   }
 
   &__disclaimer {
-    background-color: var(--gray-100);
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+    //background-color: var(--gray-100);
+    //padding: 0.5rem 1rem;
+    //border-radius: 0.5rem;
+    //display: flex;
+    //align-items: center;
+    //gap: 1rem;
   }
 
   &__filters {

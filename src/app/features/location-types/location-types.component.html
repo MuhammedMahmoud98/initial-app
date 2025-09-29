@@ -23,14 +23,14 @@
       </div>
     } @else if (isEmptyState() && !isErrorState()) {
       <app-component-state
-        [mainTitle]="'no locations types available'"
-        [subTitle]="'add a location type to categories locations effectively'"
+        [mainTitle]="'noLocationsTypeAvailable'"
+        [subTitle]="'locationTypeSubTitleEmpty'"
         [iconUrl]="'assets/images/location-state.svg'"
       />
     } @else if (isErrorState() && !isEmptyState()) {
       <app-component-state
-        [mainTitle]="'an error occurred'"
-        [subTitle]="'data could not be retrieved, kindly try again later'"
+        [mainTitle]="'there is a network error'"
+        [subTitle]="'please check your network or contact system admin'"
         [iconUrl]="'assets/images/refresh-state.svg'"
         [showReloadButton]="true"
       />

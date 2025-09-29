@@ -3,5 +3,20 @@
   "locationTypes": "location types",
   "notAccessTitle": "unauthorized access",
   "notAccessSubtitle": "please use the authorized service account",
-  "paginationReport": "{{itemsLength}} out of {{totalRecords}}"
+  "paginationReport": "{{itemsLength}} out of {{totalRecords}}",
+  "typeName": "type name",
+  "classification": "classification",
+  "typeCode": "type code",
+  "availableServices": "available services",
+  "availability": "availability",
+  "emptyServicesMsg": "no services available",
+  "searchPlaceholder": "search by code",
+  "noLocationsTypeAvailable": "no location types available",
+  "locationTypeSubTitleEmpty": "add a location type to categories locations effectively",
+  "there is a network error": "there is a network error",
+  "please check your network or contact system admin": "please check your network or contact system admin",
+  "no locations found yet": "no locations found yet",
+  "start by creating a new location to manage and track your records here": "start by creating a new location to manage and track your records here",
+  "data could not be retrieved": "data could not be retrieved",
+  "kindly try again later": "kindly try again later"
 }

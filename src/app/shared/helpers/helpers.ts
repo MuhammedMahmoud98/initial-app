@@ -1,4 +1,5 @@
 import {COMMON_CONSTANTS} from '../constants/common-constants';
+import {PrintQRCodeDto} from '../../features/created-locations/models/created-location.model';
 
 
 export const isTokenLessUrl: (url: string) => Readonly<boolean> = (url: string): boolean => {
@@ -12,4 +13,26 @@ export const isEqualObjects = (obj1: never, obj2: never): boolean => {
   const keys2 = Object.keys(obj2);
   if (keys1.length !== keys2.length) return false;
   return keys1.every(k => obj1[k] === obj2[k]);
+}
+
+export const handlePDFSize = (items: PrintQRCodeDto[], isFileName?: boolean) => {
+  if (!items.length) return 'A4';
+
+  const currentItemSize = items[0]?.size;
+  if (currentItemSize?.includes('A')) {
+    return currentItemSize;
+  }
+
+  if (currentItemSize?.includes('*') && !isFileName) {
+    const dimensions: string[] = currentItemSize?.split('*');
+
+    return {
+      width: +dimensions[0] * 72,
+      height: +dimensions[1] * 72,
+    }
+  } else {
+    return currentItemSize;
+  }
+
+  return 'A4'
 }

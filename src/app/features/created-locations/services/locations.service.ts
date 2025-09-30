@@ -2,7 +2,12 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {API_CONSTANTS, ItemFilter} from '../../../shared';
 import {Observable} from 'rxjs';
-import {CreatedLocationResponse, GenerateQrPayload, GenerateQrResponse} from '../models/created-location.model';
+import {
+  CreatedLocationResponse,
+  GenerateQrPayload,
+  GenerateQrResponse,
+  PrintQrCodeResponse
+} from '../models/created-location.model';
 import {LocationTypesResponse} from '../models/location-types.model';
 import {
   LocationServiceBody,
@@ -61,5 +66,22 @@ export class LocationsService {
     }
 
     return this.#httpClient.post<GenerateQrResponse>(API_CONSTANTS.DELETE_LOCATIONS, customPayload);
+  }
+
+  printQRCode(payload: GenerateQrPayload, pagination: ItemFilter): Observable<PrintQrCodeResponse> {
+    const params = new HttpParams({fromObject: pagination as never});
+
+    let customPayload!: Partial<GenerateQrPayload>;
+    if (payload.all) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const {selectedLocationIds, ...rest} = payload;
+      customPayload = rest;
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const {excludedLocationIds, ...rest} = payload;
+      customPayload = rest;
+    }
+
+    return this.#httpClient.post<PrintQrCodeResponse>(API_CONSTANTS.PRINT_QR, customPayload, {params});
   }
 }

@@ -16,4 +16,5 @@ export const environment = {
   mygateprod: true,
   chatHost: 'wss://chat.hubplatforms.com/ws-xmpp',
   baseHref: '/qr-code',
+  qrCodeUrl: 'https://web.hubplatforms.com'
 };

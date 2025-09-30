@@ -33,7 +33,7 @@
           </p-button>
 
           <!-- PRINT QR CODE BUTTON -->
-          <p-button styleClass="w-full md:w-auto my-3 md:my-0 md:mx-3 " [label]="'print QR code'" [severity]="'contrast'">
+          <p-button styleClass="w-full md:w-auto my-3 md:my-0 md:mx-3" (onClick)="printQRCode()" [label]="'print QR code'" [severity]="'contrast'">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
               <path d="M15.8337 8.33333V3.33333V2.5L15.0003 2.5H5.00033L4.16699 2.5V3.33333V8.33333" stroke="#1D252D"/>
               <path d="M16.6667 8.33325H3.33333H2.5V9.16659V16.6666V17.4999H3.33333H14.6667H15.5C16.6046 17.4999 17.5 16.6045 17.5 15.4999V14.6666V9.16659V8.33325H16.6667Z" stroke="#1D252D"/>
@@ -122,5 +122,17 @@
 <ng-template #locationTypeCustomColumn let-row>
   @let location = genericCasting(row);
 
-  <div>{{location.typeCode + '-' + location?.code}}</div>
+  <div>{{location.typeCode + '-' + location?.typeTitle}}</div>
+</ng-template>
+
+
+<!-- BUILDING CUSTOM COLUMN -->
+<ng-template #buildingCustomColumn let-row>
+  @let location = genericCasting(row);
+
+  <app-text-with-bg-color
+    [textItems]="location.building"
+    [bgColor]="'var(--monlight-100)'"
+    [textColor]="'var(--monlight-500)'"
+  />
 </ng-template>

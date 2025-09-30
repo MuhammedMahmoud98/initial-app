@@ -3,7 +3,7 @@ import {MAIN_ROUTES} from '../enums/shared.enum';
 import {CoreAppRoutes, ItemFilter} from '../models';
 
 export const COMMON_CONSTANTS = {
-    TOASTER_LIFE_TIME: 50000000,
+    TOASTER_LIFE_TIME: 5000,
     CLIPBOARD_LIFETIME: 2000,
     SEARCH_TYPING_LENGTH: 2,
     SEARCH_RESET_LENGTH: 0,

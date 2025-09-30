@@ -336,7 +336,7 @@ export class CreatedLocationsComponent implements OnDestroy {
       switchMap((printResponse: PrintQrCodeResponse) => {
         this.downloadAndPrintPDF(printResponse.content);
 
-        if (printResponse.totalElements > 1) {
+        if (printResponse.totalPages > 1) {
           const totalPages: number = printResponse.totalPages;
 
           return generate({

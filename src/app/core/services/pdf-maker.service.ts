@@ -85,10 +85,10 @@ export class PdfMakerService {
             margin: [0, 40, 0, 20]
           },
           {
-            qr: `${environment.qrCodeUrl}/qrcode/${record.qrCode}`, // ✅ pdfmake built-in QR
+            qr: `${environment.qrCodeUrl}/qr-guest/user-guest/${record.qrCode}`,
             alignment: 'center',
             foreground: '#000',
-            fit: 200,                                          // ✅ controls QR size
+            fit: 200,
             width: 200,
             height: 200,
           },

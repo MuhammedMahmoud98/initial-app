@@ -9,14 +9,14 @@ import {
   WritableSignal
 } from '@angular/core';
 import {PdfMakerService} from '../../core/services';
-import {COMMON_CONSTANTS, INITIAL_FILTER_PAYLOAD, mockPDFRecords} from '../../shared/constants/common-constants';
+import {COMMON_CONSTANTS, INITIAL_FILTER_PAYLOAD} from '../../shared/constants/common-constants';
 import {GenericTableComponent} from '../../shared/components/generic-table/generic-table.component';
 import {ItemFilter, TableColumn} from '../../shared';
 import {
   CreatedLocation,
   CreatedLocationColumnType,
   CreatedLocationResponse,
-  GenerateQrPayload, GenerateQrResponse
+  GenerateQrPayload, GenerateQrResponse, PrintQRCodeDto, PrintQrCodeResponse
 } from './models/created-location.model';
 import {genericCasting} from '../../shared/helpers/helpers';
 import {CustomStatusComponent} from '../../shared/components/custom-status/custom-status.component';
@@ -30,7 +30,7 @@ import {HubFilters} from '../../shared/components/hub-filters/models/hub-filters
 import {DialogService} from 'primeng/dynamicdialog';
 import {LoadingDialogComponent} from '../../shared/dialogs/loading-dialog/loading-dialog.component';
 import {LoadingDialogService} from '../../shared/services/loading-dialog.service';
-import {catchError, EMPTY, Observable, tap} from 'rxjs';
+import {catchError, EMPTY, exhaustMap, generate, Observable, switchMap, tap} from 'rxjs';
 import {LocationsService} from './services/locations.service';
 import {TitleWithIconComponent} from '../../shared/components/title-with-icon/title-with-icon.component';
 import {ComponentStateComponent} from '../../shared/components/component-state/component-state.component';
@@ -39,6 +39,7 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Dialog} from 'primeng/dialog';
 import {HttpErrorResponse} from '@angular/common/http';
 import {SkeletonLoaderComponent} from '../../shared/components/skeleton-loader/skeleton-loader.component';
+import {TextWithBgColorComponent} from '../../shared/components/text-with-bg-color/text-with-bg-color.component';
 
 @Component({
   selector: 'app-created-locations',
@@ -54,6 +55,7 @@ import {SkeletonLoaderComponent} from '../../shared/components/skeleton-loader/s
     Dialog,
     LoadingDialogComponent,
     SkeletonLoaderComponent,
+    TextWithBgColorComponent,
   ],
   providers: [DialogService],
   standalone: true,
@@ -67,7 +69,6 @@ export class CreatedLocationsComponent implements OnDestroy {
   readonly genericTableCacheService: GenericTableCacheService = inject(GenericTableCacheService);
   protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
   readonly #locationsService: LocationsService = inject(LocationsService);
-  readonly #dialogService: DialogService = inject(DialogService);
   readonly loadingDialogService = inject(LoadingDialogService);
   readonly #messageService: MessageService = inject(MessageService);
   readonly #translateService: TranslateService = inject(TranslateService)
@@ -91,6 +92,7 @@ export class CreatedLocationsComponent implements OnDestroy {
   codeCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('codeCustomColumn');
   districtCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('districtCustomColumn');
   locationTypeCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('locationTypeCustomColumn');
+  buildingCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('buildingCustomColumn');
 
   // CASTING
   protected readonly genericCasting = genericCasting<CreatedLocation>;
@@ -107,12 +109,12 @@ export class CreatedLocationsComponent implements OnDestroy {
     return [
       {field: 'district', template: this.districtCustomColumn()},
       {field: 'category'},
-      {field: 'building'},
+      {field: 'building', template: this.buildingCustomColumn()},
       {field: 'floor'},
       {field: 'zone'},
       {field: 'serial'},
-      {field: 'type', template: this.locationTypeCustomColumn()},
-      {field: 'code', template: this.codeCustomColumn()},
+      {field: 'type', alias: 'locationTypeCode', template: this.locationTypeCustomColumn()},
+      {field: 'code', alias: 'locationCode', template: this.codeCustomColumn(), columnWidth: '15%'},
       {field: '', template: this.qrStatusCustomColumn(), columnWidth: '200px'},
     ]
   }
@@ -145,10 +147,9 @@ export class CreatedLocationsComponent implements OnDestroy {
     console.log(this.locationsPayload(), 'UPDATED PAYLOAD');
   }
 
-  async printMock() {
+  async downloadAndPrintPDF(records: PrintQRCodeDto[]) {
     try {
-      await this.#pdfMakerService.generatePdfSingleColumn(mockPDFRecords, mockPDFRecords.length);
-      console.log('PDF generated successfully');
+      await this.#pdfMakerService.generatePdfSingleColumn(records, records.length);
     } catch (error) {
       console.error('Error generating PDF:', error);
     }
@@ -160,42 +161,10 @@ export class CreatedLocationsComponent implements OnDestroy {
     console.log(selectedItemsIds, 'FROM CREATED LOCATIONS');
   }
 
-  testtt() {
-    this.confirmationService.confirm({
-      message: 'Are you sure?',
-      header: 'Confirmation',
-      closable: false,
-      closeOnEscape: true,
-    })
-  }
-
   onFilterValueChanges(filterValues: HubFilters) {
     this.isApplyingFilter.set(!!filterValues.filter);
     this.updateFilterPayload({...filterValues, page: 0});
     this.getCreatedLocations();
-  }
-
-  openDialog(): void {
-    const dialogRef = this.#dialogService.open(LoadingDialogComponent, {
-      showHeader: false,
-      modal: true,
-      width: '400px',
-      height: '400px'
-    });
-
-    this.loadingDialogService.setProgressValue(this.loadingDialogService.progressValue() + 20);
-
-    setTimeout(() => {
-      dialogRef.close();
-    }, 3000);
-
-    dialogRef.onClose.pipe(
-      tap(() => this.openToaster())
-    ).subscribe();
-  }
-
-  openToaster(): void {
-    this.#messageService.add({severity:'success', summary: 'Success', detail: 'Message Content', life: 30000000});
   }
 
   onPageChange(currentPage: number) {
@@ -260,6 +229,7 @@ export class CreatedLocationsComponent implements OnDestroy {
 
         // LOAD LOCATIONS IN CASE OF NEWLY GENERATED QR CODES..
         if (generateQrResponse.message !== 'No Location Ids to Generate QR') {
+          this.genericTableCacheService.resetBulkActions$.next(true);
           this.updateFilterPayload(INITIAL_FILTER_PAYLOAD);
           this.getCreatedLocations();
         }
@@ -311,12 +281,13 @@ export class CreatedLocationsComponent implements OnDestroy {
 
         if (isQrCannotDeleteMessage) {
           this.#messageService.add({
-            severity: 'error',
-            summary: 'Rejected',
-            detail: this.#translateService.instant(err?.error?.message?.[0]?.source?.message ?? 'something went wrong'),
+            severity: 'warn',
+            summary: 'Warn',
+            detail: this.#translateService.instant(isQrCannotDeleteMessage ?? 'something went wrong'),
             life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
           });
         } else {
+          this.genericTableCacheService.resetBulkActions$.next(true);
           this.#messageService.add({
             severity: 'success',
             summary: 'Success',
@@ -344,5 +315,74 @@ export class CreatedLocationsComponent implements OnDestroy {
       this.showLoadingDialog.set(false);
     }, 1500);
     this.loadingDialogService.completeProgress();
+  }
+
+  async printQRCode(): Promise<void> {
+    const payload = {
+      all: this.genericTableCacheService.isSelectingBulkAction(),
+      selectedLocationIds: this.genericTableCacheService.selectedItemsCache(),
+      excludedLocationIds: this.genericTableCacheService.unSelectedItemsCache(),
+      filter: this.locationsPayload().filter,
+    } as GenerateQrPayload;
+
+    const queryParams = {
+      page: 0,
+      size: 200,
+    } as ItemFilter;
+
+    this.startLoading('printing QR code...');
+
+    this.#locationsService.printQRCode(payload, queryParams).pipe(
+      switchMap((printResponse: PrintQrCodeResponse) => {
+        this.downloadAndPrintPDF(printResponse.content);
+
+        if (printResponse.totalElements > 1) {
+          const totalPages: number = printResponse.totalPages;
+
+          return generate({
+            initialState: 1,
+            condition: (page) => page < totalPages,
+            iterate: (page) => page + 1,
+          }).pipe(
+            exhaustMap((page: number): Observable<PrintQrCodeResponse> => this.#locationsService.printQRCode(payload , {...queryParams, page}).pipe(
+              tap((nestedPrintResponse) => {
+                if ((page + 1) === totalPages) {
+                  this.stopLoading();
+                }
+
+                this.downloadAndPrintPDF(nestedPrintResponse.content);
+                console.log(nestedPrintResponse, 'NESTED QR PRINT RESPONSE');
+              }),
+              takeUntilDestroyed(this.#destroyRef),
+            ))
+          )
+        }
+
+        this.stopLoading();
+        return EMPTY;
+      }),
+      catchError((err: HttpErrorResponse) => {
+        const hasNonGeneratedQRMsg = err?.error?.message?.[0]?.source?.message;
+
+        if (hasNonGeneratedQRMsg) {
+          this.#messageService.add({
+            severity: 'warn',
+            summary: 'Warn',
+            detail: this.#translateService.instant(hasNonGeneratedQRMsg),
+            life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
+          });
+        } else {
+          this.#messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: this.#translateService.instant('something went wrong'),
+            life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
+          });
+        }
+
+        this.stopLoading();
+        return EMPTY;
+      })
+    ).subscribe();
   }
 }

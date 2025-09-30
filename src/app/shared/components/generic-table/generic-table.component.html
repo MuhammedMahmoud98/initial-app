@@ -24,7 +24,7 @@
       }
 
       @for (col of columns; track col?.field) {
-        <th [style.width]="col?.columnWidth">
+        <th [style.width]="col?.columnWidth + '!important'">
           {{ (col.alias ?? col.field) | translate }}
         </th>
       }

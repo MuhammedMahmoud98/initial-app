@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import {TDocumentDefinitions} from 'pdfmake/interfaces';
-// import * as pdfMake from 'pdfmake/build/pdfmake';
-// import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-//
-// (pdfMake as unknown as { vfs: object }).vfs = (pdfFonts as unknown as { pdfMake: { vfs: object } }).pdfMake.vfs;
+import {PrintQRCodeDto} from '../../features/created-locations/models/created-location.model';
+import {handlePDFSize} from '../../shared/helpers/helpers';
+import {environment} from '../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -57,7 +56,7 @@ export class PdfMakerService {
   //   (docDefinition as any).content = [];
   // }
 
-  async generatePdfSingleColumn(records: { name: string; qrBase64: string }[], totalCount: number) {
+  async generatePdfSingleColumn(records: PrintQRCodeDto[], totalCount: number) {
     const pdfMake = await this.initializePdfMake();
 
     const content = [
@@ -86,13 +85,15 @@ export class PdfMakerService {
             margin: [0, 40, 0, 20]
           },
           {
-            image: record.qrBase64, // TODO:: GENERATE QR CODE HERE..
-            width: 400,
-            height: 400,
-            alignment: 'center'
+            qr: `${environment.qrCodeUrl}/qrcode/${record.qrCode}`, // ✅ pdfmake built-in QR
+            alignment: 'center',
+            foreground: '#000',
+            fit: 200,                                          // ✅ controls QR size
+            width: 200,
+            height: 200,
           },
           {
-            text: record.name,
+            text: record.locationCode,
             style: 'qrLabel',
             alignment: 'center'
           }
@@ -102,13 +103,8 @@ export class PdfMakerService {
       } as unknown as never);
     });
 
-    // pageSize: {
-    //   width: 5 * 72,   // 360 pt
-    //     height: 7 * 72   // 360 pt
-    // }
-
     const docDefinition = {
-      pageSize: 'A4', // TODO:: IF SIZE INCLUDES *; RETURN OBJECT WITH WIDTH AND HEIGHT
+      pageSize: handlePDFSize(records), // TODO:: IF SIZE INCLUDES *; RETURN OBJECT WITH WIDTH AND HEIGHT
       pageMargins: [40, 60, 40, 50],
       content: content,
       styles: {
@@ -172,8 +168,8 @@ export class PdfMakerService {
       }
     } as unknown as TDocumentDefinitions;
 
-    const pdfDoc = pdfMake.createPdf(docDefinition);
-    pdfDoc.open();
+    const pdfDoc = pdfMake.createPdf(docDefinition).download(`${handlePDFSize(records, true)} File`);
+    // pdfDoc.open();
 
     return pdfDoc;
   }

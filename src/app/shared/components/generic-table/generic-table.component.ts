@@ -1,10 +1,21 @@
-import {ChangeDetectionStrategy, Component, effect, inject, input, InputSignal, output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  input,
+  InputSignal,
+  output
+} from '@angular/core';
 import {TableModule, TablePageEvent} from 'primeng/table';
 import {TableColumn} from '../../models';
 import {NgTemplateOutlet} from '@angular/common';
 import {COMMON_CONSTANTS} from '../../constants/common-constants';
 import {GenericTableCacheService} from '../../services';
 import {TranslatePipe} from '@ngx-translate/core';
+import {tap} from 'rxjs';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 
 @Component({
@@ -22,6 +33,7 @@ import {TranslatePipe} from '@ngx-translate/core';
 export class GenericTableComponent<T extends {id: number}> {
   // INJECTIONS
   readonly genericTableCacheService: GenericTableCacheService = inject(GenericTableCacheService);
+  readonly destroyRef: DestroyRef = inject(DestroyRef);
   // INPUTS
   columns: InputSignal<TableColumn<T>[]> = input.required();
   items: InputSignal<T[]> = input.required();
@@ -30,6 +42,8 @@ export class GenericTableComponent<T extends {id: number}> {
 
   // EFFECTS
   onApplyingBulkSelection = effect(() => {
+    this.listenToResetBulkActionsChanges();
+
     if (this.genericTableCacheService.isSelectingBulkAction()) {
       this.selectedLocations = this.items().filter((item): boolean => !this.genericTableCacheService.unSelectedItemsCache().includes(item.id));
       // this.genericTableCacheService.selectedItemsCounter.set(this.genericTableCacheService.totalAvailableItems());
@@ -76,5 +90,17 @@ export class GenericTableComponent<T extends {id: number}> {
 
   onMainCheckboxChanged($event: Event) {
     console.log($event);
+  }
+
+  listenToResetBulkActionsChanges(): void {
+    this.genericTableCacheService.resetBulkActions$.pipe(
+      tap((isResetBulkActions: boolean) => {
+        if (isResetBulkActions) {
+          this.selectedLocations = [];
+          this.genericTableCacheService.resetBulkActions();
+        }
+      }),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe();
   }
 }

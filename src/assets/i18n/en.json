@@ -1,4 +1,7 @@
 {
+  "languageToTranslate": "العربية",
+  "logOut": "sign out",
+  "profile": "profile",
   "createdLocations": "created locations",
   "locationTypes": "location types",
   "notAccessTitle": "unauthorized access",
@@ -22,5 +25,13 @@
   "cancel": "cancel",
   "confirm": "confirm",
   "qrConfirmMessageHeader": "once the QR code is generated the location record won't be deletable",
-  "qrConfirmMessageBody": "are you sure you want to proceed?"
+  "qrConfirmMessageBody": "are you sure you want to proceed?",
+  "locationTypeCode": "location type code",
+  "locationCode": "location code",
+  "district": "district",
+  "category": "category",
+  "building": "building",
+  "floor": "floor",
+  "zone": "zone",
+  "serial": "serial"
 }

@@ -1,13 +1,18 @@
 import {Injectable, signal} from '@angular/core';
+import {Subject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GenericTableCacheService {
+  // SIGNALS
   selectedItemsCounter = signal(0);
   totalAvailableItems = signal(0);
   unSelectedItemsCache = signal<number[]>([]);
   selectedItemsCache = signal<number[]>([]);
+
+  // SUBJECTS
+  resetBulkActions$: Subject<boolean> = new Subject<boolean>();
 
   // CHECK IF USER SELECT ALL RECORDS IN DB
   isSelectingBulkAction = signal(false);
@@ -20,6 +25,13 @@ export class GenericTableCacheService {
   resetCache(): void {
     this.selectedItemsCounter.set(0);
     this.totalAvailableItems.set(0);
+    this.unSelectedItemsCache.set([]);
+    this.selectedItemsCache.set([]);
+    this.isSelectingBulkAction.set(false);
+  }
+
+  resetBulkActions(): void {
+    this.selectedItemsCounter.set(0);
     this.unSelectedItemsCache.set([]);
     this.selectedItemsCache.set([]);
     this.isSelectingBulkAction.set(false);

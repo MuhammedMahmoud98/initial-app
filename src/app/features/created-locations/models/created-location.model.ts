@@ -21,6 +21,8 @@ export type CreatedLocationColumnType = TableColumn<CustomCreatedLocationColumn>
 
 export type CreatedLocationResponse = LocationBase<CreatedLocation>;
 
+export type PDFSize = 'A4' | 'A5' | `${number}*${number}`;
+
 
 export interface GenerateQrPayload {
   all: boolean;
@@ -32,3 +34,12 @@ export interface GenerateQrPayload {
 export interface GenerateQrResponse {
   message: string;
 }
+
+export interface PrintQRCodeDto {
+  locationId: number;
+  locationCode: string;
+  qrCode: string;
+  size: PDFSize;
+}
+
+export type PrintQrCodeResponse = LocationBase<PrintQRCodeDto>;

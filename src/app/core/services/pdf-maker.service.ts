@@ -8,14 +8,24 @@ import {environment} from '../../environment/environment';
   providedIn: 'root'
 })
 export class PdfMakerService {
+  // protected async initializePdfMake() {
+  //   const pdfMake = await import('pdfmake/build/pdfmake');
+  //   const pdfFonts = await import('pdfmake/build/vfs_fonts');
+  //
+  //   // Debug: Check what's actually in pdfFonts
+  //
+  //   // The correct structure is usually just pdfFonts.vfs or pdfFonts.pdfMake.vfs
+  //   // Try this instead:
+  //   (pdfMake as unknown as { vfs: object }).vfs = pdfFonts.vfs || (pdfFonts as unknown as {pdfMake: {vfs: object}}).pdfMake?.vfs;
+  //
+  //   return pdfMake;
+  // }
+
   protected async initializePdfMake() {
-    const pdfMake = await import('pdfmake/build/pdfmake');
+    const pdfMakeModule = await import('pdfmake/build/pdfmake');
     const pdfFonts = await import('pdfmake/build/vfs_fonts');
 
-    // Debug: Check what's actually in pdfFonts
-
-    // The correct structure is usually just pdfFonts.vfs or pdfFonts.pdfMake.vfs
-    // Try this instead:
+    const pdfMake = { ...pdfMakeModule }; // clone to make it extensible
     (pdfMake as unknown as { vfs: object }).vfs = pdfFonts.vfs || (pdfFonts as unknown as {pdfMake: {vfs: object}}).pdfMake?.vfs;
 
     return pdfMake;

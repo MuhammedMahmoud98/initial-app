@@ -31,8 +31,22 @@ export const handlePDFSize = (items: PrintQRCodeDto[], isFileName?: boolean) => 
       height: +dimensions[1] * 72,
     }
   } else {
-    return currentItemSize;
+    return currentItemSize?.replace('*', 'x');
+  }
+}
+
+export const displayQrDimension = (pdfSize: string | {width: number; height: number}) => {
+  if ((pdfSize as {width: number; height: number})?.width) {
+    return 120;
   }
 
-  return 'A4'
+  if ((pdfSize as string).includes('A4')) {
+    return 250;
+  }
+
+  if ((pdfSize as string).includes('A5')) {
+    return 300;
+  }
+
+  return 120;
 }

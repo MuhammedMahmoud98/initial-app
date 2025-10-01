@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {TDocumentDefinitions} from 'pdfmake/interfaces';
 import {PrintQRCodeDto} from '../../features/created-locations/models/created-location.model';
 import {displayQrDimension, handlePDFSize} from '../../shared/helpers/helpers';
@@ -25,7 +25,7 @@ export class PdfMakerService {
     const pdfMakeModule = await import('pdfmake/build/pdfmake');
     const pdfFonts = await import('pdfmake/build/vfs_fonts');
 
-    const pdfMake = { ...pdfMakeModule }; // clone to make it extensible
+    const pdfMake = pdfMakeModule.default || pdfMakeModule; // clone to make it extensible
     (pdfMake as unknown as { vfs: object }).vfs = pdfFonts.vfs || (pdfFonts as unknown as {pdfMake: {vfs: object}}).pdfMake?.vfs;
 
     return pdfMake;
@@ -33,6 +33,8 @@ export class PdfMakerService {
 
   async generatePdfSingleColumn(records: PrintQRCodeDto[]) {
     const pdfMake = await this.initializePdfMake();
+
+    console.log(pdfMake, 'PDF MAKE');
 
     const content: unknown[] = [];
 
@@ -220,9 +222,8 @@ export class PdfMakerService {
       },
     } as unknown as TDocumentDefinitions;
 
-    const pdfDoc = pdfMake.createPdf(docDefinition).download(`${handlePDFSize(records, true)} QR CODE FILE`);
     // pdfDoc.open();
 
-    return pdfDoc;
+    return pdfMake.createPdf(docDefinition).download(`${handlePDFSize(records, true)} QR CODE FILE`);
   }
 }

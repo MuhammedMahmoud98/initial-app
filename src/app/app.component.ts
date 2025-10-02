@@ -9,6 +9,7 @@ import {ConfirmDialog} from 'primeng/confirmdialog';
 import {Toast} from 'primeng/toast';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {AuthenticationService} from './features/auth/services/authentication.service';
+import {SpinnerLoaderComponent} from './shared/components/spinner-loader/spinner-loader.component';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,7 @@ import {AuthenticationService} from './features/auth/services/authentication.ser
     CoreTabsListComponent,
     ConfirmDialog,
     Toast,
+    SpinnerLoaderComponent,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './app.component.html',
@@ -41,6 +43,8 @@ export class AppComponent {
 
     return !!(useId || hasToken);
   });
+
+  isAppReady = computed(() => this.#userService.currentUser()?.id);
 
   constructor() {
     this.localizationService.initialize();

@@ -221,18 +221,25 @@ export class CreatedLocationsComponent implements OnDestroy {
       tap((generateQrResponse: GenerateQrResponse): void => {
         this.stopLoading();
 
-        this.#messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: this.#translateService.instant(generateQrResponse.message),
-          life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
-        });
-
         // LOAD LOCATIONS IN CASE OF NEWLY GENERATED QR CODES..
         if (generateQrResponse.message !== 'No Location Ids to Generate QR') {
+          this.#messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: this.#translateService.instant(generateQrResponse.message),
+            life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
+          });
+
           this.genericTableCacheService.resetBulkActions$.next(true);
           this.updateFilterPayload(INITIAL_FILTER_PAYLOAD);
           this.getCreatedLocations();
+        } else {
+          this.#messageService.add({
+            severity: 'warn',
+            summary: 'Warn',
+            detail: this.#translateService.instant(generateQrResponse.message),
+            life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
+          });
         }
       }),
       takeUntilDestroyed(this.#destroyRef),

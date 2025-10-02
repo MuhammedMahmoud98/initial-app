@@ -413,10 +413,10 @@ const stcPreset = definePreset(Aura, {
     progressspinner: {
       colorScheme: {
         color: {
-          one: 'var(--primary-300)',
-          two: 'var(--primary-400)',
+          one: 'var(--primary-500)',
+          two: 'var(--primary-500)',
           three: 'var(--primary-500)',
-          four: 'var(--secondary-500)',
+          four: 'var(--primary-500)',
         },
       }
     },

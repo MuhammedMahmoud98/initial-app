@@ -50,3 +50,7 @@ export const displayQrDimension = (pdfSize: string | {width: number; height: num
 
   return 120;
 }
+
+export const UTCDate = (date: Date): Date => {
+  return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+}

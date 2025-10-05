@@ -8,10 +8,13 @@ import {
 import {CopyToClipboardInterface} from './models/copy-to-clipboard.model';
 import {COMMON_CONSTANTS} from '../../constants/common-constants';
 import {animate, style, transition, trigger} from '@angular/animations';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-copy-to-clipboard',
-  imports: [],
+  imports: [
+    TranslatePipe
+  ],
   standalone: true,
   templateUrl: './copy-to-clipboard.component.html',
   styleUrl: './copy-to-clipboard.component.scss',

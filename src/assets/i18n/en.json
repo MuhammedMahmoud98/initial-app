@@ -34,5 +34,14 @@
   "building": "building",
   "floor": "floor",
   "zone": "zone",
-  "serial": "serial"
+  "serial": "serial",
+  "generate QR code": "generate QR code",
+  "delete": "delete",
+  "print QR code": "print QR code",
+  "No Location Ids to Generate QR": "the selected locations already have QR codes generated",
+  "selectedLocations": "{{selectedItems}} selected locations",
+  "select": "select",
+  "unselect": "unselect",
+  "bulkSelectCaption": "{{totalRecordsInDB}} records",
+  "copied!": "copied"
 }

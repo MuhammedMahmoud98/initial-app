@@ -9,7 +9,7 @@
   <!-- COPIED MESSAGE -->
   @if (isCopiedSignal()) {
     <div [@fadeInOut] class="hub-clipboard__message">
-      {{copiedMessageSignal()}}
+      {{copiedMessageSignal() | translate}}
 
     <!-- ARROW DOWN -->
       <div class="hub-clipboard__message-arrow"></div>

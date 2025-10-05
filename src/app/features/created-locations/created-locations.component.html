@@ -19,7 +19,7 @@
       <div [hidden]="!genericTableCacheService.selectedItemsCounter()">
         <app-table-action-bulk [isApplyingFilter]="isApplyingFilter()">
           <!-- GENERATE QR CODE BUTTON -->
-          <p-button styleClass="w-full md:w-auto" (onClick)="confirmQrGeneration()" [label]="'generate QR code'" [severity]="'contrast'">
+          <p-button styleClass="w-full md:w-auto" (onClick)="confirmQrGeneration()" [label]="'generate QR code' | translate" [severity]="'contrast'">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
               <path d="M7.5 2.5H2.5V7.5H7.5V2.5Z" stroke="#1D252D"/>
               <path d="M7.5 12.5H2.5V17.5H7.5V12.5Z" stroke="#1D252D"/>
@@ -33,7 +33,7 @@
           </p-button>
 
           <!-- PRINT QR CODE BUTTON -->
-          <p-button styleClass="w-full md:w-auto my-3 md:my-0 md:mx-3" (onClick)="printQRCode()" [label]="'print QR code'" [severity]="'contrast'">
+          <p-button styleClass="w-full md:w-auto my-3 md:my-0 md:mx-3" (onClick)="printQRCode()" [label]="'print QR code' | translate" [severity]="'contrast'">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
               <path d="M15.8337 8.33333V3.33333V2.5L15.0003 2.5H5.00033L4.16699 2.5V3.33333V8.33333" stroke="#1D252D"/>
               <path d="M16.6667 8.33325H3.33333H2.5V9.16659V16.6666V17.4999H3.33333H14.6667H15.5C16.6046 17.4999 17.5 16.6045 17.5 15.4999V14.6666V9.16659V8.33325H16.6667Z" stroke="#1D252D"/>
@@ -43,7 +43,7 @@
           </p-button>
 
           <!-- DELETE LOCATIONS BUTTON -->
-          <p-button styleClass="w-full md:w-auto" (onClick)="deleteLocationQR()" [label]="'delete locations'" [severity]="'secondary'" [outlined]="true">
+          <p-button styleClass="w-full md:w-auto" (onClick)="deleteLocationQR()" [label]="'delete' |  translate" [severity]="'secondary'" [outlined]="true">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
               <path d="M3.75 4.16675V18.3334H14.25C15.3546 18.3334 16.25 17.438 16.25 16.3334V4.16675H3.75Z" stroke="#FF375E"/>
               <path d="M8.33301 8.33325V13.7499" stroke="#FF375E" stroke-linecap="square"/>

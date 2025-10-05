@@ -1,25 +1,15 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {TDocumentDefinitions} from 'pdfmake/interfaces';
 import {PrintQRCodeDto} from '../../features/created-locations/models/created-location.model';
 import {displayQrDimension, handlePDFSize} from '../../shared/helpers/helpers';
 import {environment} from '../../environment/environment';
+import {DatePipe} from '@angular/common';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PdfMakerService {
-  // protected async initializePdfMake() {
-  //   const pdfMake = await import('pdfmake/build/pdfmake');
-  //   const pdfFonts = await import('pdfmake/build/vfs_fonts');
-  //
-  //   // Debug: Check what's actually in pdfFonts
-  //
-  //   // The correct structure is usually just pdfFonts.vfs or pdfFonts.pdfMake.vfs
-  //   // Try this instead:
-  //   (pdfMake as unknown as { vfs: object }).vfs = pdfFonts.vfs || (pdfFonts as unknown as {pdfMake: {vfs: object}}).pdfMake?.vfs;
-  //
-  //   return pdfMake;
-  // }
+  readonly #datePipe: DatePipe = inject(DatePipe);
 
   protected async initializePdfMake() {
     const pdfMakeModule = await import('pdfmake/build/pdfmake');
@@ -224,6 +214,12 @@ export class PdfMakerService {
 
     // pdfDoc.open();
 
-    return pdfMake.createPdf(docDefinition).download(`${handlePDFSize(records, true)} QR CODE FILE`);
+    return pdfMake.createPdf(docDefinition).download(`${handlePDFSize(records, true)} Locations QR Codes - ${this.displayCurrentDate()}`);
   }
+
+  displayCurrentDate(): string {
+    const date = new Date();
+
+    return this.#datePipe.transform(date, 'dd-MM-yyyy - h:mm a') || '';
+  };
 }

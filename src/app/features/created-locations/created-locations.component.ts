@@ -40,6 +40,7 @@ import {Dialog} from 'primeng/dialog';
 import {HttpErrorResponse} from '@angular/common/http';
 import {SkeletonLoaderComponent} from '../../shared/components/skeleton-loader/skeleton-loader.component';
 import {TextWithBgColorComponent} from '../../shared/components/text-with-bg-color/text-with-bg-color.component';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-created-locations',
@@ -58,7 +59,7 @@ import {TextWithBgColorComponent} from '../../shared/components/text-with-bg-col
     TextWithBgColorComponent,
     TranslatePipe,
   ],
-  providers: [DialogService],
+  providers: [DialogService, DatePipe, PdfMakerService],
   standalone: true,
   templateUrl: './created-locations.component.html',
   styleUrl: './created-locations.component.scss',

@@ -1,9 +1,12 @@
 import {ChangeDetectionStrategy, Component, inject, input} from '@angular/core';
 import {GenericTableCacheService} from '../../services';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-table-action-bulk',
-  imports: [],
+  imports: [
+    TranslatePipe
+  ],
   standalone: true,
   templateUrl: './table-action-bulk.component.html',
   styleUrl: './table-action-bulk.component.scss',

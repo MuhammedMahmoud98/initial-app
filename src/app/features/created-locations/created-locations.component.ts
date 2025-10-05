@@ -34,7 +34,7 @@ import {catchError, EMPTY, exhaustMap, generate, Observable, switchMap, tap} fro
 import {LocationsService} from './services/locations.service';
 import {TitleWithIconComponent} from '../../shared/components/title-with-icon/title-with-icon.component';
 import {ComponentStateComponent} from '../../shared/components/component-state/component-state.component';
-import {TranslateService} from '@ngx-translate/core';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Dialog} from 'primeng/dialog';
 import {HttpErrorResponse} from '@angular/common/http';
@@ -56,6 +56,7 @@ import {TextWithBgColorComponent} from '../../shared/components/text-with-bg-col
     LoadingDialogComponent,
     SkeletonLoaderComponent,
     TextWithBgColorComponent,
+    TranslatePipe,
   ],
   providers: [DialogService],
   standalone: true,

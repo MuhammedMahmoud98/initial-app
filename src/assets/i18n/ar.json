@@ -26,7 +26,7 @@
   "cancel": "إلغاء",
   "confirm": "تأكيد",
   "qrConfirmMessageHeader": "بمجرد إنشاء رمز الاستجابة السريعة، لن يكون سجل الموقع قابلاً للحذف",
-  "qrConfirmMessageBody": "، هل أنت متأكد أنك تريد المتابعة؟",
+  "qrConfirmMessageBody": "هل أنت متأكد أنك تريد المتابعة؟",
   "locationTypeCode": "كود نوع المكان",
   "locationCode": "كود المكان",
   "district": "القطاع",
@@ -34,5 +34,14 @@
   "building": "المبني",
   "floor": "الدور",
   "zone": "الزاوية",
-  "serial": "التكويد"
+  "serial": "التكويد",
+  "generate QR code": "إنشاء رمز الاستجابة السريعة",
+  "delete": "مسح",
+  "print QR code": "طباعة رمز الاستجابة السريعة",
+  "No Location Ids to Generate QR": "المواقع المحددة تحتوي بالفعل على رموز استجابة سريعة مُنشأة",
+  "selectedLocations": "تم تحديد {{selectedItems}} سجل",
+  "select": "تحديد",
+  "unselect": "إلغاء تحديد",
+  "bulkSelectCaption": "كل السجلات {{totalRecordsInDB}}",
+  "copied!": "تم النسخ"
 }

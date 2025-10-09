@@ -8,8 +8,10 @@ export class GenericTableCacheService {
   // SIGNALS
   selectedItemsCounter = signal(0);
   totalAvailableItems = signal(0);
+  hasMorePages = signal(false);
   unSelectedItemsCache = signal<number[]>([]);
   selectedItemsCache = signal<number[]>([]);
+  selectedRecordsCache = signal<{id: number}[]>([]);
 
   // SUBJECTS
   resetBulkActions$: Subject<boolean> = new Subject<boolean>();
@@ -34,6 +36,7 @@ export class GenericTableCacheService {
     this.selectedItemsCounter.set(0);
     this.unSelectedItemsCache.set([]);
     this.selectedItemsCache.set([]);
+    this.selectedRecordsCache.set([]);
     this.isSelectingBulkAction.set(false);
   }
 
@@ -68,6 +71,16 @@ export class GenericTableCacheService {
     const merged = new Set([...this.unSelectedItemsCache(), ...unselected]);
     this.unSelectedItemsCache.set([...merged]);
     this.handleSelectedItemsCounter();
+  }
+
+  updateSelectedItems(currentPageItems: { id: number }[], selectedItems: { id: number }[]) {
+    const updatedCache = this.selectedRecordsCache()
+      // Keep items from other pages
+      .filter(cached => !currentPageItems.some(pageItem => pageItem.id === cached.id))
+      // Add currently selected ones
+      .concat(selectedItems);
+
+    this.selectedRecordsCache.set(updatedCache);
   }
 
   clearUnSelectedCache(): void {

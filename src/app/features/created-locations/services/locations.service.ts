@@ -6,7 +6,7 @@ import {
   CreatedLocationResponse,
   GenerateQrPayload,
   GenerateQrResponse,
-  PrintQrCodeResponse
+  PrintQrCodeResponse, ValidateQrResponse
 } from '../models/created-location.model';
 import {LocationTypesResponse} from '../models/location-types.model';
 import {
@@ -83,5 +83,9 @@ export class LocationsService {
     }
 
     return this.#httpClient.post<PrintQrCodeResponse>(API_CONSTANTS.PRINT_QR, customPayload, {params});
+  }
+
+  validateQRPrint(payload: GenerateQrPayload): Observable<ValidateQrResponse> {
+    return this.#httpClient.post<ValidateQrResponse>(API_CONSTANTS.VALIDATE_QR_PRINT, payload);
   }
 }

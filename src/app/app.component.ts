@@ -44,7 +44,8 @@ export class AppComponent {
     return !!(useId || hasToken);
   });
 
-  isAppReady = computed(() => this.#userService.currentUser()?.id);
+  isAppReady = computed(() => this.#userService.currentUser()?.['is-qr-code-admin']);
+  isAppLoading = computed(() => this.#userService.isUserLoading());
 
   constructor() {
     this.localizationService.initialize();

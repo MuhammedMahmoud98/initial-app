@@ -3,7 +3,7 @@ import {PrintQRCodeDto} from '../../features/created-locations/models/created-lo
 
 
 export const isTokenLessUrl: (url: string) => Readonly<boolean> = (url: string): boolean => {
-  return COMMON_CONSTANTS.TOKEN_LESS_URLS.some(tokenLessUrl => url.includes(tokenLessUrl));
+  return COMMON_CONSTANTS.TOKEN_LESS_URLS.some(tokenLessUrl => url.endsWith(tokenLessUrl));
 }
 
 export const genericCasting = <T>(item: unknown): T => item as T;

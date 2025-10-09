@@ -43,5 +43,10 @@
   "select": "select",
   "unselect": "unselect",
   "bulkSelectCaption": "{{totalRecordsInDB}} records",
-  "copied!": "copied"
+  "copied!": "copied",
+  "generated": "generated",
+  "not generated": "not generated",
+  "generating QR code...": "generating QR code...",
+  "printing QR code...": "printing QR code...",
+  "deleting QR code...": "deleting QR code..."
 }

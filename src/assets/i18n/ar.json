@@ -6,8 +6,8 @@
   "paginationReport": "{{itemsLength}} من {{totalRecords}}",
   "createdLocations": "الأماكن",
   "locationTypes": "أنواع الأماكن",
-  "notAccessTitle": "",
-  "notAccessSubtitle": "",
+  "notAccessTitle": "تم رفض الوصول",
+  "notAccessSubtitle": "يرجى استخدام حساب مصرح له الدخول",
   "typeName": "اسم نوع المكان",
   "classification": "كود نوع المكان",
   "typeCode": "تصنيف المكان",
@@ -43,5 +43,10 @@
   "select": "تحديد",
   "unselect": "إلغاء تحديد",
   "bulkSelectCaption": "كل السجلات {{totalRecordsInDB}}",
-  "copied!": "تم النسخ"
+  "copied!": "تم النسخ",
+  "generated": "مُنْشَأ",
+  "not generated": "لم يُنْشَأ",
+  "generating QR code...": "جارٍ إنشاء رمز الاستجابة السريعة...",
+  "printing QR code...": "جارٍ طباعة رمز الاستجابة السريعة...",
+  "deleting QR code...": "جارٍ حذف رمز الاستجابة السريعة..."
 }

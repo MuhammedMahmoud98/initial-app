@@ -12,6 +12,7 @@ export class UserService {
   private readonly cookiesService: CookieService = inject(CookieService);
 
   currentUser = signal<User | null>(null);
+  isUserLoading = signal(false);
 
   constructor(private http: HttpClient) {}
 
@@ -25,13 +26,16 @@ export class UserService {
       'third-party-token': this.getMygateGateAuthToken() || '',
     });
 
+    this.isUserLoading.set(true);
     return this.http.get<{ data: User }>(newUrl, { headers, params }).pipe(
       switchMap((response) => {
         this.currentUser.set(response.data);
+        this.isUserLoading.set(false);
         return of(response.data);
       }),
       catchError((error) => {
         this.currentUser.set(null);
+        this.isUserLoading.set(false);
         return throwError(() => error);
       }),
     );

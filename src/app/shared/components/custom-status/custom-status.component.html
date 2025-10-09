@@ -11,7 +11,7 @@
       <path d="M14 8H10" stroke="#00C48C"/>
     </svg>
 
-    <span>generated</span>
+    <span>{{ 'generated' | translate }}</span>
   </div>
 } @else if (status() === 'danger') {
   <div class="danger-status">
@@ -26,6 +26,6 @@
       <path d="M14 8H10" stroke="#FF375E"/>
     </svg>
 
-    <span>not generated</span>
+    <span>{{ 'not generated' | translate }}</span>
   </div>
 }

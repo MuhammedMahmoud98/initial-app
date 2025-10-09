@@ -1,7 +1,7 @@
 import {
   afterNextRender, AfterRenderRef,
   ChangeDetectionStrategy,
-  Component, DestroyRef,
+  Component, computed, DestroyRef,
   inject, model, OnDestroy,
   signal,
   TemplateRef,
@@ -16,7 +16,7 @@ import {
   CreatedLocation,
   CreatedLocationColumnType,
   CreatedLocationResponse,
-  GenerateQrPayload, GenerateQrResponse, PrintQRCodeDto, PrintQrCodeResponse
+  GenerateQrPayload, GenerateQrResponse, PrintQRCodeDto, PrintQrCodeResponse, ValidateQrResponse
 } from './models/created-location.model';
 import {genericCasting} from '../../shared/helpers/helpers';
 import {CustomStatusComponent} from '../../shared/components/custom-status/custom-status.component';
@@ -30,7 +30,7 @@ import {HubFilters} from '../../shared/components/hub-filters/models/hub-filters
 import {DialogService} from 'primeng/dynamicdialog';
 import {LoadingDialogComponent} from '../../shared/dialogs/loading-dialog/loading-dialog.component';
 import {LoadingDialogService} from '../../shared/services/loading-dialog.service';
-import {catchError, EMPTY, exhaustMap, generate, Observable, switchMap, tap} from 'rxjs';
+import {catchError, concatMap, EMPTY, generate, Observable, switchMap, tap} from 'rxjs';
 import {LocationsService} from './services/locations.service';
 import {TitleWithIconComponent} from '../../shared/components/title-with-icon/title-with-icon.component';
 import {ComponentStateComponent} from '../../shared/components/component-state/component-state.component';
@@ -81,6 +81,8 @@ export class CreatedLocationsComponent implements OnDestroy {
   selectedItemsCounter = signal(0);
   items = signal<CreatedLocation[]>([]);
   locationsPayload = signal<ItemFilter>(INITIAL_FILTER_PAYLOAD);
+  isValidatingQr = signal(false);
+  showBulkSelection = computed(() => this.genericTableCacheService.hasMorePages());
   // SIGNAL STATES
   isEmptyState = signal(false);
   isErrorState = signal(false);
@@ -117,7 +119,7 @@ export class CreatedLocationsComponent implements OnDestroy {
       {field: 'serial'},
       {field: 'type', alias: 'locationTypeCode', template: this.locationTypeCustomColumn()},
       {field: 'code', alias: 'locationCode', template: this.codeCustomColumn(), columnWidth: '15%'},
-      {field: '', template: this.qrStatusCustomColumn(), columnWidth: '200px'},
+      {field: '', template: this.qrStatusCustomColumn(), columnWidth: '15%'},
     ]
   }
 
@@ -128,6 +130,7 @@ export class CreatedLocationsComponent implements OnDestroy {
         this.isLoading.set(false);
         if (createdLocations) {
           this.genericTableCacheService.totalAvailableItems.set(createdLocations.totalElements);
+          this.genericTableCacheService.hasMorePages.set(createdLocations.totalPages > 1);
           this.items.set(createdLocations.content);
           this.isEmptyState.set(false);
           this.isErrorState.set(false);
@@ -161,6 +164,7 @@ export class CreatedLocationsComponent implements OnDestroy {
   onSelectedItemsChange(selectedItemsIds: number[]) {
     this.selectedItemsCounter.set(selectedItemsIds.length);
     this.genericTableCacheService.selectedItemsCache.set(selectedItemsIds);
+    // this.genericTableCacheService.updateSelectedItems(selectedItemsIds);
     console.log(selectedItemsIds, 'FROM CREATED LOCATIONS');
   }
 
@@ -209,6 +213,97 @@ export class CreatedLocationsComponent implements OnDestroy {
     });
   }
 
+  validateQRPrint(): void {
+    const payload = {
+      all: this.genericTableCacheService.isSelectingBulkAction(),
+      selectedLocationIds: this.genericTableCacheService.selectedItemsCache(),
+      excludedLocationIds: this.genericTableCacheService.unSelectedItemsCache(),
+      filter: this.locationsPayload().filter,
+    } as GenerateQrPayload;
+
+    this.isValidatingQr.set(true);
+    this.#locationsService.validateQRPrint(payload).pipe(
+      tap((validateQrResponse: ValidateQrResponse): void => {
+        this.isValidatingQr.set(false);
+        this.showQrPrintWarningDialog(validateQrResponse);
+        console.log(validateQrResponse, 'VALIDATE QR RESPONSE');
+      }),
+      catchError(() => {
+        this.isValidatingQr.set(false);
+        this.#messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'something went wrong!',
+          life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
+        });
+        return EMPTY;
+      }),
+      takeUntilDestroyed(this.#destroyRef),
+    ).subscribe();
+  }
+
+  handleWarningMessage(message: string, type: 'header' | 'body'): string {
+    if (!message) return '-';
+
+    const splitMessage: string[] = message.split(/[،,.]\s*/);
+
+    return (type === 'header' ? splitMessage[0] : splitMessage[1])?.trim() ?? '-';
+  }
+
+  showQrPrintWarningDialog(validateQrResponse: ValidateQrResponse): void {
+    switch (validateQrResponse['validation-status']) {
+      case 'NONE_HAVE_QR_CODES':
+        this.confirmationService.confirm({
+          header: this.handleWarningMessage(validateQrResponse.message, 'header'),
+          message: this.handleWarningMessage(validateQrResponse.message, 'body'),
+          closable: false,
+          closeOnEscape: true,
+          rejectButtonProps: {
+            label: this.#translateService.instant('cancel'),
+            severity: 'secondary',
+            outlined: true,
+          },
+          acceptButtonProps: {
+            label: this.#translateService.instant('confirm'),
+            severity: 'secondary',
+          },
+          acceptVisible: false,
+        });
+        break;
+      case 'PARTIAL_QR_CODES':
+        this.confirmationService.confirm({
+          header: this.handleWarningMessage(validateQrResponse.message, 'header'),
+          message: this.handleWarningMessage(validateQrResponse.message, 'body'),
+          closable: false,
+          closeOnEscape: true,
+          rejectButtonProps: {
+            label: this.#translateService.instant('cancel'),
+            severity: 'secondary',
+            outlined: true,
+          },
+          acceptButtonProps: {
+            label: this.#translateService.instant('confirm'),
+            severity: 'secondary',
+          },
+          accept: () => {
+            this.printQRCode().then();
+          }
+        });
+        break;
+      case 'ALL_HAVE_QR_CODES':
+        this.printQRCode().then();
+        break;
+      case 'INVALID_REQUEST':
+        this.#messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: validateQrResponse.message,
+          life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
+        });
+        break;
+    }
+  }
+
   generateLocationsQR(): void {
     const payload = {
       all: this.genericTableCacheService.isSelectingBulkAction(),
@@ -233,7 +328,7 @@ export class CreatedLocationsComponent implements OnDestroy {
           });
 
           this.genericTableCacheService.resetBulkActions$.next(true);
-          this.updateFilterPayload(INITIAL_FILTER_PAYLOAD);
+          // this.updateFilterPayload(INITIAL_FILTER_PAYLOAD);
           this.getCreatedLocations();
         } else {
           this.#messageService.add({
@@ -273,7 +368,7 @@ export class CreatedLocationsComponent implements OnDestroy {
       tap(() => {
         console.log('%cIS DELETE SUCCESS', 'color: yellow');
         this.stopLoading();
-
+        this.genericTableCacheService.resetBulkActions$.next(true);
         this.#messageService.add({
           severity: 'success',
           summary: 'Success',
@@ -305,7 +400,7 @@ export class CreatedLocationsComponent implements OnDestroy {
             life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
           });
 
-          this.updateFilterPayload(INITIAL_FILTER_PAYLOAD);
+          // this.updateFilterPayload(INITIAL_FILTER_PAYLOAD);
           this.getCreatedLocations();
         }
         return EMPTY;
@@ -354,14 +449,13 @@ export class CreatedLocationsComponent implements OnDestroy {
             condition: (page) => page < totalPages,
             iterate: (page) => page + 1,
           }).pipe(
-            exhaustMap((page: number): Observable<PrintQrCodeResponse> => this.#locationsService.printQRCode(payload , {...queryParams, page}).pipe(
+            concatMap((page: number): Observable<PrintQrCodeResponse> => this.#locationsService.printQRCode(payload , {...queryParams, page}).pipe(
               tap((nestedPrintResponse) => {
-                if ((page + 1) === totalPages) {
-                  this.stopLoading();
-                }
-
                 this.downloadAndPrintPDF(nestedPrintResponse.content);
                 console.log(nestedPrintResponse, 'NESTED QR PRINT RESPONSE');
+                if (page === totalPages - 1) {
+                  this.stopLoading();
+                }
               }),
               takeUntilDestroyed(this.#destroyRef),
             ))

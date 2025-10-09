@@ -17,7 +17,7 @@ export class TableActionBulkComponent {
   readonly genericTableCacheService: GenericTableCacheService = inject(GenericTableCacheService);
 
   // INPUTS
-  isApplyingFilter = input(false);
+  showBulkSelection = input(false);
 
   applyHugeBulkSelection(): void {
     this.genericTableCacheService.isSelectingBulkAction.set(!this.genericTableCacheService.isSelectingBulkAction());

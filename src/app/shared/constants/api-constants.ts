@@ -25,4 +25,5 @@ export const API_CONSTANTS = {
   // QR
   GENERATE_QR: serverUrl + '/qr/generate-qr',
   PRINT_QR: serverUrl + '/qr/print-qr',
+  VALIDATE_QR_PRINT: serverUrl + '/qr/validate-print',
 };

@@ -21,6 +21,7 @@ export class AuthenticationService {
   private readonly http: HttpClient = inject(HttpClient);
 
   unAuthorizedChecked = signal(false);
+  skipThriftGuard = signal(false);
 
 
   // ***** HELPERS METHODS ***** //
@@ -68,6 +69,11 @@ export class AuthenticationService {
 
   clearUserCookies(): void {
     this.cookiesService.deleteAll();
+    this.cookiesService.delete('token', '/', undefined);
+    this.cookiesService.delete('token');
+    this.cookiesService.deleteAll('/');
+    this.cookiesService.delete('userId', '/', undefined);
+    this.cookiesService.delete('refreshToken', '/', undefined);
     localStorage.clear();
     sessionStorage.clear();
   }

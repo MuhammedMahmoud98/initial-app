@@ -4,7 +4,7 @@
       <span>{{'selectedLocations' | translate:{selectedItems: genericTableCacheService.selectedItemsCounter()} }}</span>
     </div>
 
-    @if (!isApplyingFilter()) {
+    @if (showBulkSelection()) {
       <button class="all-records flex align-items-center cursor-pointer gap-1 underline text-primary font-medium" [class.un-select-color]="genericTableCacheService.isSelectingBulkAction()" (click)="applyHugeBulkSelection()">
         <span>{{(genericTableCacheService.isSelectingBulkAction() ? 'unselect' : 'select') | translate}}</span>
         <span>{{'bulkSelectCaption' | translate:{totalRecordsInDB: genericTableCacheService.totalAvailableItems()} }}</span>

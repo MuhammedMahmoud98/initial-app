@@ -17,6 +17,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const alreadyHasAuthorization = req.headers.has('Authorization');
   const shouldSetToken = !alreadyHasAuthorization && !isTokenLessUrl(req.url);
 
+  console.log(shouldSetToken, 'SHOULD SET TOKEN');
+
   const Authorization: AuthorizationToken | string = shouldSetToken
     ? `Bearer ${authService.getAccessToken()}` as AuthorizationToken
     : '';

@@ -11,12 +11,14 @@
     <!-- MAIN ROUTES -->
     @if (hasCredentials()) {
       <section class="mx-0 lg:mx-5 overflow-auto">
-        @if (isAppReady()) {
+        @if (isAppLoading()) {
+          <app-spinner-loader/>
+        }
+
+        @if (isAppReady() && !isAppLoading()) {
           <div class="core-tabs-list">
             <app-core-tabs-list />
           </div>
-        } @else {
-          <app-spinner-loader/>
         }
 
         <div class="core-content">

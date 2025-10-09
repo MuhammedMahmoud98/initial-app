@@ -14,6 +14,12 @@ export const thriftGuard: CanActivateFn = (route) => {
   const userId = +userService.getUserId();
   const hasToken = authService.hasToken();
 
+  if (authService.skipThriftGuard()) {
+    userService.isUserLoading.set(false);
+    authService.skipThriftGuard.set(false);
+    return true;
+  }
+
   if (!userId || !hasToken) {
     const isMyGateEnv = ['mygate', 'production'].includes(environment.name);
 

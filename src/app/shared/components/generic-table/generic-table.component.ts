@@ -1,6 +1,6 @@
 import {
   ChangeDetectionStrategy,
-  Component,
+  Component, computed,
   DestroyRef,
   effect,
   inject,
@@ -8,7 +8,7 @@ import {
   InputSignal,
   output
 } from '@angular/core';
-import {TableModule, TablePageEvent} from 'primeng/table';
+import {TableHeaderCheckboxToggleEvent, TableModule, TablePageEvent} from 'primeng/table';
 import {TableColumn} from '../../models';
 import {NgTemplateOutlet} from '@angular/common';
 import {COMMON_CONSTANTS} from '../../constants/common-constants';
@@ -16,6 +16,7 @@ import {GenericTableCacheService} from '../../services';
 import {TranslatePipe} from '@ngx-translate/core';
 import {tap} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {LocalizationService} from '../../../core/services';
 
 
 @Component({
@@ -34,11 +35,29 @@ export class GenericTableComponent<T extends {id: number}> {
   // INJECTIONS
   readonly genericTableCacheService: GenericTableCacheService = inject(GenericTableCacheService);
   readonly destroyRef: DestroyRef = inject(DestroyRef);
+  readonly localizationService = inject(LocalizationService);
   // INPUTS
   columns: InputSignal<TableColumn<T>[]> = input.required();
   items: InputSignal<T[]> = input.required();
   totalRecords: InputSignal<number> = input(0);
   hasCheckBoxes: InputSignal<boolean> = input(false);
+
+  // COMPUTED
+  currentLocale = computed(() => {
+    if (this.localizationService.isRTL()) {
+      return 'ar-EG'
+    }
+
+    return 'en-US'
+  });
+
+  cachedSelectionEffect = effect(() => {
+    const cached = this.genericTableCacheService.selectedRecordsCache();
+    const pageItems = this.items();
+    this.selectedLocations = cached.filter(sel =>
+      pageItems.some(item => item.id === sel.id)
+    ) as T[];
+  });
 
   // EFFECTS
   onApplyingBulkSelection = effect(() => {
@@ -60,7 +79,9 @@ export class GenericTableComponent<T extends {id: number}> {
 
   // VARIABLES
   selectedLocations!: T[];
+  cachedSelections: T[] = [];
   rowsCounter: number = COMMON_CONSTANTS.ROWS_PER_PAGE;
+  isHeaderCheckboxChanged = false;
 
   // METHODS
   trackByCode(index: number, item: T) {
@@ -69,27 +90,27 @@ export class GenericTableComponent<T extends {id: number}> {
 
   onSelectionChange(selectedItems: T[]) {
     const selectedItemsEmitter: number[] = selectedItems.map((item: T): number => item?.id);
-
+    console.log('%cIS HEADER CHANGED', 'color: purple', this.isHeaderCheckboxChanged);
+    // console.log('%cSELECTED ITEMS PURE', 'color: yellow', selectedItemsEmitter);
     if (this.hasCheckBoxes()) {
-      this.selectedItems.emit(selectedItemsEmitter);
+      this.genericTableCacheService.updateSelectedItems(this.items(), selectedItems);
+      console.log(this.genericTableCacheService.selectedRecordsCache() as T[], 'T[] CACHE');
+      this.selectedItems.emit(this.genericTableCacheService.selectedRecordsCache().map((item) => item.id));
+
       if (this.genericTableCacheService.isSelectingBulkAction()) {
         this.genericTableCacheService.updateUnSelected(this.items(), selectedItemsEmitter);
         console.log(this.genericTableCacheService.unSelectedItemsCache(), 'unSelectedItemsCache');
       }
 
-      this.genericTableCacheService.handleSelectedItemsCounter(selectedItemsEmitter.length);
+      this.genericTableCacheService.handleSelectedItemsCounter(this.genericTableCacheService.selectedRecordsCache().length);
     }
   }
 
   onPageChange($event: TablePageEvent) {
     const {rows, first} = $event;
     const currentPage = (first / rows);
-    console.log(currentPage);
     this.currentPage.emit(currentPage);
-  }
-
-  onMainCheckboxChanged($event: Event) {
-    console.log($event);
+    console.log(this.genericTableCacheService.selectedRecordsCache() as T[], 'T[] CACHE');
   }
 
   listenToResetBulkActionsChanges(): void {
@@ -102,5 +123,32 @@ export class GenericTableComponent<T extends {id: number}> {
       }),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe();
+  }
+
+  onMainCheckboxChanged($event: TableHeaderCheckboxToggleEvent) {
+    this.isHeaderCheckboxChanged = $event.checked;
+
+    this.updateCacheValues($event.checked);
+    console.log($event, 'HEADER CHECKBOX');
+  }
+
+  updateCacheValues(isChecked = false): void {
+    const currentPageItems = this.items();
+
+    this.genericTableCacheService.selectedRecordsCache.update(prevSelections => {
+      if (isChecked) {
+        const newSelections = [...prevSelections];
+        currentPageItems.forEach(item => {
+          if (!newSelections.some(sel => sel.id === item.id)) {
+            newSelections.push(item);
+          }
+        });
+        return newSelections;
+      } else {
+        return prevSelections.filter(
+          sel => !currentPageItems.some(item => item.id === sel.id)
+        );
+      }
+    });
   }
 }

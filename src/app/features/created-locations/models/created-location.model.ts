@@ -43,3 +43,20 @@ export interface PrintQRCodeDto {
 }
 
 export type PrintQrCodeResponse = LocationBase<PrintQRCodeDto>;
+
+export enum QR_VALIDATION_STATUS {
+  ALL_HAVE_QR_CODES = 'ALL_HAVE_QR_CODES',
+  PARTIAL_QR_CODES = 'PARTIAL_QR_CODES',
+  NONE_HAVE_QR_CODES = 'NONE_HAVE_QR_CODES',
+  INVALID_REQUEST = 'INVALID_REQUEST'
+}
+
+export type ValidateQRStatus = keyof typeof QR_VALIDATION_STATUS;
+
+export interface ValidateQrResponse {
+  valid: boolean;
+  'validation-status': ValidateQRStatus;
+  message: string;
+}
+
+

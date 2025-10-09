@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, DestroyRef, forwardRef, inject, OnInit} from '@angular/core';
 import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NgOptimizedImage} from '@angular/common';
-import {debounceTime, distinctUntilChanged, filter, map, tap} from 'rxjs';
+import {debounceTime, filter, map, tap} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {InputText} from 'primeng/inputtext';
 import {COMMON_CONSTANTS, XSS_PATTERNS} from '../../constants/common-constants';
@@ -36,7 +36,7 @@ export class QrSearchComponent implements ControlValueAccessor, OnInit {
   ]);
 
   destroyed$: DestroyRef = inject(DestroyRef);
-  private lastEmittedValue = '';
+  private lastEmittedValue: string | null = '';
 
   ngOnInit(): void {
     this.handleSearchControl();
@@ -79,7 +79,6 @@ export class QrSearchComponent implements ControlValueAccessor, OnInit {
         this.searchControl.updateValueAndValidity({ emitEvent: false });
         return this.searchControl.valid && trimmed !== this.lastEmittedValue;
       }),
-      distinctUntilChanged((prev, curr) => prev === curr),
       tap((searchValue: string) => {
         this.handleSearchLogic(searchValue);
       }),
@@ -114,6 +113,7 @@ export class QrSearchComponent implements ControlValueAccessor, OnInit {
     this.searchControl.markAsPristine();
     this.searchControl.markAsUntouched();
     this.searchControl.updateValueAndValidity({ emitEvent: true });
+    this.lastEmittedValue = null; // Reset to allow re-emitting ''
     this.handleSearchLogic(''); // Ensure event is triggered
   }
 
@@ -124,7 +124,7 @@ export class QrSearchComponent implements ControlValueAccessor, OnInit {
     }
 
     if (searchValue?.length === COMMON_CONSTANTS.SEARCH_RESET_LENGTH) {
-      this.lastEmittedValue = '';
+      this.lastEmittedValue = null;
       this.onChange(searchValue);
     }
   }

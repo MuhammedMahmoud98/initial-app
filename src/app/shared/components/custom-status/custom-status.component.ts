@@ -1,9 +1,12 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
+import {TranslatePipe} from '@ngx-translate/core';
 type CustomStatus = 'success' | 'danger';
 
 @Component({
   selector: 'app-custom-status',
-  imports: [],
+  imports: [
+    TranslatePipe
+  ],
   standalone: true,
   templateUrl: './custom-status.component.html',
   styleUrl: './custom-status.component.scss',

@@ -48,5 +48,12 @@
   "not generated": "لم يُنْشَأ",
   "generating QR code...": "جارٍ إنشاء رمز الاستجابة السريعة...",
   "printing QR code...": "جارٍ طباعة رمز الاستجابة السريعة...",
-  "deleting QR code...": "جارٍ حذف رمز الاستجابة السريعة..."
+  "deleting QR code...": "جارٍ حذف رمز الاستجابة السريعة...",
+  "reload": "إعادة تحميل",
+  "data could not be retrieved, kindly try again later": "تعذر استرجاع البيانات، يرجى المحاولة مرة أخرى لاحقًاََ",
+  "service is available": "الخدمة متوفرة حاليًا",
+  "Status Updated Successfully": "تم تحديث الحالة بنجاح",
+  "no location types available": "لا توجد أنواع مواقع متاحة",
+  "add a location type to categories locations effectively": "أضف نوع موقع لتصنيف المواقع بشكل فعال",
+  "something went wrong": "لقد حدث خطأ ما"
 }

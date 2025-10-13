@@ -1,7 +1,13 @@
 import {inject, Injectable} from '@angular/core';
 import {TDocumentDefinitions} from 'pdfmake/interfaces';
 import {PrintQRCodeDto} from '../../features/created-locations/models/created-location.model';
-import {displayQrDimension, handlePDFSize} from '../../shared/helpers/helpers';
+import {
+  displayQrDimension,
+  handleFooterFontSize,
+  handlePDFSize,
+  handleQRTopMargin,
+  handleSTCLogoDimension, handleTextFontSize
+} from '../../shared/helpers/helpers';
 import {environment} from '../../environment/environment';
 import {DatePipe} from '@angular/common';
 
@@ -41,8 +47,8 @@ export class PdfMakerService {
             style: 'qrSubtext',
             alignment: 'start',
             bold: true,
-            fontSize: record.size.includes('*') ? 12 : 15,
-            margin: [0, 0, 0, 5]
+            fontSize: handleTextFontSize(records),
+            margin: [0, records[0]?.size === 'A4' ? 60: 0, 0, 5]
           },
           {
             text: 'to unique services',  // Second line
@@ -50,7 +56,7 @@ export class PdfMakerService {
             alignment: 'start',
             bold: true,
             color: '#fff',
-            fontSize: record.size.includes('*') ? 12 : 15,
+            fontSize: handleTextFontSize(records),
             margin: [0, 0, 0, 15]  // Bottom margin before QR code
           },
           {
@@ -60,7 +66,7 @@ export class PdfMakerService {
             fit: displayQrDimension(handlePDFSize(records) as never),
             width: displayQrDimension(handlePDFSize(records) as never),
             height: displayQrDimension(handlePDFSize(records) as never),
-            margin: [0, 0, 0, 15]  // Bottom margin before QR code
+            margin: [0, handleQRTopMargin(records), 0, 15]  // Bottom margin before QR code
           },
           {
             columns: [
@@ -80,13 +86,13 @@ export class PdfMakerService {
                   {
                     text: 'location code',
                     color: 'white',
-                    fontSize: 13,
+                    fontSize: handleFooterFontSize(records),
                     margin: [10, 0, 0, 0]
                   },
                   {
                     text: record.locationCode,
                     color: '#FF375E',  // Pink/red color
-                    fontSize: 14,
+                    fontSize: handleFooterFontSize(records),
                     margin: [10, 0, 0, 0]
                   }
                 ],
@@ -141,13 +147,13 @@ export class PdfMakerService {
                   {
                     text: 'shared services',
                     color: 'white',
-                    fontSize: 13,
+                    fontSize: handleFooterFontSize(records),
                     margin: [10, 0, 0, 0]
                   },
                   {
                     text: '0114599999',
                     color: '#FF4081',  // Pink/red color
-                    fontSize: 14,
+                    fontSize: handleFooterFontSize(records),
                     bold: true,
                     margin: [10, 0, 0, 0]
                   }
@@ -171,9 +177,8 @@ export class PdfMakerService {
           // STC LOGO
           // eslint-disable-next-line max-len
           image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFUAAAArCAYAAAAJ3cTrAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAARhSURBVHgB7ZqBddMwEEAvPAYwE6BO0DIB6QSEDdIJaiaIO0HSCRwmoBs4TNAygc0EKRMcd5XcuKktnSwpobz89+6ZEkmnO8nS6awJHBlEzOnxxVHsajKZNPBGeA/H54JkCv8R7+BEdE5OTcDJqQk4OTUBJ6cm4OTUBDhDKoojM3rMSM5JlBH+v0cjDyS/Se7eUizZQva1IV3XPqYxT7bvF8lGat/EomxKj2ujMAMZ3IFbUr4Wlm8HzdV+CTtj+2hI5yX46WTbcpDbxmxIvvvY96yQZIlh1GZQomDas+rzaGtBssVw++ZShQrdBviwgAhgBKca2+4xLguX0gzjOlSm+ABOpd8vMHx2DlHaFJeYjikcyamoZ2gqh7aUQ4ql1B0R14EAcKRTMf5yZiPfV14KKq1Q75rderxkzFHW8SmMBMc7tcTDwW9D5tPp3GE0O9e1CZQwEhzhVNSD7UNFUph6U5KZ+dtncytY9wS1d7cWmx4pLvsAbsMVPe6hP+7j+JXju1VPvSnYY1Dms+N37uO3vXZrQbtMAzoJvhkqgDp8Wgja48PQmWQ93YIQM9r8Gvwgyc2IZ446a3SjwAOjV8K9q3+dNqUb3ly6SYnCImkH9+qkcGopaLP27S/qJWGICvVEytrCkhEoMeIpqdPRFE6tBW3OYQTGef2OtBSUUKF28tMrDgFgZKeiDvRdjA7xcLeBZZKCoVSonazAr5OxnSqxZXQkIuEpn0o73x3oDEwIU5IlSY16Fis4DkpQ5ickpJukvoJdDjGUOWjn5nB4JJtPAwl5dqpJwF5GVsgpxCiZqrfEi88p7FiSM/rnDcRzbnGkGWvDO/TzofcbFTm2AD1reUl4gHAWOCKGHUkjKKMgIYMf/sysXZN8Aj56AXwluYVxTmaHHmq2NoIy5/CvgTqBwkdBzlzVKGMokxQ7pMoE7b3MKPnZzifQCnXiRUEqjALJqSzrqZviRFUJ2ixgBPj6CFwNOhh3sy83FWuSlYeyQmCI6qknceoFeCDsyxb9B8uVJ6lIZlxwibvs0ivFHgolmSHVU28lqOe1HqNsCWBqFDoW5V8R5pLkgzRDJUkK973+kllVo8V47JnJKHsDnm0cah/1APHv0u9cipPU/Ipfg52CooAbi1GKHhXYQ5UHE0ns1+VZuAQ3DbyMPjKjj29hKxNf7/dpKGk+xMa0/8f8zVHC1KMNjpaufBK6NepZxeU5E8Svw8xjFHvXZ5Trt/ZtoO0cD0eN3dmOsnUtFDU0vBjhxoilbZ9lIIT5vuJUFylaCrCAsnXVhusyReybKfsUQ4qlu5sva3CA4YNaC9pPNWMLl3Hs2Jij6hPnhlzNEWXyMfyN6MJ9lYd6KL8gMUSNIz6zoHZsjf5UHjp44oTO2grHHlFRO7cSKtpie6IIBOWDym+V+3tRvw52rk/uYmvKO093E2EHuNMXRrqXdPnyQGOE49BHiIgxQHX0dnWKbzYL9CijQxk9H0HfDm9vi3vp+gubMLUEARNV0AAAAABJRU5ErkJggg==', // Replace with your image
-          width: 50,  // Adjust width as needed
-          height: 31, // Adjust height as needed
-          margin: [40, 10, 0, 0] // [left, top, right, bottom] - positions in top left
+          margin: [40, 10, 0, 0], // [left, top, right, bottom] - positions in top left
+          ...handleSTCLogoDimension(records)
         };
       },
       background: function(currentPage: number, pageSize: {width: number, height: number}) {

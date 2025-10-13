@@ -41,11 +41,11 @@ export const displayQrDimension = (pdfSize: string | {width: number; height: num
   }
 
   if ((pdfSize as string).includes('A4')) {
-    return 250;
+    return 380;
   }
 
   if ((pdfSize as string).includes('A5')) {
-    return 300;
+    return 280;
   }
 
   return 120;
@@ -53,4 +53,92 @@ export const displayQrDimension = (pdfSize: string | {width: number; height: num
 
 export const UTCDate = (date: Date): Date => {
   return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+}
+
+export const getPdfSize = (items: PrintQRCodeDto[]) => {
+  return items[0]?.size ?? '-';
+}
+
+export const handleSTCLogoDimension = (items: PrintQRCodeDto[]) => {
+  const currentSize = getPdfSize(items);
+
+  if (currentSize?.includes('A4')) {
+    return {
+      width: 84,
+      height: 42,
+    }
+  }
+
+  if (currentSize?.includes('A5')) {
+    return {
+      width: 65,
+      height: 35,
+    }
+  }
+
+  if (currentSize.includes('*')) {
+    return {
+      width: 60,
+      height: 30,
+    }
+  }
+
+  return {
+    width: 60,
+    height: 30,
+  }
+}
+
+export const handleQRTopMargin = (items: PrintQRCodeDto[]) => {
+  const currentSize = getPdfSize(items);
+
+  if (currentSize?.includes('A4')) {
+    return 10;
+  }
+
+  if (currentSize?.includes('A5')) {
+    return 0;
+  }
+
+  if (currentSize.includes('*')) {
+    return 0;
+  }
+
+  return 0;
+}
+
+export const handleTextFontSize = (items: PrintQRCodeDto[]) => {
+  const currentSize = getPdfSize(items);
+
+  if (currentSize?.includes('A4')) {
+      return 30;
+  }
+
+  if (currentSize?.includes('A5')) {
+    return 20;
+  }
+
+  if (currentSize.includes('*')) {
+    return 12;
+  }
+
+  return 12;
+}
+
+export const handleFooterFontSize= (items: PrintQRCodeDto[]) => {
+  const currentSize = getPdfSize(items);
+
+  if (currentSize?.includes('A4')) {
+    return 25;
+  }
+
+  if (currentSize?.includes('A5')) {
+    return 18;
+  }
+
+  if (currentSize.includes('*')) {
+    return 12;
+  }
+
+  return 12;
 }

@@ -233,7 +233,7 @@ export class CreatedLocationsComponent implements OnDestroy {
         this.#messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'something went wrong!',
+          detail: this.#translateService.instant('something went wrong'),
           life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
         });
         return EMPTY;

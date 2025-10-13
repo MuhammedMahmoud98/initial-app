@@ -1,7 +1,7 @@
 <div class="service-availability">
   @for (service of services(); track service.id) {
     <div class="service-availability__item">
-      <div class="service-availability__item--title">service is available</div>
+      <div class="service-availability__item--title">{{ 'service is available' | translate}}</div>
 
       <p-toggleswitch [(ngModel)]="service.available" (ngModelChange)="onToggleService.emit({serviceId: service.id, isAvailable: $event})"/>
     </div>

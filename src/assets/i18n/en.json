@@ -48,5 +48,11 @@
   "not generated": "not generated",
   "generating QR code...": "generating QR code...",
   "printing QR code...": "printing QR code...",
-  "deleting QR code...": "deleting QR code..."
+  "deleting QR code...": "deleting QR code...",
+  "reload": "reload",
+  "service is available": "service is available",
+  "Status Updated Successfully": "status Updated Successfully",
+  "no location types available": "no location types available",
+  "add a location type to categories locations effectively": "add a location type to categories locations effectively",
+  "something went wrong": "something went wrong"
 }

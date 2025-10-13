@@ -15,7 +15,7 @@
 
     @if (showReloadButton()) {
       <div class="action-box">
-        <p-button [label]="'reload'" [severity]="'secondary'" (onClick)="reloadPage()"/>
+        <p-button [label]="'reload' | translate" [severity]="'secondary'" (onClick)="reloadPage()"/>
       </div>
     }
   </div>

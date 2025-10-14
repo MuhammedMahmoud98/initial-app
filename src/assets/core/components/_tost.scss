@@ -1,3 +1,10 @@
+.p-toast {
+  right: unset !important;
+  position: fixed !important;
+  top: 20px !important;
+  inset-inline-end: 20px !important;
+}
+
 .p-toast-close-button {
   background-image: url('../../../assets/images/toast-close-icon.svg') !important;
   background-repeat: no-repeat;

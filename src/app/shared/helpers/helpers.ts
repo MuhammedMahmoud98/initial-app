@@ -41,11 +41,11 @@ export const displayQrDimension = (pdfSize: string | {width: number; height: num
   }
 
   if ((pdfSize as string).includes('A4')) {
-    return 380;
+    return 320;
   }
 
   if ((pdfSize as string).includes('A5')) {
-    return 280;
+    return 250;
   }
 
   return 120;

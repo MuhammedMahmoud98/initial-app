@@ -39,6 +39,7 @@ import {
 } from '../../shared/components/service-availability/service-availability.component';
 import {ComponentStateComponent} from '../../shared/components/component-state/component-state.component';
 import {SkeletonLoaderComponent} from '../../shared/components/skeleton-loader/skeleton-loader.component';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-location-types',
@@ -65,6 +66,7 @@ export class LocationTypesComponent implements OnDestroy {
   // readonly #dialogService: DialogService = inject(DialogService);
   // readonly loadingDialogService = inject(LoadingDialogService);
   readonly #messageService: MessageService = inject(MessageService);
+  readonly #translateService: TranslateService = inject(TranslateService);
 
   // SIGNALS
   items = signal<LocationType[]>([]);
@@ -157,7 +159,7 @@ export class LocationTypesComponent implements OnDestroy {
 
         return this.#locationsService.updateLocationService(servicePayload, serviceBody).pipe(
           tap((locationServiceResponse: LocationServiceResponse) => {
-            this.#messageService.add({severity:'success', summary: 'Success', detail: locationServiceResponse.message, life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
+            this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant(locationServiceResponse.message), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
           })
         );
       })).subscribe();

@@ -62,11 +62,13 @@ export class PdfMakerService {
           {
             qr: `${environment.qrCodeUrl}/qr-guest/user-guest/${record.qrCode}`,
             alignment: 'start',
-            foreground: '#000',
+            foreground: '#512B84',
             fit: displayQrDimension(handlePDFSize(records) as never),
             width: displayQrDimension(handlePDFSize(records) as never),
             height: displayQrDimension(handlePDFSize(records) as never),
-            margin: [0, handleQRTopMargin(records), 0, 15]  // Bottom margin before QR code
+            margin: [0, handleQRTopMargin(records), 0, 15],  // Bottom margin before QR code
+            border: [false, false, false, false],
+            layout: 'noBorders'
           },
           {
             columns: [

@@ -395,7 +395,7 @@ const stcPreset = definePreset(Aura, {
       },
         body: {
           cell: {
-            padding: '0.5rem 1rem'
+            padding: '8px 1rem'
           },
         }
       }
@@ -413,10 +413,10 @@ const stcPreset = definePreset(Aura, {
     progressspinner: {
       colorScheme: {
         color: {
-          one: 'var(--primary-500)',
-          two: 'var(--primary-500)',
-          three: 'var(--primary-500)',
-          four: 'var(--primary-500)',
+          one: 'var(--secondary-500)',
+          two: 'var(--secondary-500)',
+          three: 'var(--secondary-500)',
+          four: 'var(--secondary-500)',
         },
       }
     },

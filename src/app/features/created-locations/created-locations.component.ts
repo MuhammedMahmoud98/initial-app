@@ -285,6 +285,7 @@ export class CreatedLocationsComponent implements OnDestroy {
             label: this.#translateService.instant('confirm'),
             severity: 'secondary',
           },
+          acceptVisible: true,
           accept: () => {
             this.printQRCode().then();
           }
@@ -346,7 +347,7 @@ export class CreatedLocationsComponent implements OnDestroy {
         this.#messageService.add({
           severity: 'error',
           summary: 'Rejected',
-          detail: this.#translateService.instant(err.error.message),
+          detail: this.#translateService.instant(err.error.message ?? 'something went wrong'),
           life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
         });
         return EMPTY;
@@ -389,14 +390,14 @@ export class CreatedLocationsComponent implements OnDestroy {
             severity: 'warn',
             summary: 'Warn',
             detail: this.#translateService.instant(isQrCannotDeleteMessage ?? 'something went wrong'),
-            life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
+            life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
           });
         } else {
           this.genericTableCacheService.resetBulkActions$.next(true);
           this.#messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: this.#translateService.instant(isQrCannotDeleteMessage),
+            severity: 'error',
+            summary: 'Error',
+            detail: this.#translateService.instant(isQrCannotDeleteMessage ?? 'something went wrong'),
             life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
           });
 

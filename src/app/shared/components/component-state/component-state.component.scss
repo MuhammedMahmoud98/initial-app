@@ -39,6 +39,10 @@
       align-items: center;
       gap: 0.6rem;
 
+      &__subtitle {
+        color: var(--silver-500);
+      }
+
       h4 {
         @include font-size($size: xl);
 

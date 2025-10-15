@@ -67,8 +67,6 @@ export class PdfMakerService {
             width: displayQrDimension(handlePDFSize(records) as never),
             height: displayQrDimension(handlePDFSize(records) as never),
             margin: [0, handleQRTopMargin(records), 0, 15],  // Bottom margin before QR code
-            border: [false, false, false, false],
-            layout: 'noBorders'
           },
           {
             columns: [

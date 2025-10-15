@@ -126,7 +126,7 @@
 <ng-template #locationTypeCustomColumn let-row>
   @let location = genericCasting(row);
 
-  <div>{{location.typeCode + '-' + location?.typeTitle}}</div>
+  <div>{{location?.typeTitle + '-' + location.typeCode}}</div>
 </ng-template>
 
 

@@ -37,15 +37,15 @@ export const handlePDFSize = (items: PrintQRCodeDto[], isFileName?: boolean) => 
 
 export const displayQrDimension = (pdfSize: string | {width: number; height: number}) => {
   if ((pdfSize as {width: number; height: number})?.width) {
-    return 120;
+    return 150;
   }
 
   if ((pdfSize as string).includes('A4')) {
-    return 320;
+    return 370;
   }
 
   if ((pdfSize as string).includes('A5')) {
-    return 250;
+    return 280;
   }
 
   return 120;
@@ -97,7 +97,7 @@ export const handleQRTopMargin = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize?.includes('A5')) {
-    return 0;
+    return 35;
   }
 
   if (currentSize.includes('*')) {
@@ -111,7 +111,7 @@ export const handleTextFontSize = (items: PrintQRCodeDto[]) => {
   const currentSize = getPdfSize(items);
 
   if (currentSize?.includes('A4')) {
-      return 30;
+      return 40;
   }
 
   if (currentSize?.includes('A5')) {
@@ -129,7 +129,7 @@ export const handleFooterFontSize= (items: PrintQRCodeDto[]) => {
   const currentSize = getPdfSize(items);
 
   if (currentSize?.includes('A4')) {
-    return 25;
+    return 30;
   }
 
   if (currentSize?.includes('A5')) {
@@ -141,4 +141,59 @@ export const handleFooterFontSize= (items: PrintQRCodeDto[]) => {
   }
 
   return 12;
+}
+
+export const handleLineSeparatorWidth = (items: PrintQRCodeDto[]) => {
+  const currentSize = getPdfSize(items);
+
+  if (currentSize?.includes('A4')) {
+    return 500;
+  }
+
+  if (currentSize?.includes('A5')) {
+    return 350;
+  }
+
+  if (currentSize.includes('*')) {
+    return 300;
+  }
+
+  return 300;
+}
+
+export const handleIconsWidth = (items: PrintQRCodeDto[]) => {
+  const currentSize = getPdfSize(items);
+
+  if (currentSize?.includes('A4')) {
+    return 25;
+  }
+
+  if (currentSize?.includes('A5')) {
+    return 20;
+  }
+
+  if (currentSize.includes('*')) {
+    return 12;
+  }
+
+  return 12;
+}
+
+
+export const handleIconTopMargin = (items: PrintQRCodeDto[]) => {
+  const currentSize = getPdfSize(items);
+
+  if (currentSize?.includes('A4')) {
+    return 17;
+  }
+
+  if (currentSize?.includes('A5')) {
+    return 8;
+  }
+
+  if (currentSize.includes('*')) {
+    return 4;
+  }
+
+  return 4;
 }

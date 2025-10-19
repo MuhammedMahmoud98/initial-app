@@ -61,7 +61,8 @@
                   "replace": "src/app/environment/environment.ts",
                   "with": "src/app/environment/environment.dev.ts"
                 }
-              ]
+              ],
+              "outputHashing": "all"
             },
             "development": {
               "optimization": false,

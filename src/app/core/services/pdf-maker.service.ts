@@ -54,7 +54,7 @@ export class PdfMakerService {
 
       (pdfMake as unknown as {vfs: unknown}).vfs = (pdfMake as unknown as {vfs: unknown}).vfs || {};
 
-      const fontUrl = `${environment.baseHref}assets/layouts/fonts/STCForward-Regular.ttf`;
+      const fontUrl = `${environment.baseHref}${environment.production ? '/': ''}assets/layouts/fonts/STCForward-Regular.ttf`;
       const response = await fetch(fontUrl);
       if (!response.ok) throw new Error(`Font not found at ${fontUrl}`);
       const fontData = await response.arrayBuffer();

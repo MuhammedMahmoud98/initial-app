@@ -8,7 +8,7 @@ import {
   viewChild,
   WritableSignal
 } from '@angular/core';
-import {PdfMakerService} from '../../core/services';
+import {LocalizationService, PdfMakerService} from '../../core/services';
 import {COMMON_CONSTANTS, INITIAL_FILTER_PAYLOAD} from '../../shared/constants/common-constants';
 import {GenericTableComponent} from '../../shared/components/generic-table/generic-table.component';
 import {ItemFilter, TableColumn} from '../../shared';
@@ -75,6 +75,7 @@ export class CreatedLocationsComponent implements OnDestroy {
   readonly #messageService: MessageService = inject(MessageService);
   readonly #translateService: TranslateService = inject(TranslateService)
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
+  readonly #localizaitionService: LocalizationService = inject(LocalizationService);
 
   // SIGNALS
   columns: WritableSignal<TableColumn<CreatedLocation>[]> = signal([]);
@@ -321,7 +322,8 @@ export class CreatedLocationsComponent implements OnDestroy {
         this.stopLoading();
 
         // LOAD LOCATIONS IN CASE OF NEWLY GENERATED QR CODES..
-        if (generateQrResponse.message !== 'No Location Ids to Generate QR') {
+        const warningResponseMsg: string = this.#localizaitionService.isRTL() ? 'لا توجد معرفات موقع لإنشاء رمز الاستجابة السريعة' : 'No Location Ids to Generate QR';
+        if (generateQrResponse.message !== warningResponseMsg) {
           this.#messageService.add({
             severity: 'success',
             summary: 'Success',

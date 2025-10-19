@@ -9,8 +9,8 @@
   "notAccessTitle": "تم رفض الوصول",
   "notAccessSubtitle": "يرجى استخدام حساب مصرح له الدخول",
   "typeName": "اسم نوع المكان",
-  "classification": "كود نوع المكان",
-  "typeCode": "تصنيف المكان",
+  "classification": "تصنيف المكان",
+  "typeCode": "كود نوع المكان",
   "availableServices": "الخدمات المتاحة",
   "availability": "التوفر",
   "emptyServicesMsg": "لا توجد خدمات متاحه",
@@ -56,5 +56,6 @@
   "no location types available": "لا توجد أنواع مواقع متاحة",
   "add a location type to categories locations effectively": "أضف نوع موقع لتصنيف المواقع بشكل فعال",
   "something went wrong": "لقد حدث خطأ ما",
-  "location deleted successfully": "تم حذف الموقع بنجاح"
+  "location deleted successfully": "تم حذف الموقع بنجاح",
+  "لا توجد معرفات موقع لإنشاء رمز الاستجابة السريعة": "لا توجد معرفات موقع لإنشاء رمز الاستجابة السريعة"
 }

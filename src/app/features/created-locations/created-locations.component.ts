@@ -207,6 +207,7 @@ export class CreatedLocationsComponent implements OnDestroy {
         label: this.#translateService.instant('confirm'),
         severity: 'secondary',
       },
+     acceptVisible: true,
       accept: (): void => {
         this.generateLocationsQR();
       }

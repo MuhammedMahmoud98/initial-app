@@ -24,6 +24,7 @@ export class TableActionBulkComponent {
 
     if (!this.genericTableCacheService.isSelectingBulkAction()) {
       this.genericTableCacheService.clearUnSelectedCache();
+      this.genericTableCacheService.selectedRecordsCache.set([]);
     }
   }
 }

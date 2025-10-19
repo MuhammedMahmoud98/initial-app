@@ -55,5 +55,6 @@
   "Status Updated Successfully": "تم تحديث الحالة بنجاح",
   "no location types available": "لا توجد أنواع مواقع متاحة",
   "add a location type to categories locations effectively": "أضف نوع موقع لتصنيف المواقع بشكل فعال",
-  "something went wrong": "لقد حدث خطأ ما"
+  "something went wrong": "لقد حدث خطأ ما",
+  "location deleted successfully": "تم حذف الموقع بنجاح"
 }

@@ -10,6 +10,7 @@
   [totalRecords]="totalRecords()"
   [paginator]="totalRecords() > 50"
   [lazy]="true"
+  [(first)]="first"
   [showCurrentPageReport]="true"
   [currentPageReportTemplate]="`paginationReport` | translate:{itemsLength: items().length, totalRecords: '{totalRecords}'}"
   (onHeaderCheckboxToggle)="onMainCheckboxChanged($event)"

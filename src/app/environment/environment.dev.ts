@@ -1,6 +1,6 @@
 export const environment = {
   polls: true,
-  production: false,
+  production: true,
   name: 'dev',
   host: 'https://apiblinkdev.hubplatforms.com',
   mygateHost: 'https://mygatedev.stc.com.sa',

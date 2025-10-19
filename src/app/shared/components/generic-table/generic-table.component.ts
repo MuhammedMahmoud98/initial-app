@@ -6,7 +6,7 @@ import {
   inject,
   input,
   InputSignal,
-  output
+  output, signal
 } from '@angular/core';
 import {TableHeaderCheckboxToggleEvent, TableModule, TablePageEvent} from 'primeng/table';
 import {TableColumn} from '../../models';
@@ -41,6 +41,7 @@ export class GenericTableComponent<T extends {id: number}> {
   items: InputSignal<T[]> = input.required();
   totalRecords: InputSignal<number> = input(0);
   hasCheckBoxes: InputSignal<boolean> = input(false);
+  first = signal(0);
 
   // COMPUTED
   currentLocale = computed(() => {
@@ -119,6 +120,7 @@ export class GenericTableComponent<T extends {id: number}> {
         if (isResetBulkActions) {
           this.selectedLocations = [];
           this.genericTableCacheService.resetBulkActions();
+          this.first.set(0);
         }
       }),
       takeUntilDestroyed(this.destroyRef)

@@ -116,7 +116,7 @@ export class PdfMakerService {
           {
             qr: `${environment.qrCodeUrl}/qr-guest/user-guest/${record.qrCode}`,
             alignment: 'start',
-            foreground: '#512B84',
+            foreground: '#000',
             fit: displayQrDimension(handlePDFSize(records) as never),
             width: displayQrDimension(handlePDFSize(records) as never),
             height: displayQrDimension(handlePDFSize(records) as never),

@@ -1,6 +1,6 @@
 import {Component, computed, inject, Signal} from '@angular/core';
 import {Router, RouterOutlet} from '@angular/router';
-import {LocalizationService, UserService} from './core/services';
+import {LocalizationService, UserService, PdfMakerService} from './core/services';
 import { HeaderComponent } from './core/components/header/header.component';
 import { AppsListComponent } from './core/components/apps-list/apps-list.component';
 import {SubHeaderComponent} from './core/components/sub-header/sub-header.component';
@@ -10,6 +10,7 @@ import {Toast} from 'primeng/toast';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {AuthenticationService} from './features/auth/services/authentication.service';
 import {SpinnerLoaderComponent} from './shared/components/spinner-loader/spinner-loader.component';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -24,13 +25,14 @@ import {SpinnerLoaderComponent} from './shared/components/spinner-loader/spinner
     Toast,
     SpinnerLoaderComponent,
   ],
-  providers: [ConfirmationService, MessageService],
+  providers: [ConfirmationService, MessageService, PdfMakerService, DatePipe],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
   readonly localizationService = inject(LocalizationService);
   readonly #userService = inject(UserService);
+  readonly #pdfMakerService = inject(PdfMakerService);
   readonly #authService = inject(AuthenticationService);
   private router = inject(Router);
   protected readonly isRTL: Signal<boolean> = computed(() =>
@@ -49,6 +51,10 @@ export class AppComponent {
 
   constructor() {
     this.localizationService.initialize();
+    // Start warming pdfMake/font in background to avoid first-use delay
+    try { this.#pdfMakerService.warmUpPdfMake(); } catch (e) {
+      console.log(e, 'FAILED TO WARMUP FONT FILE');
+    }
   }
 
   // toggleLanguage() {

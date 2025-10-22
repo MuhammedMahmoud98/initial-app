@@ -17,6 +17,11 @@ import {DatePipe} from '@angular/common';
 export class PdfMakerService {
   readonly #datePipe: DatePipe = inject(DatePipe);
 
+  // Cached pdfMake instance and initializer promise to avoid repeated font fetches
+  private pdfMakeInstance: unknown | null = null;
+  private pdfMakePromise: Promise<unknown> | null = null;
+  private readonly FONT_KEY = 'STCForward-Regular.ttf.base64';
+
   // protected async initializePdfMake() {
   //   const pdfMakeModule = await import('pdfmake/build/pdfmake');
   //   const pdfFonts = await import('pdfmake/build/vfs_fonts');
@@ -46,21 +51,54 @@ export class PdfMakerService {
   //   return pdfMake;
   // }
 
+    public warmUpPdfMake(): void {
+      // fire-and-forget; subsequent calls to generatePdfSingleColumn will await the same promise
+      console.log('%cFONT WARM UP', 'color: yellow');
+      void this.initializePdfMake();
+    }
+
     protected async initializePdfMake(): Promise<unknown> {
-      const pdfMakeModule = await import('pdfmake/build/pdfmake');
-      const pdfFontsModule = await import('pdfmake/build/vfs_fonts');
+      // Return cached instance when available
+      if (this.pdfMakeInstance) return this.pdfMakeInstance;
+      // If initialization is already in progress, return the same promise to serialize work
+      if (this.pdfMakePromise) return this.pdfMakePromise;
 
-      const pdfMake = (pdfFontsModule as unknown as {pdfMake : unknown}).pdfMake || pdfMakeModule.default || pdfMakeModule;
+      this.pdfMakePromise = (async () => {
+        const pdfMakeModule = await import('pdfmake/build/pdfmake');
+        const pdfFontsModule = await import('pdfmake/build/vfs_fonts');
 
-      (pdfMake as unknown as {vfs: unknown}).vfs = (pdfMake as unknown as {vfs: unknown}).vfs || {};
+        const pdfMake = (pdfFontsModule as unknown as {pdfMake : unknown}).pdfMake || pdfMakeModule.default || pdfMakeModule;
 
-      const fontUrl = `${environment.baseHref}${environment.production ? '/': ''}assets/layouts/fonts/STCForward-Regular.ttf`;
-      const response = await fetch(fontUrl);
-      if (!response.ok) throw new Error(`Font not found at ${fontUrl}`);
-      const fontData = await response.arrayBuffer();
+        (pdfMake as unknown as {vfs: unknown}).vfs = (pdfMake as unknown as {vfs: unknown}).vfs || {};
 
-      // Add the font to vfs (ensure it's on the same instance)
-      const base64Font = this.arrayBufferToBase64(fontData);
+        // Try to reuse cached base64 font from localStorage (best-effort)
+        let base64Font: string | null = null;
+        try {
+          base64Font = localStorage.getItem(this.FONT_KEY);
+        } catch (e) {
+          console.log(e);
+          base64Font = null; // localStorage may be unavailable in some environments
+        }
+
+        if (!base64Font) {
+          const fontUrl = `${environment.baseHref}${environment.production ? '/': ''}assets/layouts/fonts/STCForward-Regular.ttf`;
+          const response = await fetch(fontUrl, { cache: 'force-cache' });
+          if (!response.ok) throw new Error(`Font not found at ${fontUrl}`);
+          const fontData = await response.arrayBuffer();
+          // Prefer the async conversion to avoid expensive synchronous work
+          try {
+            base64Font = await this.arrayBufferToBase64Async(fontData);
+          } catch (e) {
+            console.log(e);
+            // Fallback to synchronous conversion if FileReader fails for any reason
+            base64Font = this.arrayBufferToBase64(fontData);
+          }
+          // Persist to localStorage for faster next loads (best-effort)
+          try { localStorage.setItem(this.FONT_KEY, base64Font); } catch (e) {
+            console.log(e);
+          }
+        }
+
       (pdfMake as unknown as {vfs: Record<string, string>}).vfs['STCForward-Regular.ttf'] = base64Font;
 
       // Define the font family
@@ -74,7 +112,17 @@ export class PdfMakerService {
         },
       };
 
-      return pdfMake;
+        this.pdfMakeInstance = pdfMake;
+        console.log('%cFONT WARM UP', 'color: orange');
+        return pdfMake;
+      })();
+
+      try {
+        return await this.pdfMakePromise;
+      } finally {
+        // Keep instance cached; clear the transient promise so future calls use cached instance
+        this.pdfMakePromise = null;
+      }
     }
 
 
@@ -287,11 +335,40 @@ export class PdfMakerService {
   };
 
   private arrayBufferToBase64(buffer: ArrayBuffer): string {
+    // Synchronous conversion was previously used; keep a synchronous shim for callers
+    // but prefer using the async version `arrayBufferToBase64Async` elsewhere to avoid blocking.
     const bytes = new Uint8Array(buffer);
     let binary = '';
     for (let i = 0; i < bytes.byteLength; i++) {
       binary += String.fromCharCode(bytes[i]);
     }
     return btoa(binary);
+   }
+
+  // Async conversion using FileReader to avoid large synchronous string operations on the main thread
+  private arrayBufferToBase64Async(buffer: ArrayBuffer): Promise<string> {
+    return new Promise((resolve, reject) => {
+      try {
+        const blob = new Blob([buffer], { type: 'application/octet-stream' });
+        const reader = new FileReader();
+        reader.onerror = () => {
+          reader.abort();
+          reject(new Error('Failed to convert font ArrayBuffer to base64'));
+        };
+        reader.onload = () => {
+          const result = reader.result as string; // data:<mime>;base64,AAAA
+          // strip prefix if present
+          const commaIndex = result.indexOf(',');
+          if (commaIndex >= 0) {
+            resolve(result.substring(commaIndex + 1));
+          } else {
+            resolve(result);
+          }
+        };
+        reader.readAsDataURL(blob);
+      } catch (e) {
+        reject(e);
+        }
+    });
   }
 }

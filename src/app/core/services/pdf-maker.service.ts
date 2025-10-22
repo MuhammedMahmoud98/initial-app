@@ -2,9 +2,11 @@ import {inject, Injectable} from '@angular/core';
 import {TDocumentDefinitions} from 'pdfmake/interfaces';
 import {PrintQRCodeDto} from '../../features/created-locations/models/created-location.model';
 import {
-  displayQrDimension,
-  handleFooterFontSize, handleIconsWidth, handleIconTopMargin, handleLineSeparatorWidth,
-  handlePDFSize,
+  displayQrDimension, getUniqueServiceBottomMargin,
+  handleFooterFontSize, handleFooterTextRightMargin, handleIconsWidth, handleIconTopMargin,
+  handleLineMargins, handleLineSeparatorWidth, handleLineWidth,
+  handleLogoMargins, handlePDFMargins,
+  handlePDFSize, handleQRBottomMargin,
   handleQRTopMargin,
   handleSTCLogoDimension, handleTextFontSize
 } from '../../shared/helpers/helpers';
@@ -158,7 +160,7 @@ export class PdfMakerService {
             bold: true,
             color: '#fff',
             fontSize: handleTextFontSize(records),
-            margin: [0, 0, 0, 15],  // Bottom margin before QR code
+            margin: [0, 0, 0, getUniqueServiceBottomMargin(records)],  // Bottom margin before QR code
             font: 'STCFont'  // ✅ Add font property here
           },
           {
@@ -168,7 +170,7 @@ export class PdfMakerService {
             fit: displayQrDimension(handlePDFSize(records) as never),
             width: displayQrDimension(handlePDFSize(records) as never),
             height: displayQrDimension(handlePDFSize(records) as never),
-            margin: [0, handleQRTopMargin(records), 0, 25],  // Bottom margin before QR code
+            margin: [0, handleQRTopMargin(records), 0, handleQRBottomMargin(records)],  // Bottom margin before QR code
           },
           {
             columns: [
@@ -189,13 +191,13 @@ export class PdfMakerService {
                     text: 'location code',
                     color: 'white',
                     fontSize: handleFooterFontSize(records),
-                    margin: [10, 0, 0, 5]
+                    margin: [handleFooterTextRightMargin(records), 0, 0, 5]
                   },
                   {
                     text: record.locationCode,
                     color: '#FF375E',  // Pink/red color
                     fontSize: handleFooterFontSize(records),
-                    margin: [10, 0, 0, 0]
+                    margin: [handleFooterTextRightMargin(records), 0, 0, 0]
                   }
                 ],
                 width: '*'
@@ -211,11 +213,11 @@ export class PdfMakerService {
                 y1: 0,
                 x2: handleLineSeparatorWidth(records),  // Adjust to match purple box width
                 y2: 0,
-                lineWidth: 2,
+                lineWidth: handleLineWidth(records),
                 lineColor: 'white'
               }
             ],
-            margin: [0, 10, 0, 10]
+            margin: handleLineMargins(records),
           },
           {
             columns: [
@@ -250,14 +252,14 @@ export class PdfMakerService {
                     text: 'shared services',
                     color: 'white',
                     fontSize: handleFooterFontSize(records),
-                    margin: [10, 0, 0, 5]
+                    margin: [handleFooterTextRightMargin(records), 0, 0, 5]
                   },
                   {
                     text: '0114599999',
                     color: '#FF375E',  // Pink/red color
                     fontSize: handleFooterFontSize(records),
                     bold: true,
-                    margin: [10, 0, 0, 0]
+                    margin: [handleFooterTextRightMargin(records), 0, 0, 0]
                   }
                 ],
                 width: '*'
@@ -272,14 +274,14 @@ export class PdfMakerService {
 
     const docDefinition = {
       pageSize: handlePDFSize(records), // TODO:: IF SIZE INCLUDES *; RETURN OBJECT WITH WIDTH AND HEIGHT
-      pageMargins: [40, 60, 10, 0],
+      pageMargins: handlePDFMargins(records),
       content: content,
       header: function() {
         return {
           // STC LOGO
           // eslint-disable-next-line max-len
           image: 'data:image/png;base64,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', // Replace with your image
-          margin: [40, 10, 0, 0], // [left, top, right, bottom] - positions in top left
+          margin: handleLogoMargins(records), // [left, top, right, bottom] - positions in top left
           ...handleSTCLogoDimension(records)
         };
       },

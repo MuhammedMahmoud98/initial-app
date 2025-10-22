@@ -27,8 +27,8 @@ export const handlePDFSize = (items: PrintQRCodeDto[], isFileName?: boolean) => 
     const dimensions: string[] = currentItemSize?.split('*');
 
     return {
-      width: +dimensions[0] * 72,
-      height: +dimensions[1] * 72,
+      width: +dimensions[0] * 37.796,
+      height: +dimensions[1] * 37.796,
     }
   } else {
     return currentItemSize?.replace('*', 'x');
@@ -37,7 +37,7 @@ export const handlePDFSize = (items: PrintQRCodeDto[], isFileName?: boolean) => 
 
 export const displayQrDimension = (pdfSize: string | {width: number; height: number}) => {
   if ((pdfSize as {width: number; height: number})?.width) {
-    return 150;
+    return 98;
   }
 
   if ((pdfSize as string).includes('A4')) {
@@ -48,7 +48,7 @@ export const displayQrDimension = (pdfSize: string | {width: number; height: num
     return 280;
   }
 
-  return 120;
+  return 20;
 }
 
 export const UTCDate = (date: Date): Date => {
@@ -78,14 +78,14 @@ export const handleSTCLogoDimension = (items: PrintQRCodeDto[]) => {
 
   if (currentSize.includes('*')) {
     return {
-      width: 60,
-      height: 30,
+      width: 20,
+      height: 10,
     }
   }
 
   return {
-    width: 60,
-    height: 30,
+    width: 20,
+    height: 10,
   }
 }
 
@@ -101,10 +101,28 @@ export const handleQRTopMargin = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('*')) {
-    return 0;
+    return 10;
   }
 
   return 0;
+}
+
+export const handleQRBottomMargin = (items: PrintQRCodeDto[]) => {
+  const currentSize = getPdfSize(items);
+
+  if (currentSize?.includes('A4')) {
+    return 25;
+  }
+
+  if (currentSize?.includes('A5')) {
+    return 25;
+  }
+
+  if (currentSize.includes('*')) {
+    return 5;
+  }
+
+  return 5;
 }
 
 export const handleTextFontSize = (items: PrintQRCodeDto[]) => {
@@ -119,10 +137,10 @@ export const handleTextFontSize = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('*')) {
-    return 12;
+    return 7;
   }
 
-  return 12;
+  return 4;
 }
 
 export const handleFooterFontSize= (items: PrintQRCodeDto[]) => {
@@ -137,10 +155,10 @@ export const handleFooterFontSize= (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('*')) {
-    return 12;
+    return 7;
   }
 
-  return 12;
+  return 4;
 }
 
 export const handleLineSeparatorWidth = (items: PrintQRCodeDto[]) => {
@@ -155,10 +173,10 @@ export const handleLineSeparatorWidth = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('*')) {
-    return 300;
+    return 150;
   }
 
-  return 300;
+  return 100;
 }
 
 export const handleIconsWidth = (items: PrintQRCodeDto[]) => {
@@ -173,10 +191,10 @@ export const handleIconsWidth = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('*')) {
-    return 12;
+    return 5;
   }
 
-  return 12;
+  return 5;
 }
 
 
@@ -189,6 +207,115 @@ export const handleIconTopMargin = (items: PrintQRCodeDto[]) => {
 
   if (currentSize?.includes('A5')) {
     return 8;
+  }
+
+  if (currentSize.includes('*')) {
+    return 3;
+  }
+
+  return 3;
+}
+
+export const handlePDFMargins  = (items: PrintQRCodeDto[]) => {
+  const currentSize = getPdfSize(items);
+
+  if (currentSize?.includes('A4')) {
+    return [40, 60, 10, 0];
+  }
+
+  if (currentSize?.includes('A5')) {
+    return [40, 60, 10, 0];
+  }
+
+  if (currentSize.includes('*')) {
+    return [15, 25, 10, 0];
+  }
+
+  return [15, 25, 10, 0];
+}
+
+export const handleLogoMargins  = (items: PrintQRCodeDto[]) => {
+  const currentSize = getPdfSize(items);
+
+  if (currentSize?.includes('A4')) {
+    return [40, 10, 0, 0];
+  }
+
+  if (currentSize?.includes('A5')) {
+    return [40, 10, 0, 0];
+  }
+
+  if (currentSize.includes('*')) {
+    return [15, 10, 0, 0];
+  }
+
+  return [15, 10, 0, 0];
+}
+
+export const handleLineWidth= (items: PrintQRCodeDto[]) => {
+  const currentSize = getPdfSize(items);
+
+  if (currentSize?.includes('A4')) {
+    return 2;
+  }
+
+  if (currentSize?.includes('A5')) {
+    return 2;
+  }
+
+  if (currentSize.includes('*')) {
+    return 1;
+  }
+
+  return 1;
+}
+
+export const handleLineMargins= (items: PrintQRCodeDto[]) => {
+  const currentSize = getPdfSize(items);
+
+  if (currentSize?.includes('A4')) {
+    return [0, 10, 0, 10];
+  }
+
+  if (currentSize?.includes('A5')) {
+    return [0, 10, 0, 10];
+  }
+
+  if (currentSize.includes('*')) {
+    return [0, 4, 0, 4];
+  }
+
+  return [0, 4, 0, 4];
+}
+
+
+export const getUniqueServiceBottomMargin= (items: PrintQRCodeDto[]) => {
+  const currentSize = getPdfSize(items);
+
+  if (currentSize?.includes('A4')) {
+    return 15;
+  }
+
+  if (currentSize?.includes('A5')) {
+    return 15;
+  }
+
+  if (currentSize.includes('*')) {
+    return 4;
+  }
+
+  return 4;
+}
+
+export const handleFooterTextRightMargin= (items: PrintQRCodeDto[]) => {
+  const currentSize = getPdfSize(items);
+
+  if (currentSize?.includes('A4')) {
+    return 10;
+  }
+
+  if (currentSize?.includes('A5')) {
+    return 10;
   }
 
   if (currentSize.includes('*')) {

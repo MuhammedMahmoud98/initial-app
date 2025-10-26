@@ -8,7 +8,7 @@ import {
   handleLogoMargins, handlePDFMargins,
   handlePDFSize, handleQRBottomMargin,
   handleQRTopMargin,
-  handleSTCLogoDimension, handleTextFontSize
+  handleSTCLogoDimension, handleTextFontSize, handleTextMarginBottom
 } from '../../shared/helpers/helpers';
 import {environment} from '../../environment/environment';
 import {DatePipe} from '@angular/common';
@@ -150,7 +150,7 @@ export class PdfMakerService {
             alignment: 'start',
             bold: true,
             fontSize: handleTextFontSize(records),
-            margin: [0, records[0]?.size === 'A4' ? 60: 0, 0, 5],
+            margin: [0, records[0]?.size === 'A4' ? 60: 0, 0, handleTextMarginBottom(records)],
             font: 'STCFont'  // ✅ Add font property here
           },
           {
@@ -191,7 +191,7 @@ export class PdfMakerService {
                     text: 'location code',
                     color: 'white',
                     fontSize: handleFooterFontSize(records),
-                    margin: [handleFooterTextRightMargin(records), 0, 0, 5]
+                    margin: [handleFooterTextRightMargin(records), 0, 0, handleTextMarginBottom(records)]
                   },
                   {
                     text: record.locationCode,
@@ -252,7 +252,7 @@ export class PdfMakerService {
                     text: 'shared services',
                     color: 'white',
                     fontSize: handleFooterFontSize(records),
-                    margin: [handleFooterTextRightMargin(records), 0, 0, 5]
+                    margin: [handleFooterTextRightMargin(records), 0, 0, handleTextMarginBottom(records)]
                   },
                   {
                     text: '0114599999',

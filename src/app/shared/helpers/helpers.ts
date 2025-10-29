@@ -268,7 +268,7 @@ export const handleLineWidth= (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('*')) {
-    return 1;
+    return 0.3;
   }
 
   return 1;

@@ -21,6 +21,10 @@ export const CORE_APP_ROUTES: CoreAppRoutes[] = [
   {
     path: MAIN_ROUTES.LOCATION_TYPES,
     title: 'locationTypes',
+  },
+  {
+    path: MAIN_ROUTES.ASSIGNED_LOCATION,
+    title:'AssignedLocations',
   }
 ];
 
@@ -28,6 +32,12 @@ export const INITIAL_FILTER_PAYLOAD: ItemFilter = {
   page: 0,
   size: COMMON_CONSTANTS.ROWS_PER_PAGE,
   filter: ''
+};
+
+export const INITIAL_FILTER_PAYLOAD_ASSIGNED_LOCATION: ItemFilter = {
+  page: 0,
+  size: COMMON_CONSTANTS.ROWS_PER_PAGE,
+  
 };
 
 

@@ -24,7 +24,7 @@ export const CORE_APP_ROUTES: CoreAppRoutes[] = [
   },
   {
     path: MAIN_ROUTES.ASSIGNED_LOCATION,
-    title:'AssignedLocations',
+    title:'assignedLocations',
   }
 ];
 

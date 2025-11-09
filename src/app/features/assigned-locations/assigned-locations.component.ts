@@ -29,6 +29,7 @@ import { AssignedLocationColumnType, AssignedLocationType, AssignedLocationTypes
 import { LocationServiceEvent} from '../location-types/models/location-types.model';
 import { TitleWithIconComponent } from '../../shared/components/title-with-icon/title-with-icon.component';
 import { INITIAL_FILTER_PAYLOAD_ASSIGNED_LOCATION } from '../../shared/constants/common-constants';
+import { HubFiltersComponent } from '../../shared/components/hub-filters/hub-filters.component';
 
 @Component({
   selector: 'app-assigned-qr',
@@ -36,7 +37,9 @@ import { INITIAL_FILTER_PAYLOAD_ASSIGNED_LOCATION } from '../../shared/constants
     GenericTableComponent,
     ComponentStateComponent,
     SkeletonLoaderComponent,
-    TitleWithIconComponent
+    TitleWithIconComponent,
+        HubFiltersComponent,
+    
   ],
   providers: [DialogService],
   standalone: true,
@@ -150,6 +153,14 @@ export class AssignedLocationsComponent implements OnDestroy {
     this.locationTypesPayload.update((current) => ({...current, ...newFilters}));
     console.log(this.locationTypesPayload(), 'UPDATED PAYLOAD');
   }
+
+  onFilterValueChanges(filterValues: HubFilters) {
+    this.isApplyingFilter.set(!!filterValues.filter);
+    this.updateFilterPayload({ ...filterValues, page: 0 });
+    this.getAssignedLocationTypes();
+  }
+
+
 
   handleEmptyState(): void {
     this.isEmptyState.set(true);

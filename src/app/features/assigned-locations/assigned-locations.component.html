@@ -12,7 +12,9 @@
         [showReloadButton]="true"
       />
     } @else {
-
+   <div >
+        <app-hub-filters type="search"  (filterValues)="onFilterValueChanges($event)"/>
+      </div>
       @if (!isEmptyState() && !isErrorState()) {
         <div class="overflow-x-auto overflow-y-hidden">
           <app-generic-table

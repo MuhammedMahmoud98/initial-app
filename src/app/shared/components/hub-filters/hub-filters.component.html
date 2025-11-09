@@ -1,7 +1,9 @@
 <div class="qr-filters">
   <form [formGroup]="form">
     <div class="w-full sm:w-25rem">
-      <app-qr-search formControlName="filter"/>
+          <app-qr-search *ngIf="type() === 'search'" formControlName="search"></app-qr-search>
+          
+          <app-qr-search *ngIf="type() === 'filter'" formControlName="filter"></app-qr-search>
     </div>
   </form>
 </div>

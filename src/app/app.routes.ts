@@ -31,6 +31,10 @@ export const routes: Routes = [
         loadComponent: () => 
           import('./features/assigned-locations/assigned-locations.component').then((m) => m.AssignedLocationsComponent)
         
+      },
+      {
+        path: MAIN_ROUTES.UPLOAD_FILE,
+        loadComponent: () => import('./features/upload-file/upload-file.component').then((m)=>m.UploadFileComponent)
       }
     ],
   },

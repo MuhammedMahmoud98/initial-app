@@ -1,0 +1,67 @@
+<div class="import-page">
+  <!-- Header -->
+  <div class="import-header">
+    <div class="back-section">
+       <button>
+        <img src="assets/images/back-arrow.svg" alt="back-arrow" />
+       </button>
+       <span>
+      import new locations
+      </span>
+    </div>
+<button class="download-btn">
+  <img src="assets/images/download-file.svg" alt="download-file.svg" />
+download template
+</button>
+  </div>
+
+  <!-- Upload Container -->
+   <section class="upload-wrapper" > 
+<div class="import-container" [class.uploading]="isUploading">
+  <!-- Default State -->
+  <ng-container *ngIf="!isUploading; else uploadingTemplate">
+    <p-fileUpload #uploader mode="advanced" name="file" [auto]="false" [customUpload]="true" accept=".xls,.xlsx"
+      [showUploadButton]="false" [showCancelButton]="false" maxFileSize="5000000" 
+      (onSelect)="onFileSelect($event)" class="custom-upload">
+      <ng-template pTemplate="content">
+        <div class="upload-placeholder" role="button" tabindex="0" aria-label="Choose file to upload"
+          (click)="uploader.choose()" (keydown.enter)="uploader.choose()">
+          <img src="assets/images/upload-page.svg" alt="upload" />
+          <p class="upload-text">drag and drop or click to upload file</p>
+          <p class="upload-sub">max excel file size is 5 mb</p>
+        </div>
+      </ng-template>
+    </p-fileUpload>
+  </ng-container>
+
+  <!-- Uploading State -->
+  <ng-template #uploadingTemplate>
+    <div class="upload-progress">
+      <div class="file-info">
+        <img src="assets/images/excel-sheet.svg" alt="excel" />
+        <div class="file-details">
+          <p class="file-name">{{ fileName }}</p>
+          <p class="file-status">
+            {{ uploadProgress < 100 ? 'uploading...' : 'upload complete' }} </p>
+            
+        </div>
+        <button class="cancel-upload" (click)="cancelUpload()">
+           <img src="assets/images/cancel.svg" alt="cancel"/>
+        </button>
+      </div>
+    
+     <p-progressBar [value]="50" [showValue]="false" styleClass="progress-bar" [ngStyle]="{'display':'contents'}"></p-progressBar>
+
+    </div>
+  </ng-template>
+</div>
+
+
+
+  <!-- Actions -->
+  <div class="import-actions">
+    <button  type="button" label="cancel" class="cancel-btn p-button-outlined p-button-sm" [disabled]="!fileUploaded">cancel</button>
+    <button  type="button" label="save" class="save-btn p-button-sm" [disabled]="!fileUploaded">save</button>
+  </div>
+  </section>
+</div>

@@ -29,4 +29,11 @@ export const API_CONSTANTS = {
   GENERATE_QR: serverUrl + '/qr/generate-qr',
   PRINT_QR: serverUrl + '/qr/print-qr',
   VALIDATE_QR_PRINT: serverUrl + '/qr/validate-print',
+  //Download Template
+  DOWNLOAD_TEMPLATE: serverUrl + '/locations/upload/template',
+  UPLOAD_TEMPLATE: serverUrl + '/locations/upload',
+  CREATE_LOCATION_BY_FILEID: serverUrl + '/locations/upload/{uploadId}/preview',
+  DISCARD_LOCATION_BY_FILEID: serverUrl + '/locations/upload/{uploadId}/discard',
+  SAVE_LOCATION_BY_FILEID: serverUrl + '/locations/upload/{uploadId}/save',
+
 };

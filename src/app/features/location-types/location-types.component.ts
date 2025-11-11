@@ -39,7 +39,11 @@ import {
 } from '../../shared/components/service-availability/service-availability.component';
 import {ComponentStateComponent} from '../../shared/components/component-state/component-state.component';
 import {SkeletonLoaderComponent} from '../../shared/components/skeleton-loader/skeleton-loader.component';
-import {TranslateService} from '@ngx-translate/core';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
+import {Button} from 'primeng/button';
+import {
+  CreateLocationTypeDialogComponent
+} from '../../shared/dialogs/create-location-type-dialog/create-location-type-dialog.component';
 
 @Component({
   selector: 'app-location-types',
@@ -51,6 +55,8 @@ import {TranslateService} from '@ngx-translate/core';
     ServiceAvailabilityComponent,
     ComponentStateComponent,
     SkeletonLoaderComponent,
+    Button,
+    TranslatePipe,
   ],
   providers: [DialogService],
   standalone: true,
@@ -63,7 +69,7 @@ export class LocationTypesComponent implements OnDestroy {
   readonly genericTableCacheService: GenericTableCacheService = inject(GenericTableCacheService);
   // protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
   readonly #locationsService: LocationsService = inject(LocationsService);
-  // readonly #dialogService: DialogService = inject(DialogService);
+  readonly #dialogService: DialogService = inject(DialogService);
   // readonly loadingDialogService = inject(LoadingDialogService);
   readonly #messageService: MessageService = inject(MessageService);
   readonly #translateService: TranslateService = inject(TranslateService);
@@ -189,5 +195,14 @@ export class LocationTypesComponent implements OnDestroy {
   clearStates(): void {
     this.isEmptyState.set(false);
     this.isErrorState.set(false);
+  }
+
+  openAddLocationTypeModal(): void {
+    this.#dialogService.open(CreateLocationTypeDialogComponent, {
+      header: this.#translateService.instant('createNewType'),
+      width: '580px',
+      modal: true,
+      closable: true,
+    });
   }
 }

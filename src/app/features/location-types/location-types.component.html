@@ -3,7 +3,17 @@
     <app-skeleton-loader/>
   } @else {
     <!-- FILTERS -->
-    <app-hub-filters (filterValues)="onFilterValueChanges($event)"/>
+    <div class="hub-locations-types__filters">
+      <app-hub-filters (filterValues)="onFilterValueChanges($event)"/>
+
+      <!-- ADD LOCATION TYPE BUTTON -->
+      <p-button [severity]="'secondary'" [outlined]="true" [label]="'createNewType' | translate" (onClick)="openAddLocationTypeModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 23 23" fill="none">
+          <path d="M12.03 5L12.0117 19" stroke="#FF375E" stroke-linecap="square"/>
+          <path d="M5 12H19" stroke="#FF375E" stroke-linecap="square"/>
+        </svg>
+      </p-button>
+    </div>
 
     @if ((!isApplyingFilter() && isEmptyState() && !items().length)) {
       <app-component-state

@@ -1,3 +1,5 @@
+import {FormControl} from '@angular/forms';
+
 export interface CoreAppRoutes {
   path: string;
   title: string;
@@ -18,3 +20,7 @@ export interface ItemFilter {
   size: number;
   filter?: string;
 }
+
+export type FormControlsOf<T> = {
+  [K in keyof T]: FormControl<T[K]>;
+};

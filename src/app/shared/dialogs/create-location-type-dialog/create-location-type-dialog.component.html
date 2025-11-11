@@ -1,0 +1,103 @@
+<div class="create-location-type" #createLocationType>
+  <!-- BODY -->
+  <div class="create-location-type__body" #formBody>
+    <form [formGroup]="form" class="create-location-type__body--form">
+      <!-- CATEGORY SWITCH -->
+      <app-location-type-category formControlName="category"/>
+
+      <!-- TYPE NAME AND CODE -->
+      <div class="flex">
+        <div class="md:col-6 col-12">
+          <app-input-label
+            [label]="'typeName'"
+            [labelTooltip]="'typeNameTooltip'"
+            [isRequired]="true"
+            [helperText]="'max 20 characters'"
+          >
+            <input pInputText [placeholder]="'typeNamePlaceholder' | translate" formControlName="name"/>
+          </app-input-label>
+        </div>
+        <div class="md:col-6 col-12">
+          <app-input-label
+            [label]="'typeCode'"
+            [labelTooltip]="'typeCodeTooltip'"
+            [isRequired]="true"
+            [helperText]="'max 10 characters'"
+          >
+            <input pInputText [placeholder]="'codeNamePlaceholder' | translate" formControlName="code"/>
+          </app-input-label>
+        </div>
+      </div>
+
+      <!-- QR PRINTING SIZE -->
+      <div class="flex flex-column gap-2">
+        <app-input-label
+          [label]="'QR printing size'"
+          [labelTooltip]="'qrPrintingTooltip'"
+          [isRequired]="true"
+        />
+        <app-printing-size-dimensions formControlName="size"/>
+      </div>
+
+      @if (getControl('category').value === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION) {
+        <!-- SERVICES SEPARATOR -->
+        <div class="services-label">{{ 'service' | translate }}</div>
+
+        <!-- SURVEY TYPES SELECTORS -->
+        <div [formArrayName]="'services'" #test>
+          @for (service of servicesArray.controls;track service;let i = $index) {
+            <div class="flex flex-column gap-3" [formGroupName]="i">
+              <!-- SERVICE TYPE -->
+              <div class="md:col-6 col-12 p-0">
+                <app-input-label
+                  [label]="'type'"
+                  [isRequired]="false"
+                  [labelTooltip]="'serviceTypeTooltip'"
+                >
+                  <p-select
+                    [options]="surveyOptions()"
+                    optionLabel="name"
+                    optionValue="code"
+                    formControlName="serviceType"
+                    [placeholder]="'selectServiceTypePlaceholder' | translate"
+                    [showClear]="true"
+                    class="" />
+                </app-input-label>
+              </div>
+
+
+              @if (service.get('serviceType')?.value === 'SURVEY') {
+                <!-- INTERNAL LINK SURVEY -->
+                <div class="col-12 internal-link-survey p-0">
+                  <app-input-label
+                    [label]="'internal survey link'"
+                    [isRequired]="true"
+                    [helperText]="'max 500 characters'"
+                  >
+                    <input pInputText placeholder="https://mygate.stc.com.sa/forms/eforms/..." formControlName="internalLink"/>
+                  </app-input-label>
+                </div>
+
+                <!-- EXTERNAL LINK SURVEY -->
+                <div class="col-12 p-0">
+                  <app-input-label
+                    [label]="'external survey link'"
+                    [isRequired]="true"
+                    [helperText]="'max 500 characters'"
+                  >
+                    <input pInputText placeholder="https://web.hubplatforms.com/forms/eforms/..." formControlName="externalLink"/>
+                  </app-input-label>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </form>
+  </div>
+
+  <div class="create-location-type__footer">
+    <p-button [label]="'cancel' | translate" [outlined]="true" severity="secondary" />
+    <p-button [label]="'create' | translate" [disabled]="form.invalid" (onClick)="saveChanges()" severity="secondary" />
+  </div>
+</div>

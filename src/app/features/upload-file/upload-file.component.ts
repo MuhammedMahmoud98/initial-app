@@ -377,7 +377,13 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
   }
 
 
-
+  backward() {
+    this.isUploadedScreen.set(false);
+    this.cancelUpload();
+    this.userActionTaken = true;
+    localStorage.removeItem('discardOnReload');
+    this.router.navigate(['/created-locations']);
+  }
 
   @HostListener('window:beforeunload', ['$event'])
   beforeUnloadHandler(event: BeforeUnloadEvent): string | void {

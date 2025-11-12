@@ -134,17 +134,30 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
 
   confirmLeavePage(): Observable<boolean> | boolean {
     if (!this.previewLoaded || this.userActionTaken) return true;
-
-    return new Observable<boolean>((observer) => {
+    return new Observable<boolean>(() => {
       this.confirmationService.confirm({
-        message: 'Are you sure you want to leave this page? Unsaved data will be lost.',
-        header: 'Confirm Navigation',
-        icon: 'pi pi-exclamation-triangle',
-        accept: () => { this.discardUpload();  observer.next(true); observer.complete(); },
-        reject: () => { observer.next(false); observer.complete(); },
+        header: this.#translateService.instant('unsavedChangesTitle'),
+        message:  this.#translateService.instant('unsavedChangesMessage'),
+        closable: false,
+        closeOnEscape: true,
+        rejectButtonProps: {
+          label: this.#translateService.instant('cancel'),
+          severity: 'secondary',
+          outlined: true,
+        },
+        acceptButtonProps: {
+          label: this.#translateService.instant('confirm'),
+          severity: 'secondary',
+        },
+        acceptVisible: true,
+        accept: () => {
+          this.discardUpload();
+        }
       });
     });
   }
+
+ 
 
   
   downloadTemplate() {

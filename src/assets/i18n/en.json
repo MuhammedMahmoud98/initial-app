@@ -66,6 +66,8 @@
   "fileSizeExceedMsg":"File size exceeds the maximum limit of 5 MB. Please reduce the file size and try again.",
   "excelFileExtension":"Wrong file extension. Please attach an Excel file",
   "uploading":"uploading...",
-  "uploadComplete":"upload complete"
+  "uploadComplete":"upload complete",
+  "unsavedChangesTitle":"unsaved changes",
+  "unsavedChangesMessage":"you have unsaved changes. are you sure you want to leave this page?"
    
 }

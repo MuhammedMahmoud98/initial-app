@@ -56,6 +56,16 @@
   "add a location type to categories locations effectively": "add a location type to categories locations effectively",
   "something went wrong": "something went wrong",
   "location deleted successfully": "location deleted successfully",
-  "assignedLocations" :"assigned Locations"
+  "assignedLocations" :"assigned Locations",
+  "importFile" : "import File",
+  "downloadTemplate" : "download template",
+  "dragAndClick" : "Drag and drop or click to upload file",
+  "maxFileSizeMsg" : "Please upload an .xlsx file and max size 5 MB",
+  "importNewLocation":"import new locations",
+  "save":"save",
+  "fileSizeExceedMsg":"File size exceeds the maximum limit of 5 MB. Please reduce the file size and try again.",
+  "excelFileExtension":"Wrong file extension. Please attach an Excel file",
+  "uploading":"uploading...",
+  "uploadComplete":"upload complete"
    
 }

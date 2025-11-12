@@ -39,7 +39,7 @@ export class LocationsUploadService {
   }
    
   saveUpload(fileID: string): Observable<any> {
-    const url: string = API_CONSTANTS.SAVE_LOCATION_BY_FILEID.replace('{uploadId}', fileID.toString()) + '/confirm';
+    const url: string = API_CONSTANTS.SAVE_LOCATION_BY_FILEID.replace('{uploadId}', fileID.toString());
     return this.#httpClient.put(url, {})
   }
 

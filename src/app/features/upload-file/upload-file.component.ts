@@ -4,18 +4,20 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  HostListener,
   inject,
+  OnInit,
   signal,
   TemplateRef,
   viewChild,
-  WritableSignal,
+  WritableSignal
 } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { LocationsUploadService } from './services/locations-upload.service';
-import { MessageService } from 'primeng/api';
-import { TranslateService } from '@ngx-translate/core';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { COMMON_CONSTANTS, INITIAL_FILTER_PAYLOAD } from '../../shared/constants/common-constants';
 import { GenericTableComponent } from '../../shared/components/generic-table/generic-table.component';
 import { ComponentStateComponent } from '../../shared/components/component-state/component-state.component';
@@ -27,11 +29,13 @@ import { CreatedLocation, CreatedLocationColumnType, CreatedLocationResponse } f
 import { ItemFilter, TableColumn } from '../../shared';
 import { genericCasting } from '../../shared/helpers/helpers';
 import { HubFilters } from '../../shared/components/hub-filters/models/hub-filters.model';
-import { catchError, EMPTY, tap } from 'rxjs';
+import { catchError, EMPTY, Observable, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TextWithBgColorComponent } from '../../shared/components/text-with-bg-color/text-with-bg-color.component';
 import { CustomStatusComponent } from '../../shared/components/custom-status/custom-status.component';
 import { CopyToClipboardComponent } from '../../shared/components/copy-to-clipboard/copy-to-clipboard.component';
+import { Router } from '@angular/router';
+import { CanLeaveUploadPage } from '../../core/guards/upload-leave.guard';
 
 
 
@@ -49,8 +53,8 @@ import { CopyToClipboardComponent } from '../../shared/components/copy-to-clipbo
     HubFiltersComponent,
     TextWithBgColorComponent,
     CustomStatusComponent,
-    CopyToClipboardComponent
-
+    CopyToClipboardComponent,
+    TranslatePipe,
 
   ],
   providers: [],
@@ -59,11 +63,13 @@ import { CopyToClipboardComponent } from '../../shared/components/copy-to-clipbo
   styleUrl: './upload-file.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UploadFileComponent {
+export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
   readonly #locationsUploadService: LocationsUploadService = inject(LocationsUploadService);
   readonly #messageService: MessageService = inject(MessageService);
   readonly #translateService: TranslateService = inject(TranslateService);
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
+  protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
+  private router = inject(Router);
 
   readonly genericTableCacheService: GenericTableCacheService = inject(GenericTableCacheService);
   columns: WritableSignal<TableColumn<CreatedLocation>[]> = signal([]);
@@ -106,15 +112,41 @@ export class UploadFileComponent {
     ]
   }
 
-  constructor(private cdr: ChangeDetectorRef) { }
-
   uploadProgress = 0;
   isUploading = false;
   fileName = '';
   fileUploaded = false;
   uploadInterval: any;
+  previewLoaded = false;
+  userActionTaken = false; 
 
+  constructor(private cdr: ChangeDetectorRef) { }
 
+  ngOnInit(): void {
+    const discarded = localStorage.getItem('discardOnReload');
+    if (discarded) {
+      const { uploadId } = JSON.parse(discarded);
+      this.fileUploadId = uploadId;
+      localStorage.removeItem('discardOnReload');
+      this.discardUpload(); // call your real discard() logic here
+    }
+  }
+
+  confirmLeavePage(): Observable<boolean> | boolean {
+    if (!this.previewLoaded || this.userActionTaken) return true;
+
+    return new Observable<boolean>((observer) => {
+      this.confirmationService.confirm({
+        message: 'Are you sure you want to leave this page? Unsaved data will be lost.',
+        header: 'Confirm Navigation',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => { this.discardUpload();  observer.next(true); observer.complete(); },
+        reject: () => { observer.next(false); observer.complete(); },
+      });
+    });
+  }
+
+  
   downloadTemplate() {
     this.#locationsUploadService.downloadTemplate().subscribe({
 
@@ -150,6 +182,7 @@ export class UploadFileComponent {
           life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
         });
         this.fileUploadId = res.uploadId;
+        localStorage.setItem('fileUploadId', this.fileUploadId);
         this.getCreatedLocations(res.uploadId);
 
         console.log('✅ Upload success:', res);
@@ -157,8 +190,8 @@ export class UploadFileComponent {
       error: (err: any) => {
         this.isUploading = false;
         this.fileUploaded = false;
-
-        if (err.error.type === 'validation' && err.error.message?.length) {
+        this.cancelUpload();
+        if (err.type === 'validation' && err.error.message?.length) {
           // Show each validation error
           err.error.message.forEach((msg: string) => {
             this.#messageService.add({
@@ -174,7 +207,11 @@ export class UploadFileComponent {
             severity: 'error',
             summary: 'Error',
             detail: this.#translateService.instant(
-              err.error.message[0].source.message || 'Upload failed. Please try again.'
+              err?.error?.errors?.[0]?.message ||
+              err?.error?.errors?.[0] ||
+              err?.error?.message?.[0]?.source?.message ||
+              err?.error?.message ||
+              'Upload failed. Please try again.'
             ),
             life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
           });
@@ -185,11 +222,45 @@ export class UploadFileComponent {
 
   onFileSelect(event: any) {
     const file = event.files?.[0];
-    if (file) {
-      this.fileName = file.name;
-      this.uploadFile(file);
+    if (!file) return;
+
+    const fileName = file.name.toLowerCase();
+    const fileSize = file.size;
+    const maxFileSize = 5 * 1024 * 1024;
+
+    const validExtensions = ['.xls', '.xlsx'];
+    const isValidType = validExtensions.some(ext => fileName.endsWith(ext));
+
+    if (!isValidType) {
+      this.#messageService.add({
+        severity: 'error',
+        summary: this.#translateService.instant('Error'),
+        detail: this.#translateService.instant('excelFileExtension'),
+        life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
+      });
+      this.cancelUpload();
+      return;
     }
+
+    if (fileSize > maxFileSize) {
+      this.#messageService.add({
+        severity: 'error',
+        summary: this.#translateService.instant('Error'),
+        detail: this.#translateService.instant('fileSizeExceedMsg'),
+        life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
+      });
+
+
+      this.cancelUpload();
+      return;
+    }
+
+    this.fileName = file.name;
+    this.previewLoaded = false;
+    this.userActionTaken = false;
+    this.uploadFile(file);
   }
+
 
 
 
@@ -198,6 +269,7 @@ export class UploadFileComponent {
     this.uploadProgress = 0;
     this.fileName = '';
     this.fileUploaded = false;
+    this.cdr.detectChanges();
   }
 
 
@@ -213,6 +285,7 @@ export class UploadFileComponent {
           this.items.set(createdLocations.content);
           this.isEmptyState.set(false);
           this.isErrorState.set(false);
+          this.previewLoaded = true;
         } else {
           this.handleEmptyState();
         }
@@ -258,9 +331,13 @@ export class UploadFileComponent {
   saveUpload() {
     this.#locationsUploadService.saveUpload(this.fileUploadId).subscribe({
       next: (res: any) => {
-        this.#messageService.add({ severity: 'success', summary: 'Success', detail: this.#translateService.instant(res.massage), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME });
+        this.#messageService.add({ severity: 'success', summary: 'Success', detail: this.#translateService.instant(res.message), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME });
         this.isUploadedScreen.set(false);
         this.cancelUpload();
+        this.userActionTaken = true;
+        localStorage.removeItem('discardOnReload');
+
+        this.router.navigate(['/created-locations']);
       },
       error: (err: any) => {
         this.#messageService.add({ severity: 'error', summary: 'Error', detail: this.#translateService.instant(err.message), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME });
@@ -269,15 +346,32 @@ export class UploadFileComponent {
   }
 
   discardUpload() {
+    this.fileUploadId = localStorage.getItem('fileUploadId');
     this.#locationsUploadService.discardUpload(this.fileUploadId).subscribe({
       next: (res: any) => {
-        this.#messageService.add({ severity: 'success', summary: 'Success', detail: this.#translateService.instant(res.massage), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME });
+        this.#messageService.add({ severity: 'success', summary: 'Success', detail: this.#translateService.instant(res.message), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME });
         this.isUploadedScreen.set(false);
         this.cancelUpload();
+        this.userActionTaken = true;
+        localStorage.removeItem('discardOnReload');
+
+        this.router.navigate(['/created-locations']);
       },
       error: (err: any) => {
         this.#messageService.add({ severity: 'error', summary: 'Error', detail: this.#translateService.instant(err.message), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME });
       },
     });
+  }
+
+
+
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnloadHandler(event: BeforeUnloadEvent): string | void {
+    if (this.previewLoaded && !this.userActionTaken) {
+      localStorage.setItem('discardOnReload', JSON.stringify({ uploadId: this.fileUploadId }));
+      event.preventDefault();
+      return '';
+    }
   }
 }

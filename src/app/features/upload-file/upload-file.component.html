@@ -6,12 +6,12 @@
         <img src="assets/images/back-arrow.svg" alt="back-arrow" />
        </button>
        <span>
-      import new locations
+       {{'importNewLocation' | translate}}
       </span>
     </div>
 <button class="download-btn" type="button" label="download template" (click)="downloadTemplate()">
   <img src="assets/images/download-file.svg" alt="download-file.svg" />
-download template
+  {{'downloadTemplate' | translate}}
 </button>
   </div>
 
@@ -28,8 +28,8 @@ download template
         <div class="upload-placeholder" role="button" tabindex="0" aria-label="Choose file to upload"
           (click)="uploader.choose()" (keydown.enter)="uploader.choose()">
           <img src="assets/images/upload-page.svg" alt="upload" />
-          <p class="upload-text">drag and drop or click to upload file</p>
-          <p class="upload-sub">max excel file size is 5 mb</p>
+          <p class="upload-text">{{'dragAndClick' | translate}}</p>
+          <p class="upload-sub">{{'maxFileSizeMsg' | translate}}</p>
         </div>
       </ng-template>
     </p-fileUpload>
@@ -43,8 +43,9 @@ download template
         <div class="file-details">
           <p class="file-name">{{ fileName }}</p>
           <p class="file-status">
-            {{ uploadProgress < 100 ? 'uploading...' : 'upload complete' }} </p>
-            
+            {{
+            uploadProgress < 100 ? ('uploading' | translate) : ('uploadComplete' | translate) }} </p>
+
         </div>
         <button class="cancel-upload" (click)="cancelUpload()">
            <img src="assets/images/cancel.svg" alt="cancel"/>
@@ -68,7 +69,7 @@ download template
     [iconUrl]="'assets/images/location-state.svg'" [showReloadButton]="true" />
   } @else {
   <!-- FILTERS -->
-  <div [hidden]="genericTableCacheService.selectedItemsCounter()">
+  <div class="mb-4">
     <app-hub-filters (filterValues)="onFilterValueChanges($event)" />
   </div>
 
@@ -78,7 +79,7 @@ download template
   @if (!isEmptyState() && !isErrorState()) {
   <div class="overflow-x-auto overflow-y-hidden">
     <app-generic-table [columns]="createTableColumns()" [items]="items()"
-      [totalRecords]="genericTableCacheService.totalAvailableItems()" [hasCheckBoxes]="true"
+      [totalRecords]="genericTableCacheService.totalAvailableItems()" [hasCheckBoxes]="false"
        (currentPage)="onPageChange($event)" />
   </div>
   } @else if (isEmptyState() && !isErrorState()) {
@@ -102,8 +103,8 @@ download template
   <!-- Actions -->
   <div class="import-actions">
     <button
-    type="button" label="cancel" class="cancel-btn p-button-outlined p-button-sm" [disabled]="!fileUploaded" (click)="discardUpload()">cancel</button>
-    <button  type="button" label="save" class="save-btn p-button-sm" [disabled]="!fileUploaded" (click)="saveUpload()">save</button>
+    type="button" label="cancel" class="cancel-btn p-button-outlined p-button-sm" [disabled]="!fileUploaded" (click)="discardUpload()">{{"cancel" | translate}}</button>
+    <button  type="button" label="save" class="save-btn p-button-sm" [disabled]="!fileUploaded" (click)="saveUpload()">{{"save" | translate}}</button>
   </div>
   </section>
 </div>

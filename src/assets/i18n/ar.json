@@ -58,5 +58,16 @@
   "something went wrong": "لقد حدث خطأ ما",
   "location deleted successfully": "تم حذف الموقع بنجاح",
   "لا توجد معرفات موقع لإنشاء رمز الاستجابة السريعة": "لا توجد معرفات موقع لإنشاء رمز الاستجابة السريعة",
-  "assignedLocations": "الأماكن المعينة"
+  "assignedLocations": "الأماكن المعينة",
+  "Employee Name": "اسم الموظف",
+  "Employee Email": "بريد الموظف",
+  "Location Code": "كود المكان",
+  "Date of Linking": "تاريخ الربط",
+  "Unlink": "إلغاء الربط",
+  "unlinkConfirmMessageHeader": "بموافقتك على إلغاء الربط، سيتم إزالة الموظف من هذا الموقع وسيصبح الموقع متاحًا للربط مع موظفين آخرين.",
+  "unlinkConfirmMessageBody": "هل أنت متأكد أنك تريد المتابعة؟",
+  "noLocationsAssignedAvailable": "لا توجد مواقع معينة متاحة",
+  "locationAssignedSubTitleEmpty": "لا توجد مواقع معينة مطابقة لرمز المكان او بريد الموظف الذي تم إدخاله.",
+  "assignedLocationsPlaceHolder": " البحث بكود المكان او بريد الموظف"
 }
+

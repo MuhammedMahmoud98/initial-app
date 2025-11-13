@@ -11,3 +11,11 @@
   overflow: auto;
   height: 100%;
 }
+.action-link-button{
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: #717E86;
+  font-size: 15px;
+}

@@ -30,6 +30,9 @@ import { LocationServiceEvent} from '../location-types/models/location-types.mod
 import { TitleWithIconComponent } from '../../shared/components/title-with-icon/title-with-icon.component';
 import { INITIAL_FILTER_PAYLOAD_ASSIGNED_LOCATION } from '../../shared/constants/common-constants';
 import { HubFiltersComponent } from '../../shared/components/hub-filters/hub-filters.component';
+import { CopyToClipboardComponent } from '../../shared/components/copy-to-clipboard/copy-to-clipboard.component';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-assigned-qr',
@@ -38,7 +41,9 @@ import { HubFiltersComponent } from '../../shared/components/hub-filters/hub-fil
     ComponentStateComponent,
     SkeletonLoaderComponent,
     TitleWithIconComponent,
-        HubFiltersComponent,
+    HubFiltersComponent,
+    CopyToClipboardComponent,
+    TranslatePipe
     
   ],
   providers: [DialogService],
@@ -50,12 +55,11 @@ import { HubFiltersComponent } from '../../shared/components/hub-filters/hub-fil
 export class AssignedLocationsComponent implements OnDestroy {
   // INJECTIONS
   readonly genericTableCacheService: GenericTableCacheService = inject(GenericTableCacheService);
-  // protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
+  protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
   readonly #locationsService: LocationsService = inject(LocationsService);
-  // readonly #dialogService: DialogService = inject(DialogService);
-  // readonly loadingDialogService = inject(LoadingDialogService);
-  // readonly #messageService: MessageService = inject(MessageService);
-  // readonly #translateService: TranslateService = inject(TranslateService);
+ 
+  readonly #messageService: MessageService = inject(MessageService);
+  readonly #translateService: TranslateService = inject(TranslateService);
 
   // SIGNALS
   items = signal<AssignedLocationType[]>([]);
@@ -126,28 +130,6 @@ export class AssignedLocationsComponent implements OnDestroy {
     this.getAssignedLocationTypes();
   }
 
-  // listenToToggleService(): void {
-  //   this.toggle$.pipe(
-  //     debounceTime(300),
-  //     // distinctUntilChanged((prev, curr) => prev.isAvailable === curr.isAvailable),
-  //     distinctUntilChanged(),
-  //     mergeMap((locationServiceEvent: LocationServiceEvent): Observable<LocationServiceResponse> => {
-  //       const {
-  //         serviceId,
-  //         id,
-  //         isAvailable
-  //       } = locationServiceEvent;
-
-  //       const servicePayload = {id, serviceId} as LocationServicePayload;
-  //       const serviceBody = {available: isAvailable} as LocationServiceBody;
-
-  //       return this.#locationsService.updateLocationService(servicePayload, serviceBody).pipe(
-  //         tap((locationServiceResponse: LocationServiceResponse) => {
-  //           this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant(locationServiceResponse.message), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
-  //         })
-  //       );
-  //     })).subscribe();
-  // }
 
   updateFilterPayload(newFilters: HubFilters | ItemFilter): void {
     this.locationTypesPayload.update((current) => ({...current, ...newFilters}));
@@ -161,6 +143,40 @@ export class AssignedLocationsComponent implements OnDestroy {
   }
 
 
+  openUnlinkAssignedLocationDialog(assignedLocationId: number): void {
+      this.confirmationService.confirm({
+        header: this.#translateService.instant('unlinkConfirmMessageHeader'),
+        message: this.#translateService.instant('unlinkConfirmMessageBody'),
+        closable: false,
+        closeOnEscape: true,
+        rejectButtonProps: {
+          label: this.#translateService.instant('cancel'),
+          severity: 'secondary',
+          outlined: true,
+        },
+        acceptButtonProps: {
+          label: this.#translateService.instant('confirm'),
+          severity: 'secondary',
+        },
+        acceptVisible: true,
+        accept: (): void => {
+          this.unLinkAssignedLocation(assignedLocationId);
+        }
+      });
+  }
+
+  unLinkAssignedLocation(assignedLocationId: number): void {
+    this.#locationsService.unLinkAssignedLocation(assignedLocationId).pipe(
+      tap((res:any) => {
+        this.#messageService.add({ severity: 'success', summary: 'Success', detail: res?.message , life: 3000});
+        this.getAssignedLocationTypes();
+      }),
+      catchError((e) => {
+        this.#messageService.add({severity:'error', summary: 'Error', detail: e.error.message[0].source.message , life: 3000});
+        return EMPTY;
+      })
+    ).subscribe();
+  } 
 
   handleEmptyState(): void {
     this.isEmptyState.set(true);

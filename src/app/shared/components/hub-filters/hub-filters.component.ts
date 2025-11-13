@@ -26,6 +26,7 @@ import { CommonModule } from '@angular/common';
 export class HubFiltersComponent {
   // INPUT
   type = input<'search' | 'filter'>('filter'); // default to filter
+  placeHolder = input<string>('searchPlaceholder');
 
   // OUTPUT
   filterValues: OutputEmitterRef<HubFilters> = output<HubFilters>();

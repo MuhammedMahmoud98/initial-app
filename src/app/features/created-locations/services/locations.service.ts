@@ -100,4 +100,9 @@ export class LocationsService {
   validateQRPrint(payload: GenerateQrPayload): Observable<ValidateQrResponse> {
     return this.#httpClient.post<ValidateQrResponse>(API_CONSTANTS.VALIDATE_QR_PRINT, payload);
   }
+
+  unLinkAssignedLocation(assignedLocationId: number): Observable<void> {
+    const url: string = API_CONSTANTS.ASSIGNED_LOCATIONS_UNLINK.replace('{id}', assignedLocationId.toString());
+    return this.#httpClient.patch<void>(url,{});
+  }
 }

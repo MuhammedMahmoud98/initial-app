@@ -195,7 +195,7 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
           life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
         });
         this.fileUploadId = res.uploadId;
-        localStorage.setItem('fileUploadId', this.fileUploadId);
+        // localStorage.setItem('fileUploadId', this.fileUploadId);
         this.getCreatedLocations(res.uploadId);
 
         console.log('✅ Upload success:', res);
@@ -359,7 +359,7 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
   }
 
   discardUpload() {
-    this.fileUploadId = localStorage.getItem('fileUploadId');
+    // this.fileUploadId = localStorage.getItem('fileUploadId');
     this.#locationsUploadService.discardUpload(this.fileUploadId).subscribe({
       next: (res: any) => {
         this.#messageService.add({ severity: 'success', summary: 'Success', detail: this.#translateService.instant(res.message), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME });

@@ -10,7 +10,7 @@ import {
 import {GenericTableComponent} from '../../shared/components/generic-table/generic-table.component';
 import {HubFiltersComponent} from '../../shared/components/hub-filters/hub-filters.component';
 import {GenericTableCacheService} from '../../shared/services';
-import {MessageService} from 'primeng/api';
+import {MenuItem, MessageService} from 'primeng/api';
 import {LocationsService} from '../created-locations/services/locations.service';
 import {DialogService} from 'primeng/dynamicdialog';
 import {HubFilters} from '../../shared/components/hub-filters/models/hub-filters.model';
@@ -20,7 +20,7 @@ import {
   LocationTypeResponse,
   ToggleServiceEvent
 } from './models/location-types.model';
-import {ItemFilter} from '../../shared';
+import {ItemFilter, ModeType} from '../../shared';
 import {COMMON_CONSTANTS, INITIAL_FILTER_PAYLOAD} from '../../shared/constants/common-constants';
 import {
   catchError,
@@ -44,6 +44,9 @@ import {Button} from 'primeng/button';
 import {
   CreateLocationTypeDialogComponent
 } from '../../shared/dialogs/create-location-type-dialog/create-location-type-dialog.component';
+import {MenuModule} from 'primeng/menu';
+import {Ripple} from 'primeng/ripple';
+import {MODE} from '../../shared/enums/shared.enum';
 
 @Component({
   selector: 'app-location-types',
@@ -57,6 +60,9 @@ import {
     SkeletonLoaderComponent,
     Button,
     TranslatePipe,
+    // Menu,
+    MenuModule,
+    Ripple
   ],
   providers: [DialogService],
   standalone: true,
@@ -91,6 +97,7 @@ export class LocationTypesComponent implements OnDestroy {
   categoryCustomColumn = viewChild<TemplateRef<{$implicit: LocationType}>>('categoryCustomColumn');
   nameCustomColumn = viewChild<TemplateRef<{$implicit: LocationType}>>('nameCustomColumn');
   locationTypeServicesCustomColumn = viewChild<TemplateRef<{$implicit: LocationType}>>('locationTypeServicesCustomColumn');
+  locationTypeActionsColumn = viewChild<TemplateRef<{$implicit: LocationType}>>('locationTypeActionsColumn');
 
 
   protected readonly genericCasting = genericCasting<LocationType>;
@@ -134,6 +141,7 @@ export class LocationTypesComponent implements OnDestroy {
       {field: 'code', alias: 'typeCode', template: this.codeCustomColumn()},
       {field: 'services', alias: 'availableServices', template: this.serviceCustomColumn()},
       {field: 'availability', template: this.locationTypeServicesCustomColumn()},
+      {field: '', template: this.locationTypeActionsColumn()},
     ]
   }
 
@@ -197,12 +205,36 @@ export class LocationTypesComponent implements OnDestroy {
     this.isErrorState.set(false);
   }
 
-  openAddLocationTypeModal(): void {
+  openAddLocationTypeModal(mode: ModeType = MODE.ADD, locationTypeData?: LocationType): void {
+    console.log(locationTypeData, 'INSIDE MAIN TABLE')
     this.#dialogService.open(CreateLocationTypeDialogComponent, {
-      header: this.#translateService.instant('createNewType'),
+      header: this.#translateService.instant(mode === MODE.ADD ? 'createNewType' : 'editType'),
       width: '580px',
       modal: true,
       closable: true,
+      data: {
+        mode,
+        ...(locationTypeData as LocationType && { locationTypeData})
+      }
     });
+  }
+
+  locationTypeActions(row: LocationType): MenuItem[] {
+    return [
+      {
+        label: 'edit',
+        command: () => {
+          this.openAddLocationTypeModal(MODE.EDIT, row);
+        },
+        alias: 'edit'
+      },
+      {
+        label: 'delete',
+        command: () => {
+          console.log('DELETE');
+        },
+        alias: 'delete'
+      }
+    ];
   }
 }

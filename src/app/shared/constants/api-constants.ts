@@ -22,6 +22,9 @@ export const API_CONSTANTS = {
   // LOCATION TYPES
   LOCATION_TYPES: serverUrl + '/location-types',
   LOCATION_TYPE_SERVICES: serverUrl + '/location-types/{id}/service/{serviceId}',
+  CREATE_LOCATION_TYPE: serverUrl + '/location-types',
+  UPDATE_LOCATION_TYPE: serverUrl + '/location-types/{id}',
+  DELETE_LOCATION_TYPE: serverUrl + '/location-types/{id}',
   // QR
   GENERATE_QR: serverUrl + '/qr/generate-qr',
   PRINT_QR: serverUrl + '/qr/print-qr',

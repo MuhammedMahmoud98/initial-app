@@ -58,6 +58,7 @@
   "something went wrong": "something went wrong",
   "location deleted successfully": "location deleted successfully",
   "createNewType": "create new type",
+  "editType": "edit type",
   "publicLocation": "public location",
   "employeeLocation": "employee location",
   "categoryInfoMsg": "A public location is a shared space that any employee can use and is not tied to a specific person's profile.",
@@ -73,9 +74,14 @@
   "type": "type",
   "selectServiceTypePlaceholder": "select service",
   "survey": "survey",
+  "Feedback": "feedback",
   "internal survey link": "internal survey link",
   "external survey link": "external survey link",
   "max 500 characters": "max 500 characters",
   "max 20 characters": "max 20 characters",
-  "max 10 characters": "max 10 characters"
+  "max 10 characters": "max 10 characters",
+  "maxLengthField": "max {{length}} characters",
+  "minLengthField": "min {{length}} characters",
+  "requiredField": "required field",
+  "edit": "edit"
 }

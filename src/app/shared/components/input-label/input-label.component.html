@@ -22,7 +22,7 @@
     }
   </label>
   <ng-content></ng-content>
-  @if (helperText()) {
-    <span class="input-label__helper-text">{{ helperText() | translate }}</span>
+  @if (helperText() && !hasError()) {
+    <span class="input-label__helper-text" [class.input-label__has-error]="hasError()">{{ helperText() | translate }}</span>
   }
 </div>

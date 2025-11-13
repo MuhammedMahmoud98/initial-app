@@ -7,7 +7,7 @@ import {LOCATION_TYPE_CATEGORIES} from '../enums/shared.enum';
 
 // TYPES
 export type CategoryTypes = typeof LOCATION_TYPE_CATEGORIES[keyof typeof LOCATION_TYPE_CATEGORIES];
-export type ServiceType = 'SURVEY';
+export type ServiceType = 'Feedback';
 export type ServiceResponse = ServiceDto & 'id';
 
 export interface ServiceDto {
@@ -32,6 +32,7 @@ export interface LocationTypeResponse extends LocationTypePayload {
 }
 
 export type LocationTypeKeys = keyof LocationTypePayload;
+export type ServicesTypeKeys = keyof ServiceDto;
 
 export interface LocationTypeForm {
   name: FormControl<string>;

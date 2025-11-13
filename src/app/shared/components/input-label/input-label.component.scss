@@ -21,4 +21,8 @@
     color: var(--silver-600);
     font-size: 0.875rem;
   }
+
+  &__has-error {
+    color: var(--danger-500);
+  }
 }

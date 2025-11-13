@@ -1,4 +1,5 @@
 import {FormControl} from '@angular/forms';
+import {MODE} from '../enums/shared.enum';
 
 export interface CoreAppRoutes {
   path: string;
@@ -24,3 +25,7 @@ export interface ItemFilter {
 export type FormControlsOf<T> = {
   [K in keyof T]: FormControl<T[K]>;
 };
+
+export type FormErrorType = 'minlength' | 'maxlength' | 'required' | 'sqlInjectionDetected' | 'xssDetected';
+
+export type ModeType = typeof MODE[keyof typeof MODE];

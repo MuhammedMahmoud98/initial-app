@@ -247,6 +247,10 @@ const stcPreset = definePreset(Aura, {
     },
     menu: {
       colorScheme: {
+        border: {
+          radius: 'var(--stc-radius)',
+          color: 'var(--silver-300)'
+        },
         light: {
           item: {
             focusBackground: 'var(--gray-50)',
@@ -390,10 +394,10 @@ const stcPreset = definePreset(Aura, {
       borderColor: '#D7D8DA',
       invalid: {
         placeholder: {
-          color: 'var(--danger-400)',
+          color: 'var(--secondary-500)',
         },
         border: {
-          color: 'var(--danger-400)',
+          color: 'var(--secondary-500)',
         }
       }
     },

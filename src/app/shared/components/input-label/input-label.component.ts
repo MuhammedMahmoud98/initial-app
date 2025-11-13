@@ -19,4 +19,5 @@ export class InputLabelComponent {
   labelTooltip = input<string>('');
   helperText = input<string>('');
   isRequired = input<boolean>(false);
+  hasError = input<boolean>(false);
 }

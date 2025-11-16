@@ -25,6 +25,12 @@ export const routes: Routes = [
           import(
             './features/location-types/location-types.component'
           ).then((m) => m.LocationTypesComponent)
+      },
+      {
+        path: MAIN_ROUTES.ASSIGNED_LOCATION,
+        loadComponent: () => 
+          import('./features/assigned-locations/assigned-locations.component').then((m) => m.AssignedLocationsComponent)
+        
       }
     ],
   },

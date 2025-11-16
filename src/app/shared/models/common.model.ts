@@ -17,4 +17,5 @@ export interface ItemFilter {
   page: number;
   size: number;
   filter?: string;
+  search?: string;
 }

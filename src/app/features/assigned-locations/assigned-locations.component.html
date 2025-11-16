@@ -1,0 +1,93 @@
+<div class="hub-locations-types">
+  @if (isLoading()) {
+    <app-skeleton-loader/>
+  } @else {
+    <!-- FILTERS -->
+
+    @if ((!isApplyingFilter() && isEmptyState() && !items().length)) {
+      <app-component-state
+        [mainTitle]="'no location types available'"
+        [subTitle]="'add a location type to categories locations effectively'"
+        [iconUrl]="'assets/images/location-state.svg'"
+        [showReloadButton]="true"
+      />
+    } @else {
+   <div >
+        <app-hub-filters  [placeHolder]="'assignedLocationsPlaceHolder'" (filterValues)="onFilterValueChanges($event)" />
+      </div>
+      @if (!isEmptyState() && !isErrorState()) {
+        <div class="overflow-x-auto overflow-y-hidden">
+          <app-generic-table
+            [columns]="createTableColumns()"
+            [items]="items()"
+            [totalRecords]="genericTableCacheService.totalAvailableItems()"
+            [hasCheckBoxes]="false"
+            (currentPage)="onPageChange($event)"
+          />
+        </div>
+      } @else if (isEmptyState() && !isErrorState()) {
+        <app-component-state
+          [mainTitle]="'noLocationsAssignedAvailable'"
+          [subTitle]="'locationAssignedSubTitleEmpty'"
+          [iconUrl]="'assets/images/location-state.svg'"
+        />
+      } @else if (isErrorState() && !isEmptyState()) {
+        <app-component-state
+          [mainTitle]="'there is a network error'"
+          [subTitle]="'please check your network or contact system admin'"
+          [iconUrl]="'assets/images/refresh-state.svg'"
+          [showReloadButton]="true"
+        />
+      }
+    }
+  }
+</div>
+
+<!-- NAME CUSTOM COLUMN -->
+<ng-template #nameCustomColumn let-row>
+  @let location = genericCasting(row);
+
+  <app-title-with-icon [itemTitle]="location.user.name" [iconUrl]="'assets/images/location-state.svg'"/>
+</ng-template>
+
+<!-- email CUSTOM COLUMN -->
+<ng-template #emailCustomColumn let-row>
+  @let locationType = genericCasting(row);
+
+  <span>
+     {{locationType.user.email}}
+  </span>
+</ng-template>
+
+<!-- CODE CUSTOM COLUMN -->
+
+
+<ng-template #codeCustomColumn let-row>
+  @let locationType = genericCasting(row);
+
+  <app-copy-to-clipboard [textToBeCopied]="locationType.location.code" />
+</ng-template>
+
+<!-- Unlink Date CUSTOM COLUMN -->
+<ng-template #unlinkCustomColumn let-row>
+  @let locationType = genericCasting(row);
+
+ {{locationType.createdAt}}
+</ng-template>
+
+
+<!-- action update link toggle to unlink-->
+ <ng-template #assignedLocationLinkAction  let-row>
+
+  @let locationType = genericCasting(row);
+
+  <span 
+    class="action-link-button"
+    role="button"
+    tabindex="0"
+    (click)="openUnlinkAssignedLocationDialog(locationType.id)"
+    (keydown.enter)="openUnlinkAssignedLocationDialog(locationType.id)">
+     <img src="assets/images/unlink.svg" alt="unlink">  {{ 'Unlink' | translate }}
+  </span>
+ </ng-template>
+

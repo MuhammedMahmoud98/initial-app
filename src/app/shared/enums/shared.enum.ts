@@ -1,6 +1,7 @@
 export enum MAIN_ROUTES {
   CREATED_LOCATIONS = 'created-locations',
-  LOCATION_TYPES = 'location-types'
+  LOCATION_TYPES = 'location-types',
+  ASSIGNED_LOCATION = 'assigned-locations'
 }
 
 export enum LOCATION_TYPE_CATEGORIES {

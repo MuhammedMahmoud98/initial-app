@@ -1,7 +1,14 @@
-import {FormControlsOf} from '../../../types/common-types.model';
+import { FormControl } from '@angular/forms';
+
+
+export type FormControlsOf<T> = {
+  [K in keyof T]: FormControl<T[K] | null>;
+};
+
 
 export interface HubFilters {
-  filter: string;
+  filter?: string;
+  search?: string;
 }
 
 

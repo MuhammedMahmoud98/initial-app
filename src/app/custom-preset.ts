@@ -247,6 +247,10 @@ const stcPreset = definePreset(Aura, {
     },
     menu: {
       colorScheme: {
+        border: {
+          radius: 'var(--stc-radius)',
+          color: 'var(--silver-300)'
+        },
         light: {
           item: {
             focusBackground: 'var(--gray-50)',
@@ -303,9 +307,11 @@ const stcPreset = definePreset(Aura, {
       shadow: 'none',
       colorScheme: {
         light: {
+          borderColor: 'var(--gray-200)',
           overlay: {
             border: {
-              color: '{surface.100}',
+              color: 'var(--gray-200)',
+              radius: 'var(--stc-radius)',
             },
           },
           option: {
@@ -313,6 +319,10 @@ const stcPreset = definePreset(Aura, {
               background: 'var(--gray-50)',
             },
           },
+          padding: {
+            x: '1.2rem',
+            y: '.81rem',
+          }
         },
       },
     },
@@ -380,6 +390,15 @@ const stcPreset = definePreset(Aura, {
       padding: {
         x: '1.2rem',
         y: '.81rem',
+      },
+      borderColor: '#D7D8DA',
+      invalid: {
+        placeholder: {
+          color: 'var(--secondary-500)',
+        },
+        border: {
+          color: 'var(--secondary-500)',
+        }
       }
     },
     multiselect: {

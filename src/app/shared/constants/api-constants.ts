@@ -22,6 +22,9 @@ export const API_CONSTANTS = {
   // LOCATION TYPES
   LOCATION_TYPES: serverUrl + '/location-types',
   LOCATION_TYPE_SERVICES: serverUrl + '/location-types/{id}/service/{serviceId}',
+  CREATE_LOCATION_TYPE: serverUrl + '/location-types',
+  UPDATE_LOCATION_TYPE: serverUrl + '/location-types/{id}',
+  DELETE_LOCATION_TYPE: serverUrl + '/location-types/{id}',
   // assignedLocation
   ASSIGNED_LOCATIONS: serverUrl + '/user-locations',
   ASSIGNED_LOCATIONS_UNLINK: serverUrl + '/user-locations/{id}/unlink',

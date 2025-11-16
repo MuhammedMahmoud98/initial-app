@@ -19,19 +19,3 @@
     color: var(--silver-600);
   }
 }
-
-.p-dialog-close-button {
-  background-color: var(--silver-200) !important;
-  border-radius: 31px;
-  width: 10px;
-  height: 10px;
-
-  svg {
-    width: 10px;
-    height: 10px;
-  }
-
-  &:hover {
-    background-color: var(--silver-300) !important;
-  }
-}

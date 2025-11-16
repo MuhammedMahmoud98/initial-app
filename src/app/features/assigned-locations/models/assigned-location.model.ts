@@ -13,7 +13,13 @@ export interface AssignedLocationType {
         id: number;
         code: string;
     };
-    createdAt: string; 
+    createdAt: string;
 }
+
+export interface LinkAssignedLocation {
+  id: number;
+  message: string;
+}
+
 export type AssignedLocationTypesResponse = LocationBase<AssignedLocationType>;
 export type AssignedLocationColumnType = TableColumn<AssignedLocationType>;

@@ -17,7 +17,7 @@ import {ItemFilter} from '../../shared';
 import {
   catchError,
   EMPTY,
-  
+
   Subject,
   tap
 } from 'rxjs';
@@ -25,7 +25,12 @@ import {genericCasting} from '../../shared/helpers/helpers';
 
 import {ComponentStateComponent} from '../../shared/components/component-state/component-state.component';
 import {SkeletonLoaderComponent} from '../../shared/components/skeleton-loader/skeleton-loader.component';
-import { AssignedLocationColumnType, AssignedLocationType, AssignedLocationTypesResponse } from './models/assigned-location.model';
+import {
+  AssignedLocationColumnType,
+  AssignedLocationType,
+  AssignedLocationTypesResponse,
+  LinkAssignedLocation
+} from './models/assigned-location.model';
 import { LocationServiceEvent} from '../location-types/models/location-types.model';
 import { TitleWithIconComponent } from '../../shared/components/title-with-icon/title-with-icon.component';
 import { INITIAL_FILTER_PAYLOAD_ASSIGNED_LOCATION } from '../../shared/constants/common-constants';
@@ -44,7 +49,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     HubFiltersComponent,
     CopyToClipboardComponent,
     TranslatePipe
-    
+
   ],
   providers: [DialogService],
   standalone: true,
@@ -57,7 +62,7 @@ export class AssignedLocationsComponent implements OnDestroy {
   readonly genericTableCacheService: GenericTableCacheService = inject(GenericTableCacheService);
   protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
   readonly #locationsService: LocationsService = inject(LocationsService);
- 
+
   readonly #messageService: MessageService = inject(MessageService);
   readonly #translateService: TranslateService = inject(TranslateService);
 
@@ -167,7 +172,7 @@ export class AssignedLocationsComponent implements OnDestroy {
 
   unLinkAssignedLocation(assignedLocationId: number): void {
     this.#locationsService.unLinkAssignedLocation(assignedLocationId).pipe(
-      tap((res:any) => {
+      tap((res: LinkAssignedLocation) => {
         this.#messageService.add({ severity: 'success', summary: 'Success', detail: res?.message , life: 3000});
         this.getAssignedLocationTypes();
       }),
@@ -176,7 +181,7 @@ export class AssignedLocationsComponent implements OnDestroy {
         return EMPTY;
       })
     ).subscribe();
-  } 
+  }
 
   handleEmptyState(): void {
     this.isEmptyState.set(true);

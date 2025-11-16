@@ -1,0 +1,28 @@
+.input-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &--dark {
+      color: var(--onyx-500);
+    }
+
+    &--required {
+      color: var(--secondary-500);
+    }
+  }
+
+  &__helper-text {
+    color: var(--silver-600);
+    font-size: 0.875rem;
+  }
+
+  &__has-error {
+    color: var(--danger-500);
+  }
+}

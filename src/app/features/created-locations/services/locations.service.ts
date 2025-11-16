@@ -14,7 +14,10 @@ import {
   LocationServicePayload,
   LocationServiceResponse
 } from '../../location-types/models/location-types.model';
-import { AssignedLocationTypesResponse } from '../../assigned-locations/models/assigned-location.model';
+import {
+  AssignedLocationTypesResponse,
+  LinkAssignedLocation
+} from '../../assigned-locations/models/assigned-location.model';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +34,7 @@ export class LocationsService {
     const params = new HttpParams({fromObject: payload as never});
     return this.#httpClient.get<LocationTypesResponse>(API_CONSTANTS.LOCATION_TYPES, {params});
   }
-   
+
   getAssignedLocation(payload: ItemFilter): Observable<AssignedLocationTypesResponse>  {
     const params = new HttpParams({ fromObject: payload as never });
     return this.#httpClient.get<AssignedLocationTypesResponse>(API_CONSTANTS.ASSIGNED_LOCATIONS, { params });
@@ -101,8 +104,8 @@ export class LocationsService {
     return this.#httpClient.post<ValidateQrResponse>(API_CONSTANTS.VALIDATE_QR_PRINT, payload);
   }
 
-  unLinkAssignedLocation(assignedLocationId: number): Observable<void> {
+  unLinkAssignedLocation(assignedLocationId: number): Observable<LinkAssignedLocation> {
     const url: string = API_CONSTANTS.ASSIGNED_LOCATIONS_UNLINK.replace('{id}', assignedLocationId.toString());
-    return this.#httpClient.patch<void>(url,{});
+    return this.#httpClient.patch<LinkAssignedLocation>(url,{});
   }
 }

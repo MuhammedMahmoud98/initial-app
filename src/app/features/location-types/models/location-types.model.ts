@@ -1,4 +1,4 @@
-import {LocationBase, TableColumn} from '../../../shared';
+import {LocationBase, ModeType, TableColumn} from '../../../shared';
 
 export interface LocationType {
   id:       number;
@@ -43,4 +43,7 @@ export type LocationColumnType = TableColumn<LocationType>;
 
 export type LocationTypeResponse = LocationBase<LocationType>;
 
-
+export interface LocationTypeDialogData {
+  mode: ModeType;
+  locationTypeData?: LocationType;
+}

@@ -1,0 +1,28 @@
+<div class="input-label">
+  <label class="input-label__label" for="">
+    <div class="flex align-items-center gap-1">
+      <span class="input-label__label--dark">{{label() | translate}}</span>
+      @if (isRequired()) {
+        <sup class="input-label__label--required">*</sup>
+      }
+    </div>
+    @if (labelTooltip()) {
+      <div class="cursor-pointer" [pTooltip]="labelTooltip() | translate" [tooltipPosition]="'top'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <g clip-path="url(#clip0_211_2896)">
+            <path d="M8 0.833008C9.97849 0.833096 11.7711 1.63563 13.0674 2.93164C14.3637 4.22795 15.1659 6.02126 15.166 8C15.1659 9.97874 14.3637 11.7711 13.0674 13.0674C11.7711 14.3637 9.97874 15.1659 8 15.166C6.02126 15.1659 4.22795 14.3637 2.93164 13.0674C1.63563 11.7711 0.833096 9.97849 0.833008 8C0.833096 6.02126 1.63535 4.22795 2.93164 2.93164C4.22795 1.63535 6.02126 0.833096 8 0.833008ZM8 1.83301C6.29713 1.8331 4.75609 2.52323 3.63965 3.63965C2.52323 4.75609 1.8331 6.29713 1.83301 8C1.8331 9.70271 2.52342 11.2439 3.63965 12.3604C4.75607 13.4766 6.2973 14.1659 8 14.166C9.70287 14.1659 11.2439 13.4768 12.3604 12.3604C13.4768 11.2439 14.1659 9.70287 14.166 8C14.1659 6.2973 13.4766 4.75607 12.3604 3.63965C11.2439 2.52342 9.70271 1.8331 8 1.83301ZM8.70703 11.7334H7.80664V7.44336H6.66699V6.63379H8.70703V11.7334ZM8.70703 5.57324H7.80664V4.2334H8.70703V5.57324Z" fill="#717E86"/>
+          </g>
+          <defs>
+            <clipPath id="clip0_211_2896">
+              <rect width="16" height="16" fill="white"/>
+            </clipPath>
+          </defs>
+        </svg>
+      </div>
+    }
+  </label>
+  <ng-content></ng-content>
+  @if (helperText() && !hasError()) {
+    <span class="input-label__helper-text" [class.input-label__has-error]="hasError()">{{ helperText() | translate }}</span>
+  }
+</div>

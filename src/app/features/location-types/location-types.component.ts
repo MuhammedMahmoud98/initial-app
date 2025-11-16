@@ -231,6 +231,7 @@ export class LocationTypesComponent implements OnDestroy {
       {
         label: 'delete',
         command: () => {
+          // TODO:: APPLY DELETE FUNCTION HERE..
           console.log('DELETE');
         },
         alias: 'delete'

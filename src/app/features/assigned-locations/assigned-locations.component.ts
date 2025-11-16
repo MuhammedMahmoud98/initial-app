@@ -38,6 +38,7 @@ import { HubFiltersComponent } from '../../shared/components/hub-filters/hub-fil
 import { CopyToClipboardComponent } from '../../shared/components/copy-to-clipboard/copy-to-clipboard.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-assigned-qr',
@@ -48,7 +49,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     TitleWithIconComponent,
     HubFiltersComponent,
     CopyToClipboardComponent,
-    TranslatePipe
+    TranslatePipe,
+    CommonModule
 
   ],
   providers: [DialogService],

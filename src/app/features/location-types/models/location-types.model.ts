@@ -6,6 +6,7 @@ export interface LocationType {
   code:     string;
   size:     string;
   category: string;
+  'has-linked-locations': boolean;
   services: LocationService[];
 }
 
@@ -47,3 +48,20 @@ export interface LocationTypeDialogData {
   mode: ModeType;
   locationTypeData?: LocationType;
 }
+
+export interface BackendErrorSource {
+  pointer: string;
+  code: string;
+  message: string;
+}
+
+export interface BackendErrorItem {
+  source: BackendErrorSource;
+  code: string;
+  message: string;
+}
+
+export interface BackendErrorResponse {
+  message: BackendErrorItem[];
+}
+

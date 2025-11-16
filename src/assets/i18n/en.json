@@ -94,5 +94,8 @@
   "Unlink": "unlink",
   "noLocationsAssignedAvailable": "no assigned locations available",
   "locationAssignedSubTitleEmpty": "No assigned locations matched the code, mail entered",
-  "assignedLocationsPlaceHolder": "search by location code, employee email"
+  "assignedLocationsPlaceHolder": "search by location code, employee email",
+  "deleteLocationTypeConfirmMessageHeader": "once the location type is deleted all linked locations will be unassigned",
+  "deleteLocationTypeConfirmMessageBody": "are you sure you want to proceed?",
+  "locationTypeDeletedSuccessfully": "location type deleted successfully"
 }

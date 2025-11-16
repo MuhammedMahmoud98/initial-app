@@ -21,7 +21,7 @@ export class LocationTypeActionsService {
   }
 
   deleteLocationType(id: number): Observable<unknown> {
-    const uri = API_CONSTANTS.UPDATE_LOCATION_TYPE.replace('id', id.toString());
+    const uri = API_CONSTANTS.DELETE_LOCATION_TYPE.replace('{id}', id.toString());
 
     return this.#http.delete(uri);
   }

@@ -97,5 +97,8 @@
   "unlinkConfirmMessageBody": "هل أنت متأكد أنك تريد المتابعة؟",
   "noLocationsAssignedAvailable": "لا توجد مواقع معينة متاحة",
   "locationAssignedSubTitleEmpty": "لا توجد مواقع معينة مطابقة لرمز المكان او بريد الموظف الذي تم إدخاله.",
-  "assignedLocationsPlaceHolder": " البحث بكود المكان او بريد الموظف"
+  "assignedLocationsPlaceHolder": " البحث بكود المكان او بريد الموظف",
+  "deleteLocationTypeConfirmMessageHeader": "بمجرد حذف نوع المكان، سيتم إلغاء تعيين جميع الأماكن المرتبطة به.",
+  "deleteLocationTypeConfirmMessageBody": "هل أنت متأكد أنك تريد المتابعة؟",
+  "locationTypeDeletedSuccessfully": "تم حذف نوع المكان بنجاح"
 }

@@ -13,7 +13,7 @@ import {
   WritableSignal
 } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import {FileUploadEvent, FileUploadModule} from 'primeng/fileupload';
+import {FileSelectEvent, FileUploadModule} from 'primeng/fileupload';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { LocationsUploadService } from './services/locations-upload.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -234,7 +234,7 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
     });
   }
 
-  onFileSelect(event: FileUploadEvent) {
+  onFileSelect(event: FileSelectEvent) {
     const file = event.files?.[0];
     if (!file) return;
 

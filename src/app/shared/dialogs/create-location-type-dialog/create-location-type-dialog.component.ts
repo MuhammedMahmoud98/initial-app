@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, Signal, signal} from '@angular/core';
 import {Button} from 'primeng/button';
 import {LocationTypeCategoryComponent} from '../../components/location-type-category/location-type-category.component';
 import {AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -12,18 +12,26 @@ import {
   CategoryTypes,
   LocationTypeForm,
   LocationTypeKeys,
-  LocationTypePayload,
+  LocationTypePayload, LocationTypeResponse,
   ServiceDto
 } from '../../models/create-location-type.model';
 import {Select} from 'primeng/select';
-import {FormControlsOf, FormErrorType} from '../../models';
+import {FormControlsOf, FormErrorType, ModeType} from '../../models';
 import {LOCATION_TYPE_CATEGORIES, MODE} from '../../enums/shared.enum';
-import {noScriptValidator, noSqlInjectionValidator} from '../../validators/custom-validators';
+import {
+  duplicatedTypeCodeValidator,
+  noScriptValidator,
+  noSqlInjectionValidator, ServiceLinkValidator
+} from '../../validators/custom-validators';
 import {catchError, EMPTY, tap} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DynamicDialogConfig, DynamicDialogRef} from 'primeng/dynamicdialog';
 import {LocationTypeActionsService} from '../../../features/location-types/services/location-type-actions.service';
 import {LocationType, LocationTypeDialogData} from '../../../features/location-types/models/location-types.model';
+import {SpinnerLoaderComponent} from '../../components/spinner-loader/spinner-loader.component';
+import {MessageService} from 'primeng/api';
+import {HttpErrorResponse} from '@angular/common/http';
+import {DUPLICATE_RECORD_CODE} from '../../constants/common-constants';
 
 @Component({
   selector: 'app-create-location-type-dialog',
@@ -36,6 +44,7 @@ import {LocationType, LocationTypeDialogData} from '../../../features/location-t
     InputText,
     TranslatePipe,
     Select,
+    SpinnerLoaderComponent,
   ],
   standalone: true,
   templateUrl: './create-location-type-dialog.component.html',
@@ -49,12 +58,22 @@ export class CreateLocationTypeDialogComponent {
   readonly #dialogConfig: DynamicDialogConfig = inject(DynamicDialogConfig);
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
   readonly #locationTypeActionsService: LocationTypeActionsService = inject(LocationTypeActionsService);
+  readonly #messageService: MessageService = inject(MessageService);
+
   // SIGNALS
   surveyOptions = signal([
     {name: this.#translateService.instant('Feedback'), code: 'Feedback'},
   ]);
 
+  isLoading = signal(false);
+
+  // COMPUTED
+  dialogMode: Signal<ModeType> = computed(() => this.#dialogConfig?.data?.mode as ModeType);
+  dialogData: Signal<LocationType> = computed(() => (this.#dialogConfig?.data as LocationTypeDialogData)?.locationTypeData as LocationType);
+  hasLinkedLocations: Signal<boolean> = computed(() => (this.#dialogConfig?.data as LocationTypeDialogData).locationTypeData?.['has-linked-locations'] ?? false);
+
   LOCATION_TYPE_CATEGORIES = LOCATION_TYPE_CATEGORIES;
+  protected readonly MODE = MODE;
 
   // FORM
   form!: FormGroup<LocationTypeForm>;
@@ -80,8 +99,14 @@ export class CreateLocationTypeDialogComponent {
   createServiceFormGroup(): FormGroup {
     const serviceFormGroup = new FormGroup({
       serviceType: new FormControl(null),
-      internalLink: new FormControl('', [noScriptValidator, noSqlInjectionValidator]),
-      externalLink: new FormControl('', [noScriptValidator, noSqlInjectionValidator]),
+      internalLink: new FormControl('', {
+        validators: [noScriptValidator, noSqlInjectionValidator],
+        asyncValidators: [ServiceLinkValidator(this.#locationTypeActionsService)],
+      }),
+      externalLink: new FormControl('', {
+        validators: [noScriptValidator, noSqlInjectionValidator],
+        asyncValidators: [ServiceLinkValidator(this.#locationTypeActionsService)],
+      }),
       available: new FormControl(true)
     });
 
@@ -95,6 +120,10 @@ export class CreateLocationTypeDialogComponent {
           // Add required validator when service type is SURVEY
           internalLink?.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(500), noScriptValidator, noSqlInjectionValidator]);
           externalLink?.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(500), noScriptValidator, noSqlInjectionValidator]);
+
+          // SET ASYNC VALIDATOR
+          internalLink?.setAsyncValidators([ServiceLinkValidator(this.#locationTypeActionsService)]);
+          externalLink?.setAsyncValidators([ServiceLinkValidator(this.#locationTypeActionsService)]);
         } else {
           // Remove required validator for other service types
           internalLink?.setValidators([noScriptValidator, noSqlInjectionValidator]);
@@ -114,9 +143,9 @@ export class CreateLocationTypeDialogComponent {
   listenToCategoryChanges(): void {
     this.getControl('category').valueChanges.pipe(
       tap((categoryValue: CategoryTypes) => {
-        const surveyControl = this.getControl('services').get('0')?.get('serviceType');
-        const internalLinkControl = this.getControl('services').get('0')?.get('internalLink');
-        const externalLinkControl = this.getControl('services').get('0')?.get('externalLink');
+        const surveyControl = this.getControl('services')?.get('0')?.get('serviceType');
+        const internalLinkControl = this.getControl('services')?.get('0')?.get('internalLink');
+        const externalLinkControl = this.getControl('services')?.get('0')?.get('externalLink');
         if (categoryValue === LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION && surveyControl?.value) {
           internalLinkControl?.setValidators([noScriptValidator, noSqlInjectionValidator]);
           externalLinkControl?.setValidators([noScriptValidator, noSqlInjectionValidator]);
@@ -127,9 +156,14 @@ export class CreateLocationTypeDialogComponent {
         }
 
         if (categoryValue === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION && surveyControl?.value) {
+          // eslint-disable-next-line max-len
           internalLinkControl?.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(500), noScriptValidator, noSqlInjectionValidator]);
+          // eslint-disable-next-line max-len
           externalLinkControl?.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(500), noScriptValidator, noSqlInjectionValidator]);
 
+          // SET ASYNC VALIDATOR
+          internalLinkControl?.setAsyncValidators([ServiceLinkValidator(this.#locationTypeActionsService)]);
+          externalLinkControl?.setAsyncValidators([ServiceLinkValidator(this.#locationTypeActionsService)]);
           // Update validity
           internalLinkControl?.updateValueAndValidity();
           externalLinkControl?.updateValueAndValidity();
@@ -141,17 +175,55 @@ export class CreateLocationTypeDialogComponent {
 
   saveChanges(): void {
     console.log(this.form.getRawValue(), 'form value');
-    const payload = this.form.getRawValue();
-    this.#locationTypeActionsService.createNewLocationType(payload).pipe(
-      tap((createLocationTypeRes) => {
-        console.log('%cCreateLocationType create location type', 'color: green', createLocationTypeRes);
-      }),
-      takeUntilDestroyed(this.#destroyRef),
-      catchError((err) => {
-        console.log(err, 'ERR');
-        return EMPTY;
-      })
-    ).subscribe();
+    const payload = {
+      ...this.form.getRawValue(),
+      services: this.servicesArray.getRawValue()?.[0].serviceType ? this.servicesArray.getRawValue() : [],
+    } as LocationTypePayload;
+
+    this.isLoading.set(true);
+    this.invokeCreateLocationType(payload);
+    this.invokeUpdateLocationType(this.dialogData()?.id, payload);
+  }
+
+  invokeCreateLocationType(payload: LocationTypePayload): void {
+    if (this.dialogMode() === MODE.ADD) {
+      this.#locationTypeActionsService.createNewLocationType(payload).pipe(
+        tap((createLocationTypeRes: LocationTypeResponse) => {
+          this.isLoading.set(false);
+          this.#messageService.add({severity: 'success', summary: 'success', detail: this.#translateService.instant('newLocationTypeSuccessMsg', {typeName: createLocationTypeRes.name})});
+          this.#dialogRef.close({refresh: true});
+        }),
+        takeUntilDestroyed(this.#destroyRef),
+        catchError((err) => {
+          this.handleTypeCodeDuplicationError(err);
+          this.isLoading.set(false);
+          console.log(err, 'CREATE ERROR');
+          return EMPTY;
+        })
+      ).subscribe();
+    }
+  }
+
+  invokeUpdateLocationType(id: number, payload: LocationTypePayload): void {
+    if (this.dialogMode() === MODE.EDIT) {
+      this.#locationTypeActionsService.updateLocationType(id, payload).pipe(
+        tap(() => {
+          this.closeWithSuccessMsg(this.#translateService.instant('updateLocationTypeSuccessMsg', {typeName: this.form.getRawValue().name}));
+        }),
+        catchError((error) => {
+          console.log(error, 'UPDATE ERROR');
+          this.handleTypeCodeDuplicationError(error);
+          this.isLoading.set(false);
+          return EMPTY;
+        }),
+      ).subscribe();
+    }
+  }
+
+  closeWithSuccessMsg(message: string): void {
+    this.isLoading.set(false);
+    this.#dialogRef.close({refresh: true});
+    this.#messageService.add({severity: 'success', summary: 'success', detail: message});
   }
 
   getControl(controlName: LocationTypeKeys): FormControl {
@@ -199,13 +271,36 @@ export class CreateLocationTypeDialogComponent {
   }
 
   private activateEditMode(): void {
-    const dialogData = (this.#dialogConfig?.data as LocationTypeDialogData);
-
-    if (dialogData.mode === MODE.EDIT) {
+    if (this.dialogMode() === MODE.EDIT) {
+      const dialogData = (this.#dialogConfig?.data as LocationTypeDialogData);
+      console.log(dialogData, 'DIALOG DATA');
       this.form.patchValue(dialogData?.locationTypeData as Partial<LocationType | unknown>);
+      this.handleDisableControlsForLinkedLocations();
+      console.log(this.hasLinkedLocations(), 'HAS LINKED LOCATIONS');
+
       this.form.updateValueAndValidity();
 
       console.log(this.form.getRawValue(), 'EDIT MODE');
     }
+  }
+
+  handleDisableControlsForLinkedLocations(): void {
+    if (this.hasLinkedLocations()) {
+      this.getControl('category').disable();
+      this.getControl('code').disable();
+      this.getControl('name').disable();
+    }
+  }
+
+  private handleTypeCodeDuplicationError(err: HttpErrorResponse) {
+    const ctrl = this.getControl('code');
+
+    if (err?.error?.message?.[0]?.code === DUPLICATE_RECORD_CODE) {
+      ctrl.addValidators(duplicatedTypeCodeValidator(ctrl.value));
+    } else {
+      ctrl.removeValidators(duplicatedTypeCodeValidator(ctrl.value));
+    }
+
+    ctrl.updateValueAndValidity();
   }
 }

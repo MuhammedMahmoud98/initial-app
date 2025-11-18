@@ -20,6 +20,7 @@ export interface ServiceDto {
 export interface LocationTypePayload {
   name: string;
   code: string;
+  'has-linked-locations': boolean;
   size: PrintingSizeTypes;
   category: CategoryTypes;
   services: ServiceDto[];
@@ -40,4 +41,22 @@ export interface LocationTypeForm {
   size: FormControl<PrintingSizeTypes>;
   category: FormControl<CategoryTypes>;
   services: FormArray<FormGroup<FormControlsOf<ServiceDto>>>;
+}
+
+export interface ServiceLink {
+  internalLink: LinkInfo;
+  externalLink: LinkInfo;
+}
+
+export interface LinkInfo {
+  valid: boolean;
+  message: string;
+}
+
+
+export type ServiceLinkKeys = keyof ServiceLink;
+export type ServiceLinkPayload = Partial<Record<ServiceLinkKeys, string>>;
+
+export interface ServiceLinkResponse {
+  data: ServiceLink;
 }

@@ -37,10 +37,9 @@ export const INITIAL_FILTER_PAYLOAD: ItemFilter = {
 export const INITIAL_FILTER_PAYLOAD_ASSIGNED_LOCATION: ItemFilter = {
   page: 0,
   size: COMMON_CONSTANTS.ROWS_PER_PAGE,
-  
 };
 
-
+export const DUPLICATE_RECORD_CODE = 'dobox.duplicate.records';
 
 export const SQL_INJECTION_PATTERNS: RegExp[] = [
   /('|(\\')|(;)|(\\;)|(--|#|\/\*|\*\/))/gi,

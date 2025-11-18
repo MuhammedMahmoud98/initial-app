@@ -13,7 +13,7 @@ import {
   WritableSignal
 } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import { FileUploadModule } from 'primeng/fileupload';
+import {FileSelectEvent, FileUploadModule} from 'primeng/fileupload';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { LocationsUploadService } from './services/locations-upload.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -36,6 +36,8 @@ import { CustomStatusComponent } from '../../shared/components/custom-status/cus
 import { CopyToClipboardComponent } from '../../shared/components/copy-to-clipboard/copy-to-clipboard.component';
 import { Router } from '@angular/router';
 import { CanLeaveUploadPage } from '../../core/guards/upload-leave.guard';
+import {DiscardUploadResponse, SaveUploadResponse, UploadLocationsResponse} from './models/upload-file.model';
+import {HttpErrorResponse} from '@angular/common/http';
 
 
 
@@ -95,7 +97,7 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
 
   // CASTING
   protected readonly genericCasting = genericCasting<CreatedLocation>;
-  fileUploadId: any;
+  fileUploadId!: string;
 
 
   createTableColumns(): CreatedLocationColumnType[] {
@@ -116,9 +118,8 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
   isUploading = false;
   fileName = '';
   fileUploaded = false;
-  uploadInterval: any;
   previewLoaded = false;
-  userActionTaken = false; 
+  userActionTaken = false;
 
   constructor(private cdr: ChangeDetectorRef) { }
 
@@ -157,9 +158,9 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
     });
   }
 
- 
 
-  
+
+
   downloadTemplate() {
     this.#locationsUploadService.downloadTemplate().subscribe({
 
@@ -183,7 +184,7 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
     this.uploadProgress = 0;
 
     this.#locationsUploadService.uploadLocations(file).subscribe({
-      next: (res: any) => {
+      next: (res: UploadLocationsResponse) => {
         this.isUploading = false;
         this.fileUploaded = true;
         this.uploadProgress = 100;
@@ -200,11 +201,11 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
 
         console.log('✅ Upload success:', res);
       },
-      error: (err: any) => {
+      error: (err: HttpErrorResponse) => {
         this.isUploading = false;
         this.fileUploaded = false;
         this.cancelUpload();
-        if (err.type === 'validation' && err.error.message?.length) {
+        if (err.error.type === 'validation' && err.error.message?.length) {
           // Show each validation error
           err.error.message.forEach((msg: string) => {
             this.#messageService.add({
@@ -233,7 +234,7 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
     });
   }
 
-  onFileSelect(event: any) {
+  onFileSelect(event: FileSelectEvent) {
     const file = event.files?.[0];
     if (!file) return;
 
@@ -343,7 +344,7 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
 
   saveUpload() {
     this.#locationsUploadService.saveUpload(this.fileUploadId).subscribe({
-      next: (res: any) => {
+      next: (res: SaveUploadResponse) => {
         this.#messageService.add({ severity: 'success', summary: 'Success', detail: this.#translateService.instant(res.message), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME });
         this.isUploadedScreen.set(false);
         this.cancelUpload();
@@ -352,8 +353,8 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
 
         this.router.navigate(['/created-locations']);
       },
-      error: (err: any) => {
-        this.#messageService.add({ severity: 'error', summary: 'Error', detail: this.#translateService.instant(err.message), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME });
+      error: (err: HttpErrorResponse) => {
+        this.#messageService.add({ severity: 'error', summary: 'Error', detail: this.#translateService.instant(err.error.message), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME });
       },
     });
   }
@@ -361,7 +362,7 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
   discardUpload() {
     // this.fileUploadId = localStorage.getItem('fileUploadId');
     this.#locationsUploadService.discardUpload(this.fileUploadId).subscribe({
-      next: (res: any) => {
+      next: (res: DiscardUploadResponse) => {
         this.#messageService.add({ severity: 'success', summary: 'Success', detail: this.#translateService.instant(res.message), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME });
         this.isUploadedScreen.set(false);
         this.cancelUpload();
@@ -370,8 +371,8 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
 
         this.router.navigate(['/created-locations']);
       },
-      error: (err: any) => {
-        this.#messageService.add({ severity: 'error', summary: 'Error', detail: this.#translateService.instant(err.message), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME });
+      error: (err: HttpErrorResponse) => {
+        this.#messageService.add({ severity: 'error', summary: 'Error', detail: this.#translateService.instant(err.error.message), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME });
       },
     });
   }

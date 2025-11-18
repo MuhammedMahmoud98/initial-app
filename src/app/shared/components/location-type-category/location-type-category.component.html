@@ -1,6 +1,6 @@
 <div class="location-type-category">
   @for (category of locationTypeCategories(); track category.value) {
-    <button type="button" class="location-type-category__item" [class.location-type-category__item--active]="category.isSelected" (click)="select(category.value)">{{category.label | translate}}</button>
+    <button type="button" class="location-type-category__item" [class.disabled-state]="disabled && category.isSelected" [class.location-type-category__item--active]="category.isSelected" (click)="select(category.value)">{{category.label | translate}}</button>
   }
 </div>
 

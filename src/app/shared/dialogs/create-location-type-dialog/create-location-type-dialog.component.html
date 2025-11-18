@@ -6,7 +6,7 @@
       <app-location-type-category formControlName="category"/>
 
       <!-- TYPE NAME AND CODE -->
-      <div class="flex">
+      <div class="flex flex-wrap">
         <div class="md:col-6 col-12">
           @let nameControl = getControl('name');
           <app-input-label
@@ -53,6 +53,10 @@
             @if (getControlError('code', 'maxlength')) {
               <span class="stc-danger">{{ 'maxLengthField' | translate:{length: getErrorRequiredLength('code', 'maxlength')} }}</span>
             }
+
+            @if (getControlError('code', 'duplicatedTypeCode')) {
+              <span class="stc-danger">{{ 'duplicatedTypeCode' | translate }}</span>
+            }
           </app-input-label>
         </div>
       </div>
@@ -67,13 +71,13 @@
         <app-printing-size-dimensions formControlName="size"/>
       </div>
 
-      @if (getControl('category').value === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION) {
+      @if (getControl('category')?.value === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION) {
         <!-- SERVICES SEPARATOR -->
         <div class="services-label">{{ 'service' | translate }}</div>
 
         <!-- SURVEY TYPES SELECTORS -->
         <div [formArrayName]="'services'" #test>
-          @for (service of servicesArray.controls;track service;let i = $index) {
+          @for (service of servicesArray?.controls;track service;let i = $index) {
             <div class="flex flex-column gap-3" [formGroupName]="i">
               <!-- SERVICE TYPE -->
               <div class="md:col-6 col-12 p-0">
@@ -116,6 +120,10 @@
                     @if (getServicesControlError(internalLinkControl, 'maxlength')) {
                       <span class="stc-danger">{{ 'maxLengthField' | translate:{length: getServiceErrorRequiredLength(internalLinkControl, 'maxlength')} }}</span>
                     }
+
+                    @if (getServicesControlError(internalLinkControl, 'invalidServiceLink')) {
+                      <span class="stc-danger">{{ internalLinkControl?.errors?.['invalidServiceLink'] }}</span>
+                    }
                   </app-input-label>
                 </div>
 
@@ -140,6 +148,10 @@
                     @if (getServicesControlError(externalLinkControl, 'maxlength')) {
                       <span class="stc-danger">{{ 'maxLengthField' | translate:{length: getServiceErrorRequiredLength(externalLinkControl, 'maxlength')} }}</span>
                     }
+
+                    @if (getServicesControlError(externalLinkControl, 'invalidServiceLink')) {
+                      <span class="stc-danger">{{ externalLinkControl?.errors?.['invalidServiceLink'] }}</span>
+                    }
                   </app-input-label>
                 </div>
               }
@@ -148,10 +160,15 @@
         </div>
       }
     </form>
+    @if (isLoading()) {
+      <div class="create-location-type__body--loader">
+        <app-spinner-loader/>
+      </div>
+    }
   </div>
 
   <div class="create-location-type__footer">
     <p-button [label]="'cancel' | translate" [outlined]="true" severity="secondary" (onClick)="closeDialog()" />
-    <p-button [label]="'create' | translate" [disabled]="form.invalid" (onClick)="saveChanges()" severity="secondary" />
+    <p-button [label]="(dialogMode() === MODE.ADD ? 'create' : 'update') | translate" [disabled]="!form.valid ||form.invalid || form.pristine || isLoading()" (onClick)="saveChanges()" severity="secondary" />
   </div>
 </div>

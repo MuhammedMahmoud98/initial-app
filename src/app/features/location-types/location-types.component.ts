@@ -2,7 +2,7 @@ import {
   afterNextRender,
   AfterRenderRef,
   ChangeDetectionStrategy,
-  Component,
+  Component, DestroyRef,
   inject,
   OnDestroy,
   signal, TemplateRef, viewChild
@@ -49,6 +49,7 @@ import {MenuModule} from 'primeng/menu';
 import {Ripple} from 'primeng/ripple';
 import {MODE} from '../../shared/enums/shared.enum';
 import { LocationTypeActionsService } from './services/location-type-actions.service';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-location-types',
@@ -82,6 +83,7 @@ export class LocationTypesComponent implements OnDestroy {
   // readonly loadingDialogService = inject(LoadingDialogService);
   readonly #messageService: MessageService = inject(MessageService);
   readonly #translateService: TranslateService = inject(TranslateService);
+  readonly #destroyRef: DestroyRef = inject(DestroyRef);
 
   // SIGNALS
   items = signal<LocationType[]>([]);
@@ -128,6 +130,7 @@ export class LocationTypesComponent implements OnDestroy {
           this.handleEmptyState();
         }
       }),
+      takeUntilDestroyed(this.#destroyRef),
       catchError(() => {
         this.isLoading.set(false);
         this.handleErrorState();
@@ -210,7 +213,7 @@ export class LocationTypesComponent implements OnDestroy {
 
   openAddLocationTypeModal(mode: ModeType = MODE.ADD, locationTypeData?: LocationType): void {
     console.log(locationTypeData, 'INSIDE MAIN TABLE')
-    this.#dialogService.open(CreateLocationTypeDialogComponent, {
+    const dialogRef = this.#dialogService.open(CreateLocationTypeDialogComponent, {
       header: this.#translateService.instant(mode === MODE.ADD ? 'createNewType' : 'editType'),
       width: '580px',
       modal: true,
@@ -220,6 +223,15 @@ export class LocationTypesComponent implements OnDestroy {
         ...(locationTypeData as LocationType && { locationTypeData})
       }
     });
+
+    dialogRef.onClose.pipe(
+      tap((dialogCloseResponse: {refresh: boolean}) => {
+        if (dialogCloseResponse?.refresh) {
+          this.getLocationTypes();
+        }
+      }),
+      takeUntilDestroyed(this.#destroyRef),
+    ).subscribe()
   }
 
   locationTypeActions(row: LocationType): MenuItem[] {
@@ -232,10 +244,8 @@ export class LocationTypesComponent implements OnDestroy {
         alias: 'edit'
       },
       {
-        
         label: 'delete',
         command: () => {
-          // TODO:: APPLY DELETE FUNCTION HERE..
           this.openDeleteConfirmDialog(row.id);
         },
         alias: 'delete',

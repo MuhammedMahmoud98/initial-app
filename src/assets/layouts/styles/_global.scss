@@ -62,9 +62,14 @@
   border: 1px solid var(--secondary-300);
 }
 
-
- [dir="rtl"] .back-section button img {
-  transform: rotate(180deg);
+[dir="rtl"] {
+  .back-section {
+    button {
+      img {
+        transform: rotate(180deg);
+      }
+    }
+  }
 }
 
 .stc-danger {

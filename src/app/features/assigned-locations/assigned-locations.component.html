@@ -72,7 +72,7 @@
 <ng-template #unlinkCustomColumn let-row>
   @let locationType = genericCasting(row);
 
-{{ locationType.createdAt | date:'dd MMM yyyy hh:mm a' }}
+  {{ locationType.createdAt | date:'dd MMM yyyy hh:mm a' }}
 </ng-template>
 
 
@@ -85,8 +85,8 @@
     class="action-link-button"
     role="button"
     tabindex="0"
-    (click)="openUnlinkAssignedLocationDialog(locationType.id)"
-    (keydown.enter)="openUnlinkAssignedLocationDialog(locationType.id)">
+    (click)="openUnlinkAssignedLocationDialog(locationType.user.id)"
+    (keydown.enter)="openUnlinkAssignedLocationDialog(locationType.user.id)">
      <img src="assets/images/unlink.svg" alt="unlink">  {{ 'Unlink' | translate }}
   </span>
  </ng-template>

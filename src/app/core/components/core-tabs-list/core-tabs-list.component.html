@@ -1,7 +1,14 @@
-<div class="hub-custom-tabs">
-  @for (tab of tabsList(); track tab) {
+<div class="hub-custom-tabs" *ngIf="!isUploadPage">
+  <div class="tab-sections">
+    @for (tab of tabsList(); track tab) {
     <a [routerLink]="'/' + tab.path" [routerLinkActive]="'active-route'" class="hub-custom-tabs__item">
-      {{tab.title | translate}}
+      {{ tab.title | translate }}
     </a>
-  }
+    }
+  </div>
+
+  <button class="import-btn font-medium" (click)="goToUploadFile()" *ngIf="isCreatedLocationsPage">
+    <img src="assets/images/uploadFile.svg" alt="uploadFile" />
+    {{'importFile'| translate}}
+  </button>
 </div>

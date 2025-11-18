@@ -53,3 +53,8 @@
     font-family: STCForward-Regular, sans-serif
   }
 }
+
+.disabled-state {
+  background-color: var(--silver-400);
+  cursor: not-allowed;
+}

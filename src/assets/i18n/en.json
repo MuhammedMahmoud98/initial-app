@@ -26,6 +26,7 @@
   "cancel": "cancel",
   "confirm": "confirm",
   "create": "create",
+  "update": "update",
   "qrConfirmMessageHeader": "once the QR code is generated the location record won't be deletable",
   "qrConfirmMessageBody": "are you sure you want to proceed?",
   "locationTypeCode": "location type code",
@@ -69,7 +70,6 @@
   "uploadComplete": "upload complete",
   "unsavedChangesTitle": "unsaved changes",
   "unsavedChangesMessage": "you have unsaved changes. are you sure you want to leave this page?",
-
   "createNewType": "create new type",
   "editType": "edit type",
   "publicLocation": "public location",
@@ -107,5 +107,9 @@
   "Unlink": "unlink",
   "noLocationsAssignedAvailable": "no assigned locations available",
   "locationAssignedSubTitleEmpty": "no assigned locations matched the code, mail entered",
-  "assignedLocationsPlaceHolder": "search by location code, employee email"
+  "assignedLocationsPlaceHolder": "search by location code, employee email",
+  "newLocationTypeSuccessMsg": "location type '{{typeName}}' created successfully",
+  "duplicatedTypeCode": "duplicated type code",
+  "updateLocationTypeSuccessMsg": "location Type updated successfully",
+  "invalidServiceLink": "invalid service link"
 }

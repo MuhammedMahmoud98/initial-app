@@ -1,8 +1,9 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {API_CONSTANTS, ItemFilter} from '../../../shared';
-import {catchError, Observable, throwError} from 'rxjs';
+import {Observable} from 'rxjs';
 import { CreatedLocationResponse } from '../../created-locations/models/created-location.model';
+import {DiscardUploadResponse, SaveUploadResponse, UploadLocationsResponse} from '../models/upload-file.model';
 
 
 
@@ -20,10 +21,10 @@ export class LocationsUploadService {
   }
 
 
-  uploadLocations(file: File): Observable<any> {
+  uploadLocations(file: File): Observable<UploadLocationsResponse> {
     const location_data = new FormData();
     location_data.append('location_data', file);
-    return this.#httpClient.post(API_CONSTANTS.UPLOAD_TEMPLATE, location_data)
+    return this.#httpClient.post<UploadLocationsResponse>(API_CONSTANTS.UPLOAD_TEMPLATE, location_data)
   }
 
   getCreatedLocationsByFileID(payload: ItemFilter, fileID: string): Observable<CreatedLocationResponse> {
@@ -33,14 +34,13 @@ export class LocationsUploadService {
     return this.#httpClient.get<CreatedLocationResponse>(url, { params })
   }
 
-  discardUpload(fileID: string): Observable<any> {
+  discardUpload(fileID: string): Observable<DiscardUploadResponse> {
     const url: string = API_CONSTANTS.DISCARD_LOCATION_BY_FILEID.replace('{uploadId}', fileID.toString());
-    return this.#httpClient.put(url,{})
-  }
-   
-  saveUpload(fileID: string): Observable<any> {
-    const url: string = API_CONSTANTS.SAVE_LOCATION_BY_FILEID.replace('{uploadId}', fileID.toString());
-    return this.#httpClient.put(url, {})
+    return this.#httpClient.put<DiscardUploadResponse>(url,{})
   }
 
+  saveUpload(fileID: string): Observable<SaveUploadResponse> {
+    const url: string = API_CONSTANTS.SAVE_LOCATION_BY_FILEID.replace('{uploadId}', fileID.toString());
+    return this.#httpClient.put<SaveUploadResponse>(url, {})
+  }
 }

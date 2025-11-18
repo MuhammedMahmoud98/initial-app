@@ -12,7 +12,9 @@
     @if (hasCredentials()) {
       <section class="mx-0 lg:mx-5 overflow-auto">
         @if (isAppLoading()) {
-          <app-spinner-loader/>
+          <div class="bg-white h-full">
+            <app-spinner-loader/>
+          </div>
         }
 
         @if (isAppReady() && !isAppLoading()) {

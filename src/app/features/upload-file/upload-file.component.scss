@@ -16,7 +16,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        border: none;
         width: 40px;
         height: 40px;
         background-color: white;
@@ -89,59 +88,6 @@
         background-color: #fbf6ff;
       }
 
-      ::ng-deep .custom-upload {
-        width: 100%;
-        height: 100%;
-        border: none;
-        background: transparent;
-
-        .p-fileupload-content {
-          border: none !important;
-          background: transparent !important;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-        }
-
-        .p-fileupload-choose-button {
-          display: none !important; // hide choose/upload buttons
-        }
-
-        .upload-placeholder {
-          text-align: center;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          user-select: none;
-
-          img {
-            width: 36px;
-            margin-bottom: 12px;
-            transition: transform 0.2s ease;
-          }
-
-          .upload-text {
-            font-size: 14px;
-            color: #333;
-            margin: 0;
-          }
-
-          .upload-sub {
-            font-size: 12px;
-            color: #999;
-            margin-top: 4px;
-          }
-
-          &:hover img {
-            transform: translateY(-2px) scale(1.05);
-          }
-
-          &:hover {
-            color: #4f008c;
-          }
-        }
-      }
-
       .upload-sub {
         font-size: 12px;
         color: #999;
@@ -154,7 +100,8 @@
       align-items: flex-end;
       justify-content: flex-end;
       gap: 10px;
-    margin-top: 20px;
+      margin-top: 20px;
+
       .cancel-btn {
         width: 105px;
         height: 40px;
@@ -214,14 +161,91 @@
 }
 
 
-
-
-
 /* Drag-and-drop highlight */
-::ng-deep .p-fileupload-content.p-fileupload-highlight {
-  border: 2px dashed #a970ff !important;
-  background: #f9f4ff !important;
+::ng-deep {
+  .custom-upload {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+
+    .p-fileupload-content {
+      border: none !important;
+      background: transparent !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+
+      &.p-fileupload-highlight {
+        border: 2px dashed #a970ff !important;
+        background: #f9f4ff !important;
+      }
+    }
+
+    .p-fileupload-choose-button {
+      display: none !important; // hide choose/upload buttons
+    }
+
+    .upload-placeholder {
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
+
+      img {
+        width: 36px;
+        margin-bottom: 12px;
+        transition: transform 0.2s ease;
+      }
+
+      .upload-text {
+        font-size: 14px;
+        color: #333;
+        margin: 0;
+      }
+
+      .upload-sub {
+        font-size: 12px;
+        color: #999;
+        margin-top: 4px;
+      }
+
+      &:hover {
+        color: #4f008c;
+
+        img {
+          transform: translateY(-2px) scale(1.05);
+        }
+      }
+    }
+  }
+
+  .upload-progress {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      border-radius: 4px;
+      background: #f0e6ff !important;
+      overflow: hidden;
+
+      .p-progressbar-value {
+        background: #6a1b9a !important;
+        transition: width 0.3s ease;
+      }
+    }
+
+    p-progressbar {
+      display: contents !important;
+    }
+  }
 }
+
 
 /* Uploading file state */
 .upload-progress {
@@ -233,7 +257,6 @@
 
 
   .file-info {
-
     display: flex;
     align-items: flex-start;
     gap: 10px;
@@ -286,25 +309,3 @@
     height: 100%;
   }
 }
-
-::ng-deep .upload-progress .progress-bar {
-  width: 100%;
-  height: 6px;
-  border-radius: 4px;
-  background: #f0e6ff !important;
-  /* light background behind bar */
-  overflow: hidden;
-}
-
-:ng-deep .upload-progress p-progressbar {
-  display: contents !important;
-}
-
-::ng-deep .upload-progress .progress-bar .p-progressbar-value {
-  background: #6a1b9a !important;
-  /* purple bar color */
-  transition: width 0.3s ease;
-  /* smooth animation */
-}
-
-

@@ -26,6 +26,7 @@
   "cancel": "إلغاء",
   "confirm": "تأكيد",
   "create": "إنشاء",
+  "update": "تحديث",
   "qrConfirmMessageHeader": "بمجرد إنشاء رمز الاستجابة السريعة، لن يكون سجل الموقع قابلاً للحذف",
   "qrConfirmMessageBody": "هل أنت متأكد أنك تريد المتابعة؟",
   "locationTypeCode": "كود نوع المكان",
@@ -97,5 +98,8 @@
   "unlinkConfirmMessageBody": "هل أنت متأكد أنك تريد المتابعة؟",
   "noLocationsAssignedAvailable": "لا توجد مواقع معينة متاحة",
   "locationAssignedSubTitleEmpty": "لا توجد مواقع معينة مطابقة لرمز المكان او بريد الموظف الذي تم إدخاله.",
-  "assignedLocationsPlaceHolder": " البحث بكود المكان او بريد الموظف"
+  "assignedLocationsPlaceHolder": " البحث بكود المكان او بريد الموظف",
+  "newLocationTypeSuccessMsg": "تم إنشاء نوع الموقع '{{typeName}}' بنجاح",
+  "duplicatedTypeCode": "كود نوع المكان مكرر، يرجى استخدام كود مختلف",
+  "updateLocationTypeSuccessMsg": "تم تحديث نوع الموقع بنجاح"
 }

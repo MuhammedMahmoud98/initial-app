@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
+  Component, effect,
   forwardRef,
   inject,
   signal,
@@ -35,11 +35,18 @@ export class PrintingSizeDimensionsComponent implements ControlValueAccessor{
   printingSizeOptions: WritableSignal<PrintingSizeDimension[]> = signal([
     { label: 'A4', value: 'A4', isSelected: true },
     { label: 'A5', value: 'A5', isSelected: false },
-    { label: '5x5', value: '5*5', isSelected: false },
+    { label: 'A6', value: 'A6', isSelected: false },
+    { label: '5x5', value: '5x5', isSelected: false },
   ]);
 
   private _value = 'A4';
   disabled = false;
+
+  init = effect(() => {
+    this.printingSizeOptions.update(options =>
+      options.map(option => ({ ...option, isSelected: option.value === this._value }))
+    );
+  });
 
   // placeholders for the callbacks which are later provided
   // by the forms API

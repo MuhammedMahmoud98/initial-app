@@ -27,6 +27,6 @@ export type FormControlsOf<T> = {
   [K in keyof T]: FormControl<T[K]>;
 };
 
-export type FormErrorType = 'minlength' | 'maxlength' | 'required' | 'sqlInjectionDetected' | 'xssDetected';
+export type FormErrorType = 'minlength' | 'maxlength' | 'required' | 'duplicatedTypeCode' | 'invalidServiceLink' | 'sqlInjectionDetected' | 'xssDetected';
 
 export type ModeType = typeof MODE[keyof typeof MODE];

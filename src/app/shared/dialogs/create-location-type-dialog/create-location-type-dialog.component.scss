@@ -1,3 +1,5 @@
+$white: #ffffff;
+
 .p-dialog-content {
   overflow: hidden;
 }
@@ -9,6 +11,8 @@
   max-height: 70vh;
 
   &__body {
+    position: relative;
+
     &:has(.internal-link-survey) {
       overflow: auto;
     }
@@ -23,6 +27,14 @@
         font-family: STCForward-Medium, sans-serif;
         margin-top: 1rem;
       }
+    }
+
+    &--loader {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.6);
     }
   }
 

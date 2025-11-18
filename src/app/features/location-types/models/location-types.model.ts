@@ -6,6 +6,7 @@ export interface LocationType {
   code:     string;
   size:     string;
   category: string;
+  'has-linked-locations'?: boolean;
   services: LocationService[];
 }
 

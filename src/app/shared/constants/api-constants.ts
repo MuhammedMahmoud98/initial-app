@@ -32,4 +32,5 @@ export const API_CONSTANTS = {
   GENERATE_QR: serverUrl + '/qr/generate-qr',
   PRINT_QR: serverUrl + '/qr/print-qr',
   VALIDATE_QR_PRINT: serverUrl + '/qr/validate-print',
+  LINK_VALIDATE_QR: `${environment.host}/v1/private/eforms/validate/qr-code-link`
 };

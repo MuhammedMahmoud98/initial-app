@@ -10,11 +10,12 @@ import {
 import {GenericTableComponent} from '../../shared/components/generic-table/generic-table.component';
 import {HubFiltersComponent} from '../../shared/components/hub-filters/hub-filters.component';
 import {GenericTableCacheService} from '../../shared/services';
-import {MenuItem, MessageService} from 'primeng/api';
+import {ConfirmationService, MenuItem, MessageService} from 'primeng/api';
 import {LocationsService} from '../created-locations/services/locations.service';
 import {DialogService} from 'primeng/dynamicdialog';
 import {HubFilters} from '../../shared/components/hub-filters/models/hub-filters.model';
 import {
+  BackendErrorResponse,
   LocationColumnType, LocationServiceBody, LocationServiceEvent, LocationServicePayload, LocationServiceResponse,
   LocationType,
   LocationTypeResponse,
@@ -47,6 +48,7 @@ import {
 import {MenuModule} from 'primeng/menu';
 import {Ripple} from 'primeng/ripple';
 import {MODE} from '../../shared/enums/shared.enum';
+import { LocationTypeActionsService } from './services/location-type-actions.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
@@ -74,8 +76,9 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 export class LocationTypesComponent implements OnDestroy {
   // INJECTIONS
   readonly genericTableCacheService: GenericTableCacheService = inject(GenericTableCacheService);
-  // protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
+  protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
   readonly #locationsService: LocationsService = inject(LocationsService);
+  readonly #locationTypeActionsService: LocationTypeActionsService = inject(LocationTypeActionsService);
   readonly #dialogService: DialogService = inject(DialogService);
   // readonly loadingDialogService = inject(LoadingDialogService);
   readonly #messageService: MessageService = inject(MessageService);
@@ -243,11 +246,54 @@ export class LocationTypesComponent implements OnDestroy {
       {
         label: 'delete',
         command: () => {
-          // TODO:: APPLY DELETE FUNCTION HERE..
-          console.log('DELETE');
+          this.openDeleteConfirmDialog(row.id);
         },
-        alias: 'delete'
+        alias: 'delete',
+        visible: !row['has-linked-locations']
       }
     ];
+  }
+
+  openDeleteConfirmDialog(locationTypeId: number): void {
+    this.confirmationService.confirm({
+      header: this.#translateService.instant('deleteLocationTypeConfirmMessageHeader'),
+      message: this.#translateService.instant('deleteLocationTypeConfirmMessageBody'),
+      closable: false,
+      closeOnEscape: true,
+      rejectButtonProps: {
+        label: this.#translateService.instant('cancel'),
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: this.#translateService.instant('confirm'),
+        severity: 'secondary',
+      },
+      acceptVisible: true,
+      accept: (): void => {
+        this.deleteLocationType(locationTypeId);
+      }
+    });
+  }
+
+  private getBackendErrorMessage(error: BackendErrorResponse): string {
+    return (
+      error?.message?.[0]?.source?.message ||
+      this.#translateService.instant('something went wrong')
+    );
+  }
+
+
+  deleteLocationType(locationTypeId: number): void {
+    this.#locationTypeActionsService.deleteLocationType(locationTypeId).pipe(
+      tap(() => {
+        this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant('locationTypeDeletedSuccessfully'), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
+        this.getLocationTypes();
+      }),
+      catchError((e) => {
+        this.#messageService.add({ severity: 'error', summary: 'Error', detail: this.getBackendErrorMessage(e.error) , life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
+        return EMPTY;
+      })
+    ).subscribe();
   }
 }

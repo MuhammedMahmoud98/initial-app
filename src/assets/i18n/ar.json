@@ -72,7 +72,6 @@
   "uploadComplete": "اكتمل التحميل",
   "unsavedChangesTitle": "تغييرات غير محفوظة",
   "unsavedChangesMessage": "لديك تغييرات غير محفوظة. هل أنت متأكد أنك تريد المغادرة دون حفظ؟",
-
   "createNewType": "إنشاء نوع جديد",
   "editType": "تعديل النوع",
   "publicLocation": "مكان عام",
@@ -111,8 +110,11 @@
   "unlinkConfirmMessageBody": "هل أنت متأكد أنك تريد المتابعة؟",
   "noLocationsAssignedAvailable": "لا توجد مواقع معينة متاحة",
   "locationAssignedSubTitleEmpty": "لا توجد مواقع معينة مطابقة لرمز المكان او بريد الموظف الذي تم إدخاله.",
-  "assignedLocationsPlaceHolder": " البحث بكود المكان او بريد الموظف",
+  "assignedLocationsPlaceHolder": "البحث بكود المكان او بريد الموظف",
   "newLocationTypeSuccessMsg": "تم إنشاء نوع الموقع '{{typeName}}' بنجاح",
   "duplicatedTypeCode": "كود نوع المكان مكرر، يرجى استخدام كود مختلف",
-  "updateLocationTypeSuccessMsg": "تم تحديث نوع الموقع بنجاح"
+  "updateLocationTypeSuccessMsg": "تم تحديث نوع الموقع بنجاح",
+  "deleteLocationTypeConfirmMessageHeader": "بمجرد حذف نوع المكان، سيتم إلغاء تعيين جميع الأماكن المرتبطة به.",
+  "deleteLocationTypeConfirmMessageBody": "هل أنت متأكد أنك تريد المتابعة؟",
+  "locationTypeDeletedSuccessfully": "تم حذف نوع المكان بنجاح"
 }

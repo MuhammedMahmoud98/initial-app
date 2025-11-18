@@ -72,7 +72,7 @@
 <ng-template #unlinkCustomColumn let-row>
   @let locationType = genericCasting(row);
 
- {{locationType.createdAt}}
+  {{ locationType.createdAt | date:'dd MMM yyyy hh:mm a' }}
 </ng-template>
 
 

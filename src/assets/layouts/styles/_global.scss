@@ -62,6 +62,16 @@
   border: 1px solid var(--secondary-300);
 }
 
+[dir="rtl"] {
+  .back-section {
+    button {
+      img {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}
+
 .stc-danger {
   color: var(--secondary-500);
   font-size: 0.875rem;

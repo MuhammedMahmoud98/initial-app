@@ -1,0 +1,153 @@
+<div class="import-page">
+  <!-- Header -->
+  <div class="import-header">
+    <div class="back-section">
+       <button (click)="backward()" class="back-btn" aria-label="back button">
+        <img src="assets/images/back-arrow.svg" alt="back-arrow" />
+       </button>
+       <span>
+       {{'importNewLocation' | translate}}
+      </span>
+    </div>
+<button class="download-btn" type="button" label="download template" (click)="downloadTemplate()">
+  <img src="assets/images/download-file.svg" alt="download-file.svg" />
+  {{'downloadTemplate' | translate}}
+</button>
+  </div>
+
+  <!-- Upload Container -->
+   <section class="upload-wrapper" > 
+    @if(!isUploadedScreen()) {
+<div class="import-container" [class.uploading]="isUploading" >
+  <!-- Default State -->
+  <ng-container *ngIf="!isUploading; else uploadingTemplate">
+    <p-fileUpload #uploader mode="advanced" name="file" [auto]="false" [customUpload]="true" accept=".xls,.xlsx"
+      [showUploadButton]="false" [showCancelButton]="false" maxFileSize="5000000" 
+      (onSelect)="onFileSelect($event)" class="custom-upload">
+      <ng-template pTemplate="content">
+        <div class="upload-placeholder" role="button" tabindex="0" aria-label="Choose file to upload"
+          (click)="uploader.choose()" (keydown.enter)="uploader.choose()">
+          <img src="assets/images/upload-page.svg" alt="upload" />
+          <p class="upload-text">{{'dragAndClick' | translate}}</p>
+          <p class="upload-sub">{{'maxFileSizeMsg' | translate}}</p>
+        </div>
+      </ng-template>
+    </p-fileUpload>
+  </ng-container>
+
+  <!-- Uploading State -->
+  <ng-template #uploadingTemplate>
+    <div class="upload-progress">
+      <div class="file-info">
+        <img src="assets/images/excel-sheet.svg" alt="excel" />
+        <div class="file-details">
+          <p class="file-name">{{ fileName }}</p>
+          <p class="file-status">
+            {{
+            uploadProgress < 100 ? ('uploading' | translate) : ('uploadComplete' | translate) }} </p>
+
+        </div>
+        <button class="cancel-upload" (click)="cancelUpload()">
+           <img src="assets/images/cancel.svg" alt="cancel"/>
+        </button>
+      </div>
+    
+     <p-progressBar [value]="uploadProgress" [showValue]="false" styleClass="progress-bar" [ngStyle]="{'display':'contents'}"></p-progressBar>
+
+    </div>
+  </ng-template>
+</div>
+    } @else { 
+
+<div class="hub-created-locations">
+  @if (isLoading()) {
+  <app-skeleton-loader />
+  } @else {
+  @if ((!isApplyingFilter() && isEmptyState() && !items().length)) {
+  <app-component-state [mainTitle]="'no locations found yet'"
+    [subTitle]="'start by creating a new location to manage and track your records here'"
+    [iconUrl]="'assets/images/location-state.svg'" [showReloadButton]="true" />
+  } @else {
+  <!-- FILTERS -->
+  <div class="mb-4">
+    <app-hub-filters (filterValues)="onFilterValueChanges($event)" />
+  </div>
+
+
+
+  <!-- CREATED LOCATIONS TABLE -->
+  @if (!isEmptyState() && !isErrorState()) {
+  <div class="overflow-x-auto overflow-y-hidden">
+    <app-generic-table [columns]="createTableColumns()" [items]="items()"
+      [totalRecords]="genericTableCacheService.totalAvailableItems()" [hasCheckBoxes]="false"
+       (currentPage)="onPageChange($event)" />
+  </div>
+  } @else if (isEmptyState() && !isErrorState()) {
+  <app-component-state [mainTitle]="'no result found'" [subTitle]="'no location code matches the code entered'"
+    [iconUrl]="'assets/images/search-state.svg'" />
+  } @else if (isErrorState() && !isEmptyState()) {
+  <app-component-state [mainTitle]="'data could not be retrieved'"
+    [subTitle]="'data could not be retrieved, kindly try again later'" [iconUrl]="'assets/images/refresh-state.svg'"
+    [showReloadButton]="true" />
+  }
+  }
+  }
+  <!--  <button (click)="openToaster()">TEST CELL</button>-->
+</div>
+    }
+
+
+
+
+
+  <!-- Actions -->
+  <div class="import-actions">
+    <button
+    type="button" label="cancel" class="cancel-btn p-button-outlined p-button-sm" [disabled]="!fileUploaded" (click)="discardUpload()">{{"cancel" | translate}}</button>
+    <button  type="button" label="save" class="save-btn p-button-sm" [disabled]="!fileUploaded" (click)="saveUpload()">{{"save" | translate}}</button>
+  </div>
+  </section>
+</div>
+
+<!-- CUSTOM CELLS GOES HERE.. -->
+
+<!-- QR STATUS CUSTOM COLUMN -->
+<ng-template #qrStatusCustomColumn let-row>
+  @let location = genericCasting(row);
+
+  <app-custom-status [status]="location?.qrCode ? 'success' : 'danger'" />
+</ng-template>
+
+
+<!-- CODE CUSTOM COLUMN -->
+<ng-template #codeCustomColumn let-row>
+  @let location = genericCasting(row);
+
+  <app-copy-to-clipboard [textToBeCopied]="location.code" />
+</ng-template>
+
+
+<!-- DISTRICT CUSTOM COLUMN -->
+<ng-template #districtCustomColumn let-row>
+  @let location = genericCasting(row);
+
+  <app-title-with-icon [itemTitle]="location.district" [iconUrl]="'assets/images/widget.svg'" />
+</ng-template>
+
+
+<!-- LOCATION TYPE CUSTOM COLUMN -->
+<ng-template #locationTypeCustomColumn let-row>
+  @let location = genericCasting(row);
+
+  <div>{{location?.typeTitle + '-' + location.typeCode}}</div>
+</ng-template>
+
+
+<!-- BUILDING CUSTOM COLUMN -->
+<ng-template #buildingCustomColumn let-row>
+  @let location = genericCasting(row);
+
+  <app-text-with-bg-color [textItems]="location.building" [bgColor]="'var(--monlight-100)'"
+    [textColor]="'var(--monlight-500)'" />
+</ng-template>
+

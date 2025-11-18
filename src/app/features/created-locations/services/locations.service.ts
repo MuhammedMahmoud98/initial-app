@@ -41,7 +41,7 @@ export class LocationsService {
   }
 
   updateAssignedLocationsLinks(payload: LocationServicePayload): Observable<LocationServiceResponse>{
-    const url: string = API_CONSTANTS.LOCATION_TYPE_SERVICES.replace('{id}', payload.id.toString()).replace('{id}', payload.id.toString());
+    const url: string = API_CONSTANTS.LOCATION_TYPE_SERVICES.replace('{id}', payload.id.toString())
 
     return this.#httpClient.patch<LocationServiceResponse>(url,{});
   }

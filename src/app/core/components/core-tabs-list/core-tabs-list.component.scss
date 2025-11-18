@@ -8,15 +8,22 @@
   padding: 0.5rem 0 1rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 24px;
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
   scrollbar-width: none;
   -ms-overflow-style: none;
-
+  
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  .tab-sections {
+  display: flex;
+    align-items: center;
+    gap: 24px;
   }
 
   &__item {
@@ -53,3 +60,24 @@
   }
 }
 
+.import-btn {
+  background-color: var(--secondary-500);
+  color: white;
+  height: 40px;
+  width: 124px;
+  border-radius: 2px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  cursor: pointer;
+  font-family: STCForward-Regular, sans-serif;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #ff4f74;
+  
+   
+  }
+}

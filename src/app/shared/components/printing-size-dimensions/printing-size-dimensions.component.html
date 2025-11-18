@@ -1,0 +1,11 @@
+<div class="printing-size-dimensions">
+  <span class="printing-size-dimensions__title">{{ 'select printing size dimensions' | translate}}</span>
+
+  <div class="printing-size-dimensions__options">
+    @for (option of printingSizeOptions(); track option.value) {
+      <button class="printing-size-dimensions__options--option" [class.printing-size-dimensions__options--selected]="option.isSelected" (click)="select(option.value)">
+        {{option.label}}
+      </button>
+    }
+  </div>
+</div>

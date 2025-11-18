@@ -1,0 +1,14 @@
+.p-dialog-close-button {
+  background-color: transparent !important;
+  background-image: url('../../../assets/images/dialog-close-icon.svg') !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+
+  timesicon {
+    display: none;
+  }
+}
+
+.p-dialog-title {
+  color: var(--onyx-500);
+}

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, DestroyRef, forwardRef, inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DestroyRef, forwardRef, inject, input, OnInit} from '@angular/core';
 import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NgOptimizedImage} from '@angular/common';
 import {debounceTime, filter, map, tap} from 'rxjs';
@@ -38,6 +38,7 @@ export class QrSearchComponent implements ControlValueAccessor, OnInit {
   destroyed$: DestroyRef = inject(DestroyRef);
   private lastEmittedValue: string | null = '';
 
+  placeHolder = input<string>('searchPlaceholder');
   ngOnInit(): void {
     this.handleSearchControl();
   }

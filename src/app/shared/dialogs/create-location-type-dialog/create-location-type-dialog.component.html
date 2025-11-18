@@ -1,0 +1,157 @@
+<div class="create-location-type" #createLocationType>
+  <!-- BODY -->
+  <div class="create-location-type__body" #formBody>
+    <form [formGroup]="form" class="create-location-type__body--form">
+      <!-- CATEGORY SWITCH -->
+      <app-location-type-category formControlName="category"/>
+
+      <!-- TYPE NAME AND CODE -->
+      <div class="flex">
+        <div class="md:col-6 col-12">
+          @let nameControl = getControl('name');
+          <app-input-label
+            [label]="'typeName'"
+            [labelTooltip]="'typeNameTooltip'"
+            [isRequired]="true"
+            [helperText]="'max 20 characters'"
+            [hasError]="nameControl.invalid && !nameControl.pristine"
+          >
+            <input pInputText [placeholder]="'typeNamePlaceholder' | translate" formControlName="name"/>
+            <!-- ERROR STATES -->
+            @if (getControlError('name', 'required')) {
+              <span class="stc-danger">{{'requiredField' | translate }}</span>
+            }
+
+            @if (getControlError('name', 'minlength')) {
+              <span class="stc-danger">{{ 'minLengthField' | translate:{length: getErrorRequiredLength('name', 'minlength')} }}</span>
+            }
+
+            @if (getControlError('name', 'maxlength')) {
+              <span class="stc-danger">{{ 'maxLengthField' | translate:{length: getErrorRequiredLength('name', 'maxlength')} }}</span>
+            }
+          </app-input-label>
+        </div>
+        <div class="md:col-6 col-12">
+          @let codeControl = getControl('code');
+          <app-input-label
+            [label]="'typeCode'"
+            [labelTooltip]="'typeCodeTooltip'"
+            [isRequired]="true"
+            [helperText]="'max 10 characters'"
+            [hasError]="codeControl.invalid && !codeControl.pristine"
+          >
+            <input pInputText [placeholder]="'codeNamePlaceholder' | translate" formControlName="code"/>
+            <!-- ERROR STATES -->
+            @if (getControlError('code', 'required')) {
+              <span class="stc-danger">{{'requiredField' | translate }}</span>
+            }
+
+            @if (getControlError('code', 'minlength')) {
+              <span class="stc-danger">{{ 'minLengthField' | translate:{length: getErrorRequiredLength('code', 'minlength')} }}</span>
+            }
+
+            @if (getControlError('code', 'maxlength')) {
+              <span class="stc-danger">{{ 'maxLengthField' | translate:{length: getErrorRequiredLength('code', 'maxlength')} }}</span>
+            }
+          </app-input-label>
+        </div>
+      </div>
+
+      <!-- QR PRINTING SIZE -->
+      <div class="flex flex-column gap-2">
+        <app-input-label
+          [label]="'QR printing size'"
+          [labelTooltip]="'qrPrintingTooltip'"
+          [isRequired]="true"
+        />
+        <app-printing-size-dimensions formControlName="size"/>
+      </div>
+
+      @if (getControl('category').value === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION) {
+        <!-- SERVICES SEPARATOR -->
+        <div class="services-label">{{ 'service' | translate }}</div>
+
+        <!-- SURVEY TYPES SELECTORS -->
+        <div [formArrayName]="'services'" #test>
+          @for (service of servicesArray.controls;track service;let i = $index) {
+            <div class="flex flex-column gap-3" [formGroupName]="i">
+              <!-- SERVICE TYPE -->
+              <div class="md:col-6 col-12 p-0">
+                <app-input-label
+                  [label]="'type'"
+                  [isRequired]="false"
+                  [labelTooltip]="'serviceTypeTooltip'"
+                >
+                  <p-select
+                    [options]="surveyOptions()"
+                    optionLabel="name"
+                    optionValue="code"
+                    formControlName="serviceType"
+                    [placeholder]="'selectServiceTypePlaceholder' | translate"
+                    [showClear]="true"
+                    class="" />
+                </app-input-label>
+              </div>
+
+
+              @if (service.get('serviceType')?.value === 'Feedback') {
+                <!-- INTERNAL LINK SURVEY -->
+                <div class="col-12 internal-link-survey p-0">
+                @let internalLinkControl = service.get('internalLink');
+                  <app-input-label
+                    [label]="'internal survey link'"
+                    [isRequired]="true"
+                    [helperText]="'max 500 characters'"
+                    [hasError]="(internalLinkControl?.invalid && !internalLinkControl?.pristine) ?? false"
+                  >
+                    <input pInputText placeholder="https://mygate.stc.com.sa/forms/eforms/..." formControlName="internalLink"/>
+                    @if (getServicesControlError(internalLinkControl, 'required')) {
+                      <span class="stc-danger">{{'requiredField' | translate }}</span>
+                    }
+
+                    @if (getServicesControlError(internalLinkControl, 'minlength')) {
+                      <span class="stc-danger">{{ 'minLengthField' | translate:{length: getServiceErrorRequiredLength(internalLinkControl, 'minlength')} }}</span>
+                    }
+
+                    @if (getServicesControlError(internalLinkControl, 'maxlength')) {
+                      <span class="stc-danger">{{ 'maxLengthField' | translate:{length: getServiceErrorRequiredLength(internalLinkControl, 'maxlength')} }}</span>
+                    }
+                  </app-input-label>
+                </div>
+
+                <!-- EXTERNAL LINK SURVEY -->
+                <div class="col-12 p-0">
+                @let externalLinkControl = service.get('externalLink');
+                  <app-input-label
+                    [label]="'external survey link'"
+                    [isRequired]="true"
+                    [helperText]="'max 500 characters'"
+                    [hasError]="(externalLinkControl?.invalid && !externalLinkControl?.pristine) ?? false"
+                  >
+                    <input pInputText placeholder="https://web.hubplatforms.com/forms/eforms/..." formControlName="externalLink"/>
+                    @if (getServicesControlError(externalLinkControl, 'required')) {
+                      <span class="stc-danger">{{'requiredField' | translate }}</span>
+                    }
+
+                    @if (getServicesControlError(externalLinkControl, 'minlength')) {
+                      <span class="stc-danger">{{ 'minLengthField' | translate:{length: getServiceErrorRequiredLength(externalLinkControl, 'minlength')} }}</span>
+                    }
+
+                    @if (getServicesControlError(externalLinkControl, 'maxlength')) {
+                      <span class="stc-danger">{{ 'maxLengthField' | translate:{length: getServiceErrorRequiredLength(externalLinkControl, 'maxlength')} }}</span>
+                    }
+                  </app-input-label>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </form>
+  </div>
+
+  <div class="create-location-type__footer">
+    <p-button [label]="'cancel' | translate" [outlined]="true" severity="secondary" (onClick)="closeDialog()" />
+    <p-button [label]="'create' | translate" [disabled]="form.invalid" (onClick)="saveChanges()" severity="secondary" />
+  </div>
+</div>

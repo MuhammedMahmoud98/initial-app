@@ -1,0 +1,37 @@
+.printing-size-dimensions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+
+  &__title {
+    color: var(--silver-600);
+    font-size: 13px;
+  }
+
+  &__options {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    &--option {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 48px;
+      width: 64px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--stc-radius);
+      color: var(--onyx-500);
+      font-size: 15px;
+      cursor: pointer;
+      outline: none;
+      background-color: transparent;
+    }
+
+    &--selected {
+      border-color: var(--primary-300);
+      background-color: var(--primary-50);
+      font-family: STCForward-Medium, sans-serif;
+    }
+  }
+}

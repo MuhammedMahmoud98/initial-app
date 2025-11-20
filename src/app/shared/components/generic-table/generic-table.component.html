@@ -15,6 +15,7 @@
   [currentPageReportTemplate]="`paginationReport` | translate:{itemsLength: items().length, totalRecords: '{totalRecords}'}"
   (onHeaderCheckboxToggle)="onMainCheckboxChanged($event)"
   dataKey="id"
+  [styleClass]="showRecordInfo() ? 'show-reports-only' : ''"
 >
   <ng-template #header let-columns>
     <tr>

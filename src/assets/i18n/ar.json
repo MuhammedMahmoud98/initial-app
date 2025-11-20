@@ -114,7 +114,7 @@
   "newLocationTypeSuccessMsg": "تم إنشاء نوع الموقع '{{typeName}}' بنجاح",
   "duplicatedTypeCode": "كود نوع المكان مكرر، يرجى استخدام كود مختلف",
   "updateLocationTypeSuccessMsg": "تم تحديث نوع الموقع بنجاح",
-  "deleteLocationTypeConfirmMessageHeader": "بمجرد حذف نوع المكان، سيتم إلغاء تعيين جميع الأماكن المرتبطة به.",
-  "deleteLocationTypeConfirmMessageBody": "هل أنت متأكد أنك تريد المتابعة؟",
+  "deleteLocationTypeConfirmMessageHeader": "تأكيد حذف نوع المكان",
+  "deleteLocationTypeConfirmMessageBody": "هل أنت متأكد أنك تريد المتابعة بحذف نوع الموقع هذا؟",
   "locationTypeDeletedSuccessfully": "تم حذف نوع المكان بنجاح"
 }

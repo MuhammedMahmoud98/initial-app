@@ -6,7 +6,7 @@ import {
   handleFooterFontSize, handleFooterTextRightMargin, handleIconsWidth, handleIconTopMargin,
   handleLineMargins, handleLineSeparatorWidth, handleLineWidth,
   handleLogoMargins, handlePDFMargins,
-  handlePDFSize, handleQRBottomMargin,
+  handlePDFSize, handlePhoneIconTopMargin, handleQRBottomMargin,
   handleQRTopMargin,
   handleSTCLogoDimension, handleTextFontSize, handleTextMarginBottom
 } from '../../shared/helpers/helpers';
@@ -244,7 +244,7 @@ export class PdfMakerService {
                   '  <path d="M15.9617 4.02957C18.6607 4.03057 21.3527 5.05657 23.4117 7.11557C25.4707 9.17457 26.4977 11.8666 26.4977 14.5656H27.8737C27.8747 11.5196 26.7097 8.46657 24.3847 6.14257C22.0607 3.81756 19.0077 2.65257 15.9617 2.65357V4.02957Z" fill="white"/>\n' +
                   '</svg>',
                 width: handleIconsWidth(records),
-                margin: [0, handleIconTopMargin(records), 15, 0]  // Negative margin to position over purple box
+                margin: [0, handlePhoneIconTopMargin(records), 15, 0]  // Negative margin to position over purple box
               },
               {
                 stack: [

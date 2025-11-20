@@ -14,6 +14,7 @@ export interface AssignedLocationType {
         code: string;
     };
     createdAt: string;
+    linkedAt: string;
 }
 
 export interface LinkAssignedLocation {

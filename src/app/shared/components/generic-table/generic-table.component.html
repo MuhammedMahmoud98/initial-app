@@ -8,7 +8,7 @@
   [rows]="rowsCounter"
   [rowTrackBy]="trackByCode"
   [totalRecords]="totalRecords()"
-  [paginator]="totalRecords() > 50"
+  [paginator]=" showRecordInfo() ? showRecordInfo() : totalRecords() > 50"
   [lazy]="true"
   [(first)]="first"
   [showCurrentPageReport]="true"

@@ -51,3 +51,25 @@
 .p-paginator-page {
   font-family: STCForward-Regular, sans-serif !important;
 }
+
+.show-reports-only {
+  .p-paginator-first {
+      display: none !important;
+ }
+
+  .p-paginator-last {
+      display: none !important;
+  }
+
+  .p-paginator-pages {
+      display: none !important;
+  }
+
+  .p-paginator-prev {
+      display: none !important;
+  }
+
+  .p-paginator-next {
+      display: none !important;
+  }
+}

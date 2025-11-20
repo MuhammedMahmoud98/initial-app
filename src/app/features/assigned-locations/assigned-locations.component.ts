@@ -3,6 +3,7 @@ import {
   AfterRenderRef,
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   inject,
   OnDestroy,
   signal, TemplateRef, viewChild
@@ -18,7 +19,6 @@ import {
   catchError,
   EMPTY,
 
-  Subject,
   tap
 } from 'rxjs';
 import {genericCasting} from '../../shared/helpers/helpers';
@@ -31,14 +31,14 @@ import {
   AssignedLocationTypesResponse,
   LinkAssignedLocation
 } from './models/assigned-location.model';
-import { LocationServiceEvent} from '../location-types/models/location-types.model';
 import { TitleWithIconComponent } from '../../shared/components/title-with-icon/title-with-icon.component';
-import { INITIAL_FILTER_PAYLOAD_ASSIGNED_LOCATION } from '../../shared/constants/common-constants';
+import { INITIAL_FILTER_PAYLOAD } from '../../shared/constants/common-constants';
 import { HubFiltersComponent } from '../../shared/components/hub-filters/hub-filters.component';
 import { CopyToClipboardComponent } from '../../shared/components/copy-to-clipboard/copy-to-clipboard.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-assigned-qr',
@@ -64,20 +64,19 @@ export class AssignedLocationsComponent implements OnDestroy {
   readonly genericTableCacheService: GenericTableCacheService = inject(GenericTableCacheService);
   protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
   readonly #locationsService: LocationsService = inject(LocationsService);
+  readonly #destroyRef: DestroyRef = inject(DestroyRef);
 
   readonly #messageService: MessageService = inject(MessageService);
   readonly #translateService: TranslateService = inject(TranslateService);
 
   // SIGNALS
   items = signal<AssignedLocationType[]>([]);
-  locationTypesPayload = signal<ItemFilter>(INITIAL_FILTER_PAYLOAD_ASSIGNED_LOCATION);
+  locationTypesPayload = signal<ItemFilter>(INITIAL_FILTER_PAYLOAD);
   isApplyingFilter = signal(false);
   isEmptyState = signal(false);
   isErrorState = signal(false);
   isLoading = signal(true);
 
-  // SUBJECTS
-  private toggle$ = new Subject<LocationServiceEvent>();
 
   // VIEW CHILDREN
   emailCustomColumn = viewChild<TemplateRef<{ $implicit: AssignedLocationType }>>('emailCustomColumn');
@@ -91,7 +90,6 @@ export class AssignedLocationsComponent implements OnDestroy {
 
   init: AfterRenderRef = afterNextRender(() => {
     this.getAssignedLocationTypes();
-    // this.listenToToggleService();
   });
 
 
@@ -107,11 +105,11 @@ export class AssignedLocationsComponent implements OnDestroy {
           this.genericTableCacheService.totalAvailableItems.set(locationTypesResponse.totalElements);
           this.items.set(locationTypesResponse.content);
           this.clearStates();
-          console.log(locationTypesResponse, 'locationTypesResponse');
         } else {
           this.handleEmptyState();
         }
       }),
+      takeUntilDestroyed(this.#destroyRef),
       catchError(() => {
         this.isLoading.set(false);
         this.handleErrorState();

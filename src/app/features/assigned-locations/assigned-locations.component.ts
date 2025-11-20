@@ -150,8 +150,8 @@ export class AssignedLocationsComponent implements OnDestroy {
 
   openUnlinkAssignedLocationDialog(assignedLocationId: number): void {
       this.confirmationService.confirm({
-        header: this.#translateService.instant('unlinkConfirmMessageBody'),
-        message: this.#translateService.instant('unlinkConfirmMessageHeader'),
+        header: this.#translateService.instant('unlinkConfirmMessageHeader'),
+        message: this.#translateService.instant('unlinkConfirmMessageBody'),
         closable: false,
         closeOnEscape: true,
         rejectButtonProps: {

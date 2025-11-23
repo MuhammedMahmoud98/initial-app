@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, signal, OnInit, OnDestroy } from '@angular/core';
 import { CORE_APP_ROUTES } from '../../../shared/constants/common-constants';
 import { Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import {MAIN_ROUTES} from '../../../shared/enums/shared.enum';
 
 @Component({
   selector: 'app-core-tabs-list',
@@ -13,7 +14,7 @@ import { Subscription } from 'rxjs';
   styleUrl: './core-tabs-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CoreTabsListComponent {
+export class CoreTabsListComponent implements OnInit, OnDestroy {
   tabsList = signal(CORE_APP_ROUTES);
 
   private routeSub!: Subscription;
@@ -43,6 +44,6 @@ export class CoreTabsListComponent {
   }
 
   goToUploadFile() {
-    this.router.navigate(['/upload-file']);
+    this.router.navigate([`${MAIN_ROUTES.CREATED_LOCATIONS}/${MAIN_ROUTES.UPLOAD_FILE}`]);
   }
 }

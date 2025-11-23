@@ -6,13 +6,15 @@
     <app-apps-list />
   </aside>
 
-  <main class="qr-container__main">
-    <app-sub-header />
+  <main class="qr-container__main" [class.qr-container__blank--main]="!isSubHeaderVisible()">
+    @if (isSubHeaderVisible()) {
+      <app-sub-header />
+    }
     <!-- MAIN ROUTES -->
     @if (hasCredentials()) {
       <section class="mx-0 lg:mx-5 overflow-auto">
         @if (isAppLoading()) {
-          <div class="bg-white h-full">
+          <div class="bg-white h-full my-3">
             <app-spinner-loader/>
           </div>
         }

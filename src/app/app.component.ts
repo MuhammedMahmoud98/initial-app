@@ -1,5 +1,5 @@
 import {Component, computed, inject, Signal} from '@angular/core';
-import {Router, RouterOutlet} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router, RouterOutlet} from '@angular/router';
 import {LocalizationService, UserService, PdfMakerService} from './core/services';
 import { HeaderComponent } from './core/components/header/header.component';
 import { AppsListComponent } from './core/components/apps-list/apps-list.component';
@@ -11,6 +11,8 @@ import {ConfirmationService, MessageService} from 'primeng/api';
 import {AuthenticationService} from './features/auth/services/authentication.service';
 import {SpinnerLoaderComponent} from './shared/components/spinner-loader/spinner-loader.component';
 import {DatePipe} from '@angular/common';
+import {filter, map} from 'rxjs';
+import {toSignal} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-root',
@@ -35,6 +37,7 @@ export class AppComponent {
   readonly #pdfMakerService = inject(PdfMakerService);
   readonly #authService = inject(AuthenticationService);
   private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
   protected readonly isRTL: Signal<boolean> = computed(() =>
     this.localizationService.isRTL(),
   );
@@ -45,6 +48,13 @@ export class AppComponent {
 
     return !!(useId || hasToken);
   });
+
+  isSubHeaderVisible = toSignal(this.router.events.pipe(filter(event => event instanceof NavigationEnd), map(() => {
+    const child = this.getDeepestChild(this.activatedRoute);
+    const data = child.snapshot.data as {hideSubHeader: boolean};
+
+    return !(data && data['hideSubHeader']) && this.hasCredentials();
+  })));
 
   isAppReady = computed(() => this.#userService.currentUser()?.['is-qr-code-admin']);
   isAppLoading = computed(() => this.#userService.isUserLoading());
@@ -57,7 +67,13 @@ export class AppComponent {
     }
   }
 
-  // toggleLanguage() {
-  //   this.localizationService.toggleLanguage();
-  // }
+  private getDeepestChild(route: ActivatedRoute): ActivatedRoute {
+    let current = route;
+
+    while (current.firstChild) {
+      current = current.firstChild;
+    }
+
+    return current;
+  }
 }

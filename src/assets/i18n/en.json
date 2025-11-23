@@ -116,5 +116,6 @@
   "duplicatedTypeCode": "duplicated type code",
   "updateLocationTypeSuccessMsg": "location Type updated successfully",
   "invalidServiceLink": "invalid service link",
-  "whitespaceErrMsg": "no leading or trailing whitespace allowed"
+  "whitespaceErrMsg": "no leading or trailing whitespace allowed",
+  "Bulk upload completed successfully!": "bulk upload completed successfully!"
 }

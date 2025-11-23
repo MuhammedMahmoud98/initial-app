@@ -118,5 +118,6 @@
   "deleteLocationTypeConfirmMessageHeader": "تأكيد حذف نوع المكان",
   "deleteLocationTypeConfirmMessageBody": "هل أنت متأكد أنك تريد المتابعة بحذف نوع الموقع هذا؟",
   "locationTypeDeletedSuccessfully": "تم حذف نوع المكان بنجاح",
-  "whitespaceErrMsg": "لا يمكن أن يحتوي هذا الحقل على مسافات فارغة"
+  "whitespaceErrMsg": "لا يمكن أن يحتوي هذا الحقل على مسافات فارغة",
+  "Bulk upload completed successfully!": "تم التحميل الجماعي بنجاح!"
 }

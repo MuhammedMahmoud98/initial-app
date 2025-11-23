@@ -31,7 +31,16 @@
           <p class="upload-text">{{'dragAndClick' | translate}}</p>
           <p class="upload-sub">{{'maxFileSizeMsg' | translate}}</p>
         </div>
+
+          <div *ngIf="reUpload()" class="text-center mt-3">
+            <button pButton type="button" class="p-button-primary" (click)="uploader.choose()"
+              (keydown.enter)="uploader.choose()">
+              {{ 'reUpload' | translate }}
+            </button>
+          </div>
       </ng-template>
+
+
     </p-fileUpload>
   </ng-container>
 
@@ -56,6 +65,8 @@
 
     </div>
   </ng-template>
+
+
 </div>
     } @else { 
 

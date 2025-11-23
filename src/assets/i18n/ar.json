@@ -29,7 +29,7 @@
   "update": "تحديث",
   "qrConfirmMessageHeader": "بمجرد إنشاء رمز الاستجابة السريعة، لن يكون سجل الموقع قابلاً للحذف",
   "qrConfirmMessageBody": "هل أنت متأكد أنك تريد المتابعة؟",
-  "locationTypeCode": "كود نوع المكان",
+  "locationTypeCode": "نوع المكان",
   "locationCode": "كود المكان",
   "district": "القطاع",
   "category": "التصنيف",
@@ -119,5 +119,7 @@
   "deleteLocationTypeConfirmMessageBody": "هل أنت متأكد أنك تريد المتابعة بحذف نوع الموقع هذا؟",
   "locationTypeDeletedSuccessfully": "تم حذف نوع المكان بنجاح",
   "whitespaceErrMsg": "لا يمكن أن يحتوي هذا الحقل على مسافات فارغة",
+  "errorLimitMessage": "يرجى إصلاح هذه الأخطاء العشرة أولاً وإعادة تحميل الورقة لمزيد من التحقق",
+  "reUpload": "إعادة إرفاق الملف",
   "Bulk upload completed successfully!": "تم التحميل الجماعي بنجاح!"
 }

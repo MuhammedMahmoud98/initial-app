@@ -322,3 +322,13 @@
     height: inherit !important;
   }
 }
+
+
+:host {
+ ::ng-deep {
+  .p-fileupload {
+  .p-message {
+  display: none !important;
+  }}}
+  
+}

@@ -29,7 +29,7 @@
   "update": "update",
   "qrConfirmMessageHeader": "once the QR code is generated the location record won't be deletable",
   "qrConfirmMessageBody": "are you sure you want to proceed?",
-  "locationTypeCode": "location type code",
+  "locationTypeCode": "location type",
   "locationCode": "location code",
   "district": "district",
   "category": "category",
@@ -114,5 +114,7 @@
   "newLocationTypeSuccessMsg": "location type '{{typeName}}' created successfully",
   "duplicatedTypeCode": "duplicated type code",
   "updateLocationTypeSuccessMsg": "location Type updated successfully",
-  "invalidServiceLink": "invalid service link"
+  "invalidServiceLink": "invalid service link",
+  "errorLimitMessage": "Please fix these 10 errors first and re-upload the sheet for further validation",
+  "reUpload": "re-upload"
 }

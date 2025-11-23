@@ -13,7 +13,7 @@ import {
   WritableSignal
 } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import {FileSelectEvent, FileUploadModule} from 'primeng/fileupload';
+import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { LocationsUploadService } from './services/locations-upload.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -36,8 +36,8 @@ import { CustomStatusComponent } from '../../shared/components/custom-status/cus
 import { CopyToClipboardComponent } from '../../shared/components/copy-to-clipboard/copy-to-clipboard.component';
 import { Router } from '@angular/router';
 import { CanLeaveUploadPage } from '../../core/guards/upload-leave.guard';
-import {DiscardUploadResponse, SaveUploadResponse, UploadLocationsResponse} from './models/upload-file.model';
-import {HttpErrorResponse} from '@angular/common/http';
+import { DiscardUploadResponse, SaveUploadResponse, UploadLocationsResponse } from './models/upload-file.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 
@@ -65,7 +65,7 @@ import {HttpErrorResponse} from '@angular/common/http';
   styleUrl: './upload-file.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
+export class UploadFileComponent implements OnInit, CanLeaveUploadPage {
   readonly #locationsUploadService: LocationsUploadService = inject(LocationsUploadService);
   readonly #messageService: MessageService = inject(MessageService);
   readonly #translateService: TranslateService = inject(TranslateService);
@@ -86,6 +86,7 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
   isApplyingFilter = signal(false);
   isLoading = signal(true);
   isUploadedScreen = signal(false);
+  reUpload = signal(false);
 
 
   // VIEW CHILDREN
@@ -138,7 +139,7 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
     return new Observable<boolean>(() => {
       this.confirmationService.confirm({
         header: this.#translateService.instant('unsavedChangesTitle'),
-        message:  this.#translateService.instant('unsavedChangesMessage'),
+        message: this.#translateService.instant('unsavedChangesMessage'),
         closable: false,
         closeOnEscape: true,
         rejectButtonProps: {
@@ -216,20 +217,46 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
             });
           });
         } else {
-          // Generic error
-          this.#messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: this.#translateService.instant(
-              err?.error?.errors?.[0]?.message ||
-              err?.error?.errors?.[0] ||
-              err?.error?.message?.[0]?.source?.message ||
-              err?.error?.message ||
-              'Upload failed. Please try again.'
-            ),
-            life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
-          });
+          const errors = err?.error?.errors;
+          
+          if (Array.isArray(errors)) {
+            const limitedErrors = errors.slice(0, 10);
+
+            limitedErrors.forEach((message: string ,i :number ) => {
+              this.#messageService.add({
+                severity: 'error',
+                summary: this.#translateService.instant('Error'),
+                detail: this.#translateService.instant(message),
+                life: COMMON_CONSTANTS.TOASTER_LIFE_TIME + i * 500,
+              });
+            });
+
+            if (errors.length > 10) {
+              this.#messageService.add({
+                severity: 'error',
+                summary: this.#translateService.instant('Error'),
+                detail: this.#translateService.instant('errorLimitMessage'),
+                life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
+              });
+            }
+          } else {
+            this.#messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: this.#translateService.instant(
+                err?.error?.errors?.[0]?.message ||
+                err?.error?.errors?.[0] ||
+                err?.error?.message?.[0]?.source?.message ||
+                err?.error?.message ||
+                'Upload failed. Please try again.'
+              ),
+              life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
+            });
+          }
         }
+        this.cancelUpload();
+        this.reUpload.set(true);
+        this.cdr.detectChanges();
       },
     });
   }
@@ -237,6 +264,8 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
   onFileSelect(event: FileSelectEvent) {
     const file = event.files?.[0];
     if (!file) return;
+
+    const errors: string[] = [];
 
     const fileName = file.name.toLowerCase();
     const fileSize = file.size;
@@ -246,24 +275,22 @@ export class UploadFileComponent implements OnInit , CanLeaveUploadPage {
     const isValidType = validExtensions.some(ext => fileName.endsWith(ext));
 
     if (!isValidType) {
-      this.#messageService.add({
-        severity: 'error',
-        summary: this.#translateService.instant('Error'),
-        detail: this.#translateService.instant('excelFileExtension'),
-        life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
-      });
-      this.cancelUpload();
-      return;
+      errors.push(this.#translateService.instant('excelFileExtension'));
     }
 
     if (fileSize > maxFileSize) {
-      this.#messageService.add({
-        severity: 'error',
-        summary: this.#translateService.instant('Error'),
-        detail: this.#translateService.instant('fileSizeExceedMsg'),
-        life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
-      });
+      errors.push(this.#translateService.instant('fileSizeExceedMsg'));
+    }
 
+    if (errors.length > 0) {
+      errors.forEach(err => {
+        this.#messageService.add({
+          severity: 'error',
+          summary: this.#translateService.instant('Error'),
+          detail: err,
+          life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
+        });
+      });
 
       this.cancelUpload();
       return;

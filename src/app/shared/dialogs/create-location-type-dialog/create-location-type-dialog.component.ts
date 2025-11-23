@@ -91,7 +91,7 @@ export class CreateLocationTypeDialogComponent {
       category: new FormControl<LocationTypePayload['category']>(LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION),
       size: new FormControl<LocationTypePayload['size']>('A4'),
       name: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(20), noScriptValidator, noSqlInjectionValidator]),
-      code: new FormControl('', [Validators.required,Validators.minLength(2), Validators.maxLength(10), noScriptValidator, noSqlInjectionValidator, noWhitespaceValidator]),
+      code: new FormControl('', [Validators.required,Validators.minLength(2), Validators.maxLength(10), noScriptValidator, noSqlInjectionValidator, noWhitespaceValidator()]),
       services: new FormArray([serviceFormGroup])
     } as unknown as LocationTypeForm));
   }

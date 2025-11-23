@@ -170,11 +170,7 @@
       </div>
     }
   </div>
-  <div class="flex flex-column gap-2">
-    <span>form valid: {{form.valid}}</span>
-    <span>form invalid: {{form.invalid}}</span>
-    <span>    form pristine: {{form.pristine}}</span>
-  </div>
+  <!-- FOOTER -->
   <div class="create-location-type__footer">
     <p-button [label]="'cancel' | translate" [outlined]="true" severity="secondary" (onClick)="closeDialog()" />
     <p-button [label]="(dialogMode() === MODE.ADD ? 'create' : 'update') | translate" [disabled]="!form.valid || form.invalid || form.pristine || isLoading()" (onClick)="saveChanges()" severity="secondary" />

@@ -17,5 +17,5 @@
     </defs>
   </svg>
 
-  <span class="category-hint__caption">{{'categoryInfoMsg' | translate}}</span>
+  <span class="category-hint__caption">{{ (selectedCategory === 'General Location' ? 'publicCategoryInfoMsg': 'employeeCategoryInfoMsg') | translate}}</span>
 </div>

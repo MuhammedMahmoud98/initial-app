@@ -57,6 +57,10 @@
             @if (getControlError('code', 'duplicatedTypeCode')) {
               <span class="stc-danger">{{ 'duplicatedTypeCode' | translate }}</span>
             }
+
+            @if (getControlError('code', 'whitespace')) {
+              <span class="stc-danger">{{ 'whitespaceErrMsg' | translate }}</span>
+            }
           </app-input-label>
         </div>
       </div>
@@ -166,9 +170,13 @@
       </div>
     }
   </div>
-
+  <div class="flex flex-column gap-2">
+    <span>form valid: {{form.valid}}</span>
+    <span>form invalid: {{form.invalid}}</span>
+    <span>    form pristine: {{form.pristine}}</span>
+  </div>
   <div class="create-location-type__footer">
     <p-button [label]="'cancel' | translate" [outlined]="true" severity="secondary" (onClick)="closeDialog()" />
-    <p-button [label]="(dialogMode() === MODE.ADD ? 'create' : 'update') | translate" [disabled]="!form.valid ||form.invalid || form.pristine || isLoading()" (onClick)="saveChanges()" severity="secondary" />
+    <p-button [label]="(dialogMode() === MODE.ADD ? 'create' : 'update') | translate" [disabled]="!form.valid || form.invalid || form.pristine || isLoading()" (onClick)="saveChanges()" severity="secondary" />
   </div>
 </div>

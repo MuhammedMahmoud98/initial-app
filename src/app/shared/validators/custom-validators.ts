@@ -1,4 +1,4 @@
-import {AbstractControl, AsyncValidatorFn, FormGroup, ValidationErrors} from '@angular/forms';
+import {AbstractControl, AsyncValidatorFn, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {SQL_INJECTION_PATTERNS, XSS_PATTERNS} from '../constants/common-constants';
 import {LocationTypeActionsService} from '../../features/location-types/services/location-type-actions.service';
 import {catchError, map, Observable, of, switchMap, timer} from 'rxjs';
@@ -18,6 +18,24 @@ export const noScriptValidator = (control: AbstractControl): ValidationErrors | 
 
   const containsXSS = XSS_PATTERNS.some(pattern => pattern.test(value));
   return containsXSS ? { xssDetected: true } : null;
+}
+
+export const noWhitespaceValidator = (): ValidatorFn => {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value as string;
+
+    if (!value) return null;
+
+    // Reject if there is ANY whitespace (beginning, middle or end)
+    const hasWhitespace = /\s/.test(value);
+
+    if (hasWhitespace) {
+      control.markAsUntouched();
+      control.markAsDirty();
+    }
+
+    return hasWhitespace ? { whitespace: true } : null;
+  };
 }
 
 export const duplicatedTypeCodeValidator = (duplicatedValue: string) => {
@@ -49,10 +67,14 @@ export const ServiceLinkValidator = (service: LocationTypeActionsService): Async
         service.validateServiceLink({ [key]: value }).pipe(
           map((res: ServiceLinkResponse) => {
             const isValid = res?.data?.[key]?.valid;
-            console.log(control);
-            return isValid
-              ? null
-              : { invalidServiceLink: res?.data?.[key]?.message };
+
+            if (!isValid) {
+              control.markAsTouched();
+              control.markAsDirty();
+              return { invalidServiceLink: res?.data?.[key]?.message };
+            }
+
+            return null;
           }),
           catchError(() =>
             of({ invalidServiceLink: 'something went wrong' })

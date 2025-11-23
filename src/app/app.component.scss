@@ -67,6 +67,10 @@
       display: contents;
     }
   }
+
+  &__blank--main {
+    grid-template-rows: auto !important;
+  }
 }
 
 @media screen and (max-width: 768px) {

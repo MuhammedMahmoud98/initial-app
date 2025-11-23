@@ -63,3 +63,7 @@ export const mockPDFRecords: { name: string; qrBase64: string }[] = Array.from(
   })
 );
 
+export const HEADER_LESS_ROUTES = [
+  MAIN_ROUTES.UPLOAD_FILE
+];
+

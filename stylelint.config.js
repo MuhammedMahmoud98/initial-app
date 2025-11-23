@@ -71,7 +71,7 @@ module.exports = {
     'selector-type-no-unknown': [
       true,
       {
-        ignoreTypes: ['/^exc-/', '/^p-/', 'app-*', 'router-outlet', 'timesicon'],
+        ignoreTypes: ['/^exc-/', '/^p-/', 'app-*', 'router-outlet', 'timesicon', 'app-generic-table'],
         message: 'Only the following element namespaces are allowed: [exc, p]',
       },
     ],

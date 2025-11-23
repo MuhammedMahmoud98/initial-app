@@ -29,15 +29,17 @@ export const routes: Routes = [
       },
       {
         path: MAIN_ROUTES.ASSIGNED_LOCATION,
-        loadComponent: () => 
+        loadComponent: () =>
           import('./features/assigned-locations/assigned-locations.component').then((m) => m.AssignedLocationsComponent)
-        
       },
       {
-        path: MAIN_ROUTES.UPLOAD_FILE,
+        path: `${MAIN_ROUTES.CREATED_LOCATIONS}/${MAIN_ROUTES.UPLOAD_FILE}`,
         loadComponent: () => import('./features/upload-file/upload-file.component').then((m) => m.UploadFileComponent),
-        canDeactivate: [UploadLeaveGuard]
-      }
+        canDeactivate: [UploadLeaveGuard],
+        data: {
+          hideSubHeader: true,
+        },
+      },
     ],
   },
   {

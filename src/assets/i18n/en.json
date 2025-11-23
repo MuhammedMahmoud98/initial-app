@@ -118,5 +118,6 @@
   "invalidServiceLink": "invalid service link",
   "errorLimitMessage": "Please fix these 10 errors first and re-upload the sheet for further validation",
   "reUpload": "re-upload",
-  "whitespaceErrMsg": "no leading or trailing whitespace allowed"
+  "whitespaceErrMsg": "no leading or trailing whitespace allowed",
+  "Bulk upload completed successfully!": "bulk upload completed successfully!"
 }

@@ -15,7 +15,7 @@
   white-space: nowrap;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -61,6 +61,8 @@
 }
 
 .import-btn {
+  position: absolute;
+  inset-inline-end: 2rem;
   background-color: var(--secondary-500);
   color: white;
   height: 40px;
@@ -77,7 +79,7 @@
 
   &:hover {
     background-color: #ff4f74;
-  
-   
+
+
   }
 }

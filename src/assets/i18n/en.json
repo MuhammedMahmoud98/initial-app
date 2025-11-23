@@ -72,9 +72,10 @@
   "unsavedChangesMessage": "you have unsaved changes. are you sure you want to leave this page?",
   "createNewType": "create new type",
   "editType": "edit type",
-  "publicLocation": "public location",
+  "generalLocation": "general location",
   "employeeLocation": "employee location",
-  "categoryInfoMsg": "A public location is a shared space that any employee can use and is not tied to a specific person's profile.",
+  "publicCategoryInfoMsg": "A public location is a shared space that any employee can use and is not tied to a specific person's profile.",
+  "employeeCategoryInfoMsg": "An employee location refers to the physical workspace where an employee is stationed, such as a desk, office, room.",
   "typeNamePlaceholder": "prayer room",
   "codeNamePlaceholder": "L6",
   "typeNameTooltip": "Write a name that describes the location type",
@@ -114,5 +115,6 @@
   "newLocationTypeSuccessMsg": "location type '{{typeName}}' created successfully",
   "duplicatedTypeCode": "duplicated type code",
   "updateLocationTypeSuccessMsg": "location Type updated successfully",
-  "invalidServiceLink": "invalid service link"
+  "invalidServiceLink": "invalid service link",
+  "whitespaceErrMsg": "no leading or trailing whitespace allowed"
 }

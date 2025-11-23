@@ -74,9 +74,10 @@
   "unsavedChangesMessage": "لديك تغييرات غير محفوظة. هل أنت متأكد أنك تريد المغادرة دون حفظ؟",
   "createNewType": "إنشاء نوع جديد",
   "editType": "تعديل النوع",
-  "publicLocation": "مكان عام",
+  "generalLocation": "مكان عام",
   "employeeLocation": "مكان موظف",
-  "categoryInfoMsg": "الموقع العام هو مساحة مشتركة يمكن لأي موظف استخدامها وليس مقيدة بشخص معين.",
+  "publicCategoryInfoMsg": "الموقع العام هو مساحة مشتركة يمكن لأي موظف استخدامها وليس مقيدة بشخص معين.",
+  "employeeCategoryInfoMsg": "موقع الموظف يشير إلى مساحة العمل الفعلية التي يتمرکز فيها الموظف، مثل المكتب أو الغرفة.",
   "typeNamePlaceholder": "غرفة صلاة",
   "codeNamePlaceholder": "L6",
   "typeNameTooltip": "اكتب اسمًا يصف نوع الموقع",
@@ -116,5 +117,6 @@
   "updateLocationTypeSuccessMsg": "تم تحديث نوع الموقع بنجاح",
   "deleteLocationTypeConfirmMessageHeader": "تأكيد حذف نوع المكان",
   "deleteLocationTypeConfirmMessageBody": "هل أنت متأكد أنك تريد المتابعة بحذف نوع الموقع هذا؟",
-  "locationTypeDeletedSuccessfully": "تم حذف نوع المكان بنجاح"
+  "locationTypeDeletedSuccessfully": "تم حذف نوع المكان بنجاح",
+  "whitespaceErrMsg": "لا يمكن أن يحتوي هذا الحقل على مسافات فارغة"
 }

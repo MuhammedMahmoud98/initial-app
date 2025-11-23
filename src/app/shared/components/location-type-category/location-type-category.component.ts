@@ -37,11 +37,11 @@ export class LocationTypeCategoryComponent implements ControlValueAccessor {
   readonly #cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   // SIGNALS
   locationTypeCategories: WritableSignal<LocationTypeCategory[]> = signal([
-    {label: 'publicLocation', value: LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION, isSelected: true},
+    {label: 'generalLocation', value: LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION, isSelected: true},
     {label: 'employeeLocation', value: LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION, isSelected: false},
   ]);
 
-  private _value = 'public location';
+  private _value = 'General Location';
   disabled = false;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -79,8 +79,13 @@ export class LocationTypeCategoryComponent implements ControlValueAccessor {
       }))
     );
 
+    console.log(this._value);
     this.onChange(this._value);
     this.onTouched();
     this.#cdr.markForCheck();
+  }
+
+  get selectedCategory(): string {
+    return this._value;
   }
 }

@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import {MAIN_ROUTES} from './shared/enums/shared.enum';
 import {thriftGuard} from './core/guards/thrift.guard';
-import {  UploadLeaveGuard } from './core/guards/upload-leave.guard';
 
 export const routes: Routes = [
   {
@@ -35,7 +34,6 @@ export const routes: Routes = [
       {
         path: `${MAIN_ROUTES.CREATED_LOCATIONS}/${MAIN_ROUTES.UPLOAD_FILE}`,
         loadComponent: () => import('./features/upload-file/upload-file.component').then((m) => m.UploadFileComponent),
-        canDeactivate: [UploadLeaveGuard],
         data: {
           hideSubHeader: true,
         },

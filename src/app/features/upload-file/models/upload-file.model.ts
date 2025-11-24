@@ -1,5 +1,7 @@
 export interface UploadLocationsResponse {
-  uploadId: string;
+  fileName: string,
+  totalRecords: number,
+  uploadedAt: string
 }
 
 export interface DiscardUploadResponse {

@@ -4,9 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  HostListener,
   inject,
-  OnInit,
   signal,
   TemplateRef,
   viewChild,
@@ -35,8 +33,7 @@ import { TextWithBgColorComponent } from '../../shared/components/text-with-bg-c
 import { CustomStatusComponent } from '../../shared/components/custom-status/custom-status.component';
 import { CopyToClipboardComponent } from '../../shared/components/copy-to-clipboard/copy-to-clipboard.component';
 import { Router } from '@angular/router';
-import { CanLeaveUploadPage } from '../../core/guards/upload-leave.guard';
-import { DiscardUploadResponse, SaveUploadResponse, UploadLocationsResponse } from './models/upload-file.model';
+import { DiscardUploadResponse, SaveUploadResponse } from './models/upload-file.model';
 import { HttpErrorResponse } from '@angular/common/http';
 
 
@@ -65,7 +62,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrl: './upload-file.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UploadFileComponent implements OnInit, CanLeaveUploadPage {
+export class UploadFileComponent  {
   readonly #locationsUploadService: LocationsUploadService = inject(LocationsUploadService);
   readonly #messageService: MessageService = inject(MessageService);
   readonly #translateService: TranslateService = inject(TranslateService);
@@ -124,16 +121,7 @@ export class UploadFileComponent implements OnInit, CanLeaveUploadPage {
 
   constructor(private cdr: ChangeDetectorRef) { }
 
-  ngOnInit(): void {
-    const discarded = localStorage.getItem('discardOnReload');
-    if (discarded) {
-      const { uploadId } = JSON.parse(discarded);
-      this.fileUploadId = uploadId;
-      localStorage.removeItem('discardOnReload');
-      this.discardUpload(); // call your real discard() logic here
-    }
-  }
-
+ 
   confirmLeavePage(): Observable<boolean> | boolean {
     if (!this.previewLoaded || this.userActionTaken) return true;
     return new Observable<boolean>(() => {
@@ -185,7 +173,7 @@ export class UploadFileComponent implements OnInit, CanLeaveUploadPage {
     this.uploadProgress = 0;
 
     this.#locationsUploadService.uploadLocations(file).subscribe({
-      next: (res: UploadLocationsResponse) => {
+      next: (res) => {
         this.isUploading = false;
         this.fileUploaded = true;
         this.uploadProgress = 100;
@@ -196,9 +184,8 @@ export class UploadFileComponent implements OnInit, CanLeaveUploadPage {
           detail: this.#translateService.instant('Bulk upload completed successfully!'),
           life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
         });
-        this.fileUploadId = res.uploadId;
         // localStorage.setItem('fileUploadId', this.fileUploadId);
-        this.getCreatedLocations(res.uploadId);
+        this.getCreatedLocations();
 
         console.log('✅ Upload success:', res);
       },
@@ -314,9 +301,9 @@ export class UploadFileComponent implements OnInit, CanLeaveUploadPage {
   }
 
 
-  getCreatedLocations(fileID: string): void {
+  getCreatedLocations(): void {
     this.isUploadedScreen.set(true);
-    this.#locationsUploadService.getCreatedLocationsByFileID(this.locationsPayload(), fileID).pipe(
+    this.#locationsUploadService.getCreatedLocationsByFileID(this.locationsPayload()).pipe(
       tap((createdLocations: CreatedLocationResponse) => {
         console.log(createdLocations, 'CREATED LOCATIONS FROM API');
         this.isLoading.set(false);
@@ -348,13 +335,13 @@ export class UploadFileComponent implements OnInit, CanLeaveUploadPage {
   onFilterValueChanges(filterValues: HubFilters) {
     this.isApplyingFilter.set(!!filterValues.filter);
     this.updateFilterPayload({ ...filterValues, page: 0 });
-    this.getCreatedLocations(this.fileUploadId);
+    this.getCreatedLocations();
   }
 
   onPageChange(currentPage: number) {
     console.log(currentPage, 'CURRENT PAGE FROM CREATED LOCATIONS');
     this.updateFilterPayload({ page: currentPage } as ItemFilter);
-    this.getCreatedLocations(this.fileUploadId);
+    this.getCreatedLocations();
   }
 
   handleEmptyState(): void {
@@ -370,13 +357,12 @@ export class UploadFileComponent implements OnInit, CanLeaveUploadPage {
   }
 
   saveUpload() {
-    this.#locationsUploadService.saveUpload(this.fileUploadId).subscribe({
+    this.#locationsUploadService.saveUpload().subscribe({
       next: (res: SaveUploadResponse) => {
         this.#messageService.add({ severity: 'success', summary: 'Success', detail: this.#translateService.instant(res.message), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME });
         this.isUploadedScreen.set(false);
         this.cancelUpload();
         this.userActionTaken = true;
-        localStorage.removeItem('discardOnReload');
 
         this.router.navigate(['/created-locations']);
       },
@@ -388,13 +374,12 @@ export class UploadFileComponent implements OnInit, CanLeaveUploadPage {
 
   discardUpload() {
     // this.fileUploadId = localStorage.getItem('fileUploadId');
-    this.#locationsUploadService.discardUpload(this.fileUploadId).subscribe({
+    this.#locationsUploadService.discardUpload().subscribe({
       next: (res: DiscardUploadResponse) => {
         this.#messageService.add({ severity: 'success', summary: 'Success', detail: this.#translateService.instant(res.message), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME });
         this.isUploadedScreen.set(false);
         this.cancelUpload();
         this.userActionTaken = true;
-        localStorage.removeItem('discardOnReload');
 
         this.router.navigate(['/created-locations']);
       },
@@ -409,16 +394,6 @@ export class UploadFileComponent implements OnInit, CanLeaveUploadPage {
     this.isUploadedScreen.set(false);
     this.cancelUpload();
     this.userActionTaken = true;
-    localStorage.removeItem('discardOnReload');
     this.router.navigate(['/created-locations']);
-  }
-
-  @HostListener('window:beforeunload', ['$event'])
-  beforeUnloadHandler(event: BeforeUnloadEvent): string | void {
-    if (this.previewLoaded && !this.userActionTaken) {
-      localStorage.setItem('discardOnReload', JSON.stringify({ uploadId: this.fileUploadId }));
-      event.preventDefault();
-      return '';
-    }
   }
 }

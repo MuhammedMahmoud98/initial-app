@@ -36,8 +36,8 @@ export const API_CONSTANTS = {
   //Download Template
   DOWNLOAD_TEMPLATE: serverUrl + '/locations/upload/template',
   UPLOAD_TEMPLATE: serverUrl + '/locations/upload',
-  CREATE_LOCATION_BY_FILEID: serverUrl + '/locations/upload/{uploadId}/preview',
-  DISCARD_LOCATION_BY_FILEID: serverUrl + '/locations/upload/{uploadId}/discard',
-  SAVE_LOCATION_BY_FILEID: serverUrl + '/locations/upload/{uploadId}/save',
+  CREATE_LOCATION_BY_FILEID: serverUrl + '/locations/upload/preview',
+  DISCARD_LOCATION_BY_FILEID: serverUrl + '/locations/upload/discard',
+  SAVE_LOCATION_BY_FILEID: serverUrl + '/locations/upload/save',
 
 };

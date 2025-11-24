@@ -27,20 +27,17 @@ export class LocationsUploadService {
     return this.#httpClient.post<UploadLocationsResponse>(API_CONSTANTS.UPLOAD_TEMPLATE, location_data)
   }
 
-  getCreatedLocationsByFileID(payload: ItemFilter, fileID: string): Observable<CreatedLocationResponse> {
-    const params = { ...payload, uploadId: fileID };
-    const url: string = API_CONSTANTS.CREATE_LOCATION_BY_FILEID.replace('{uploadId}', fileID.toString());
+  getCreatedLocationsByFileID(payload: ItemFilter): Observable<CreatedLocationResponse> {
+    const params = { ...payload};
 
-    return this.#httpClient.get<CreatedLocationResponse>(url, { params })
+    return this.#httpClient.get<CreatedLocationResponse>(API_CONSTANTS.CREATE_LOCATION_BY_FILEID, { params })
   }
 
-  discardUpload(fileID: string): Observable<DiscardUploadResponse> {
-    const url: string = API_CONSTANTS.DISCARD_LOCATION_BY_FILEID.replace('{uploadId}', fileID.toString());
-    return this.#httpClient.put<DiscardUploadResponse>(url,{})
+  discardUpload(): Observable<DiscardUploadResponse> {
+    return this.#httpClient.put<DiscardUploadResponse>(API_CONSTANTS.DISCARD_LOCATION_BY_FILEID,{})
   }
 
-  saveUpload(fileID: string): Observable<SaveUploadResponse> {
-    const url: string = API_CONSTANTS.SAVE_LOCATION_BY_FILEID.replace('{uploadId}', fileID.toString());
-    return this.#httpClient.put<SaveUploadResponse>(url, {})
+  saveUpload(): Observable<SaveUploadResponse> {
+    return this.#httpClient.put<SaveUploadResponse>(API_CONSTANTS.SAVE_LOCATION_BY_FILEID, {})
   }
 }

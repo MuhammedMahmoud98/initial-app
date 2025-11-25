@@ -74,7 +74,7 @@
   "editType": "edit type",
   "generalLocation": "general location",
   "employeeLocation": "employee location",
-  "publicCategoryInfoMsg": "A public location is a shared space that any employee can use and is not tied to a specific person's profile.",
+  "publicCategoryInfoMsg": "A general location is a shared space that any employee can use and is not tied to a specific person's profile.",
   "employeeCategoryInfoMsg": "An employee location refers to the physical workspace where an employee is stationed, such as a desk, office, room.",
   "typeNamePlaceholder": "prayer room",
   "codeNamePlaceholder": "L6",

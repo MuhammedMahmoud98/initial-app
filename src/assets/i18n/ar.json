@@ -109,8 +109,8 @@
   "Unlink": "إلغاء الربط",
   "unlinkConfirmMessageBody": "بموافقتك على إلغاء الربط، سيتم إزالة الموظف من هذا الموقع وسيصبح الموقع متاحًا للربط مع موظفين آخرين.",
   "unlinkConfirmMessageHeader": "هل أنت متأكد أنك تريد المتابعة؟",
-  "noLocationsAssignedAvailable": "لا توجد مواقع معينة متاحة",
-  "locationAssignedSubTitleEmpty": "لا توجد مواقع معينة مطابقة لرمز المكان او بريد الموظف الذي تم إدخاله.",
+  "noLocationsAssignedAvailable": "لا توجد مواقع معينة ",
+  "locationAssignedSubTitleEmpty": "عندما يعين الموظفون أنفسهم في مواقع من خلال ملفاتهم الشخصية، ستظهر المواقع المعينة هنا.",
   "assignedLocationsPlaceHolder": "البحث بكود المكان او بريد الموظف",
   "newLocationTypeSuccessMsg": "تم إنشاء نوع الموقع '{{typeName}}' بنجاح",
   "duplicatedTypeCode": "كود نوع المكان مكرر، يرجى استخدام كود مختلف",
@@ -121,5 +121,6 @@
   "whitespaceErrMsg": "لا يمكن أن يحتوي هذا الحقل على مسافات فارغة",
   "errorLimitMessage": "يرجى إصلاح هذه الأخطاء العشرة أولاً وإعادة تحميل الورقة لمزيد من التحقق",
   "reUpload": "إعادة إرفاق الملف",
-  "Bulk upload completed successfully!": "تم التحميل الجماعي بنجاح!"
+  "Bulk upload completed successfully!": "تم التحميل الجماعي بنجاح!",
+  "locationAssignedSubTitleEmptyForSearch": "لا توجد مواقع معينة مطابقة لرمز المكان او بريد الموظف الذي تم إدخاله."
 }

@@ -4,10 +4,9 @@
   } @else {
   <!-- FILTERS -->
 
-  @if ((!isApplyingFilter() && isEmptyState() && !items().length)) {
-  <app-component-state [mainTitle]="'no location types available'"
-    [subTitle]="'add a location type to categories locations effectively'"
-    [iconUrl]="'assets/images/location-state.svg'" [showReloadButton]="true" />
+  @if ((!isApplyingFilter() && isEmptyState() && !isErrorState())) {
+  <app-component-state [mainTitle]="'noLocationsAssignedAvailable'" [subTitle]="'locationAssignedSubTitleEmpty'"
+    [iconUrl]="'assets/images/location-state.svg'" [showReloadButton]="false" />
   } @else {
   <div>
     <app-hub-filters [placeHolder]="'assignedLocationsPlaceHolder'" (filterValues)="onFilterValueChanges($event)" />
@@ -15,22 +14,25 @@
   @if (!isEmptyState() && !isErrorState()) {
   <div class="overflow-x-auto overflow-y-hidden">
 
-    <app-generic-table [columns]="createTableColumns()" [items]="items()"
-     [showRecordInfo]="true"
-    [totalRecords]="genericTableCacheService.totalAvailableItems()" (currentPage)="onPageChange($event)" />
+    <app-generic-table [columns]="createTableColumns()" [items]="items()" [showRecordInfo]="true"
+      [totalRecords]="genericTableCacheService.totalAvailableItems()" (currentPage)="onPageChange($event)" />
 
   </div>
-  } @else if (isEmptyState() && !isErrorState()) {
-  <app-component-state [mainTitle]="'noLocationsAssignedAvailable'" [subTitle]="'locationAssignedSubTitleEmpty'"
-    [iconUrl]="'assets/images/location-state.svg'" />
+
   } @else if (isErrorState() && !isEmptyState()) {
   <app-component-state [mainTitle]="'there is a network error'"
     [subTitle]="'please check your network or contact system admin'" [iconUrl]="'assets/images/refresh-state.svg'"
     [showReloadButton]="true" />
+  }@else if (isApplyingFilter() && isEmptyState() && !isErrorState()) {
+  <app-component-state [mainTitle]="'noLocationsAssignedAvailable'"
+    [subTitle]="'locationAssignedSubTitleEmptyForSearch'" [iconUrl]="'assets/images/location-state.svg'"
+    [showReloadButton]="false" />
   }
   }
   }
 </div>
+
+
 
 <!-- NAME CUSTOM COLUMN -->
 <ng-template #nameCustomColumn let-row>

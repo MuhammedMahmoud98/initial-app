@@ -1,5 +1,5 @@
 import {HttpInterceptorFn, HttpRequest} from '@angular/common/http';
-import {BehaviorSubject, catchError, delay, EMPTY, filter, Observable, of, switchMap, take, throwError} from 'rxjs';
+import {BehaviorSubject, catchError, delay, filter, Observable, of, switchMap, take, throwError} from 'rxjs';
 
 let isRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<RefreshTokenResponse| null>(null);
@@ -92,12 +92,12 @@ function handleAuthError(
         return throwError(() => originalError);
       }
     }),
-    catchError(() => {
+    catchError((err) => {
       isRefreshing = false;
       refreshTokenSubject.next(null);
       // Handle refresh failure - logout user
       handleRefreshFailure(authService);
-      return EMPTY;
+      return throwError(() => err);
     })
   );
 }

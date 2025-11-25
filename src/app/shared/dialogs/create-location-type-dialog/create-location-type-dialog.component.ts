@@ -159,12 +159,6 @@ export class CreateLocationTypeDialogComponent {
           externalLinkControl?.markAsDirty();
           externalLinkControl?.setErrors(null);
 
-          if (this.dialogMode() === MODE.EDIT) {
-            this.form.markAsUntouched();
-            this.form.markAsPristine();
-            this.form.updateValueAndValidity({ emitEvent: false });
-          }
-
           // Update validity
           internalLinkControl?.updateValueAndValidity({ emitEvent: false });
           externalLinkControl?.updateValueAndValidity({ emitEvent: false });
@@ -191,6 +185,13 @@ export class CreateLocationTypeDialogComponent {
           // Update validity
           internalLinkControl?.updateValueAndValidity({ emitEvent: false });
           externalLinkControl?.updateValueAndValidity({ emitEvent: false });
+        }
+
+
+        if (this.dialogMode() === MODE.EDIT) {
+          this.form.markAsUntouched();
+          this.form.markAsPristine();
+          this.form.updateValueAndValidity({ emitEvent: false });
         }
 
         console.log(this.form);

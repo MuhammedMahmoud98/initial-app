@@ -41,7 +41,7 @@ export const handlePDFSize = (items: PrintQRCodeDto[], isFileName?: boolean) => 
 
 export const displayQrDimension = (pdfSize: string | {width: number; height: number}) => {
   if ((pdfSize as {width: number; height: number})?.width) {
-    return 66;
+    return 65;
   }
 
   if ((pdfSize as string).includes('A4')) {
@@ -57,6 +57,26 @@ export const displayQrDimension = (pdfSize: string | {width: number; height: num
   }
 
   return 20;
+}
+
+export const displayTypeNumber = (pdfSize: string | {width: number; height: number}) => {
+  if ((pdfSize as {width: number; height: number})?.width) {
+    return 12;
+  }
+
+  if ((pdfSize as string).includes('A4')) {
+    return 7;
+  }
+
+  if ((pdfSize as string).includes('A5')) {
+    return 7;
+  }
+
+  if ((pdfSize as string).includes('A6')) {
+    return 7;
+  }
+
+  return 7;
 }
 
 export const UTCDate = (date: Date): Date => {

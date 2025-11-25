@@ -23,12 +23,13 @@ export const handlePDFSize = (items: PrintQRCodeDto[], isFileName?: boolean) => 
   if (!items.length) return 'A4';
 
   const currentItemSize = items[0]?.size;
+  console.log(currentItemSize, 'currentItemSize');
   if (currentItemSize?.includes('A')) {
     return currentItemSize;
   }
 
-  if (currentItemSize?.includes('*') && !isFileName) {
-    const dimensions: string[] = currentItemSize?.split('*');
+  if (currentItemSize?.includes('x') && !isFileName) {
+    const dimensions: string[] = currentItemSize?.split('x');
 
     return {
       width: cmToPt(+dimensions[0]),

@@ -121,7 +121,7 @@ export class UploadFileComponent  {
 
   constructor(private cdr: ChangeDetectorRef) { }
 
- 
+
   confirmLeavePage(): Observable<boolean> | boolean {
     if (!this.previewLoaded || this.userActionTaken) return true;
     return new Observable<boolean>(() => {
@@ -172,8 +172,8 @@ export class UploadFileComponent  {
     this.isUploading = true;
     this.uploadProgress = 0;
 
-    this.#locationsUploadService.uploadLocations(file).subscribe({
-      next: (res) => {
+    this.#locationsUploadService.uploadLocations(file).pipe(
+      tap((res) => {
         this.isUploading = false;
         this.fileUploaded = true;
         this.uploadProgress = 100;
@@ -188,11 +188,12 @@ export class UploadFileComponent  {
         this.getCreatedLocations();
 
         console.log('✅ Upload success:', res);
-      },
-      error: (err: HttpErrorResponse) => {
+      }),
+      catchError((err) => {
         this.isUploading = false;
         this.fileUploaded = false;
         this.cancelUpload();
+
         if (err.error.type === 'validation' && err.error.message?.length) {
           // Show each validation error
           err.error.message.forEach((msg: string) => {
@@ -205,7 +206,7 @@ export class UploadFileComponent  {
           });
         } else {
           const errors = err?.error?.errors;
-          
+
           if (Array.isArray(errors)) {
             const limitedErrors = errors.slice(0, 10);
 
@@ -244,8 +245,8 @@ export class UploadFileComponent  {
         this.cancelUpload();
         this.reUpload.set(true);
         this.cdr.detectChanges();
-      },
-    });
+      return EMPTY;
+    })).subscribe();
   }
 
   onFileSelect(event: FileSelectEvent) {

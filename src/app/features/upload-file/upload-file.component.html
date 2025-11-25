@@ -17,6 +17,30 @@
 
   <!-- Upload Container -->
    <section class="upload-wrapper" > 
+  @if (isTemplateFileHasErrors()) {
+  @for (error of templateErrors(); track error; let errorIndex = $index) {
+
+  <p-message severity="error" [class]="'w-full mb-2 custom-upload-message'" [text]="error?.message" appRemoveItemFromDom [closable]="true">
+    <ng-template #icon>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <g clip-path="url(#clip0_2608_2323)">
+          <path
+            d="M10 18.3333C12.3012 18.3333 14.3845 17.4006 15.8925 15.8925C17.4006 14.3845 18.3333 12.3012 18.3333 9.99999C18.3333 7.69882 17.4006 5.61549 15.8925 4.10743C14.3845 2.5994 12.3012 1.66666 10 1.66666C7.69884 1.66666 5.6155 2.5994 4.10745 4.10743C2.59941 5.61549 1.66667 7.69882 1.66667 9.99999C1.66667 12.3012 2.59941 14.3845 4.10745 15.8925C5.6155 17.4006 7.69884 18.3333 10 18.3333Z"
+            stroke="#ED0C00" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M10.8333 7.5689H9.47463V5.83334H10.8333V7.5689ZM9.47463 15V10.0745H8.33333V8.73001H10.8333V15H9.47463Z"
+            fill="#ED0C00" />
+        </g>
+        <defs>
+          <clipPath id="clip0_2608_2323">
+            <rect width="20" height="20" fill="white" />
+          </clipPath>
+        </defs>
+      </svg>
+    </ng-template>
+  </p-message>
+  }
+  }
+
     @if(!isUploadedScreen()) {
 <div class="import-container" [class.uploading]="isUploading" >
   <!-- Default State -->

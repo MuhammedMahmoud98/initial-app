@@ -53,12 +53,10 @@ function handleAuthError(
       take(1),
       switchMap(token => {
         if (token?.['access-token']) {
-          // Retry the original request with new token
           console.log('%cRetrying request with new token', 'color: green; font-weight: bold;');
           const newReq = addTokenToRequest(req, token?.['access-token']);
-          return next(newReq);
+          return next(newReq); // Let the retry error propagate naturally
         } else {
-          // Refresh failed, return original error
           return throwError(() => originalError);
         }
       })
@@ -70,13 +68,20 @@ function handleAuthError(
   refreshTokenSubject.next(null);
 
   return authService.refreshToken(authService.getRefreshToken()).pipe(
+    catchError((refreshError) => {
+      // ✅ Handle ONLY refresh token failures here
+      isRefreshing = false;
+      refreshTokenSubject.next(null);
+      console.log('%cToken refresh failed', 'color: red; font-weight: bold;');
+      handleRefreshFailure(authService);
+      return throwError(() => refreshError);
+    }),
     switchMap((refreshResult: RefreshTokenResponse): Observable<HttpEvent<unknown>> => {
       isRefreshing = false;
 
       if (refreshResult?.['access-token']) {
         // Token refresh successful
         refreshTokenSubject.next(refreshResult);
-
         authService.setRefreshTokens(refreshResult);
 
         // Retry the original request with new token
@@ -84,20 +89,14 @@ function handleAuthError(
         return of(newReq).pipe(
           delay(100),
           switchMap((delayedReq: HttpRequest<unknown>) => next(delayedReq))
+          // ✅ No catchError here - let retry errors propagate to the calling component
         );
       } else {
-        // Token refresh failed
+        // Token refresh returned but without valid token
         refreshTokenSubject.next(null);
-        isRefreshing = false;
+        handleRefreshFailure(authService);
         return throwError(() => originalError);
       }
-    }),
-    catchError((err) => {
-      isRefreshing = false;
-      refreshTokenSubject.next(null);
-      // Handle refresh failure - logout user
-      handleRefreshFailure(authService);
-      return throwError(() => err);
     })
   );
 }

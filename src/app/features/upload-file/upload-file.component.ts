@@ -172,8 +172,6 @@ export class UploadFileComponent {
   }
 
 
-
-
   uploadFile(file: File) {
     this.isUploading = true;
     this.uploadProgress = 0;
@@ -182,15 +180,14 @@ export class UploadFileComponent {
     this.templateErrors.set([]);
     this.isTemplateFileHasErrors.set(false);
 
-    this.#locationsUploadService.uploadLocations(file).subscribe({
-      next: () => {
+    this.#locationsUploadService.uploadLocations(file).pipe(
+      tap(() => {
         this.isUploading = false;
         this.fileUploaded = true;
         this.uploadProgress = 100;
         this.getCreatedLocations();
-      },
-
-      error: (err: HttpErrorResponse) => {
+      }),
+      catchError((err) => {
         this.isUploading = false;
         this.fileUploaded = false;
         this.cancelUpload();
@@ -226,8 +223,8 @@ export class UploadFileComponent {
         }
 
         this.cdr.detectChanges();
-      },
-    });
+      return EMPTY;
+    })).subscribe();
   }
 
 

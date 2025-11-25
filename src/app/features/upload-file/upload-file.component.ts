@@ -33,8 +33,9 @@ import { TextWithBgColorComponent } from '../../shared/components/text-with-bg-c
 import { CustomStatusComponent } from '../../shared/components/custom-status/custom-status.component';
 import { CopyToClipboardComponent } from '../../shared/components/copy-to-clipboard/copy-to-clipboard.component';
 import { Router } from '@angular/router';
-import { DiscardUploadResponse, SaveUploadResponse } from './models/upload-file.model';
+import { DiscardUploadResponse, SaveUploadResponse, TemplateError } from './models/upload-file.model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Message } from 'primeng/message';
 
 
 
@@ -54,6 +55,7 @@ import { HttpErrorResponse } from '@angular/common/http';
     CustomStatusComponent,
     CopyToClipboardComponent,
     TranslatePipe,
+    Message
 
   ],
   providers: [],
@@ -62,7 +64,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrl: './upload-file.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UploadFileComponent  {
+export class UploadFileComponent {
   readonly #locationsUploadService: LocationsUploadService = inject(LocationsUploadService);
   readonly #messageService: MessageService = inject(MessageService);
   readonly #translateService: TranslateService = inject(TranslateService);
@@ -84,6 +86,8 @@ export class UploadFileComponent  {
   isLoading = signal(true);
   isUploadedScreen = signal(false);
   reUpload = signal(false);
+  isTemplateFileHasErrors = signal(false);
+  templateErrors = signal<TemplateError[]>([]);
 
 
   // VIEW CHILDREN
@@ -121,7 +125,7 @@ export class UploadFileComponent  {
 
   constructor(private cdr: ChangeDetectorRef) { }
 
- 
+
   confirmLeavePage(): Observable<boolean> | boolean {
     if (!this.previewLoaded || this.userActionTaken) return true;
     return new Observable<boolean>(() => {
@@ -168,118 +172,124 @@ export class UploadFileComponent  {
   }
 
 
+
+
   uploadFile(file: File) {
     this.isUploading = true;
     this.uploadProgress = 0;
 
+    // Reset errors
+    this.templateErrors.set([]);
+    this.isTemplateFileHasErrors.set(false);
+
     this.#locationsUploadService.uploadLocations(file).subscribe({
-      next: (res) => {
+      next: () => {
         this.isUploading = false;
         this.fileUploaded = true;
         this.uploadProgress = 100;
-
-        this.#messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: this.#translateService.instant('Bulk upload completed successfully!'),
-          life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
-        });
-        // localStorage.setItem('fileUploadId', this.fileUploadId);
         this.getCreatedLocations();
-
-        console.log('✅ Upload success:', res);
       },
+
       error: (err: HttpErrorResponse) => {
         this.isUploading = false;
         this.fileUploaded = false;
         this.cancelUpload();
-        if (err.error.type === 'validation' && err.error.message?.length) {
-          // Show each validation error
-          err.error.message.forEach((msg: string) => {
-            this.#messageService.add({
-              severity: 'error',
-              summary: 'Validation error',
-              detail: this.#translateService.instant(msg),
-              life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
-            });
-          });
-        } else {
-          const errors = err?.error?.errors;
-          
-          if (Array.isArray(errors)) {
-            const limitedErrors = errors.slice(0, 10);
-
-            limitedErrors.forEach((message: string ,i :number ) => {
-              this.#messageService.add({
-                severity: 'error',
-                summary: this.#translateService.instant('Error'),
-                detail: this.#translateService.instant(message),
-                life: COMMON_CONSTANTS.TOASTER_LIFE_TIME + i * 500,
-              });
-            });
-
-            if (errors.length > 10) {
-              this.#messageService.add({
-                severity: 'error',
-                summary: this.#translateService.instant('Error'),
-                detail: this.#translateService.instant('errorLimitMessage'),
-                life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
-              });
-            }
-          } else {
-            this.#messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: this.#translateService.instant(
-                err?.error?.errors?.[0]?.message ||
-                err?.error?.errors?.[0] ||
-                err?.error?.message?.[0]?.source?.message ||
-                err?.error?.message ||
-                'Upload failed. Please try again.'
-              ),
-              life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
-            });
-          }
-        }
-        this.cancelUpload();
         this.reUpload.set(true);
+
+        const newErrors: string[] = [];
+
+        // Validation errors from backend
+        if (err.error?.type === 'validation' && Array.isArray(err.error.message)) {
+          newErrors.push(...err.error.message);
+        }
+        // Normal errors array
+        else if (Array.isArray(err?.error?.errors)) {
+          newErrors.push(...err.error.errors);
+        }
+        // Fallback message
+        else {
+          const fallback =
+            err?.error?.errors?.[0]?.message ||
+            err?.error?.errors?.[0] ||
+            err?.error?.message?.[0]?.source?.message ||
+            err?.error?.message ||
+            'Upload failed. Please try again.';
+          newErrors.push(fallback);
+        }
+
+        //  Add first 10 backend errors
+        newErrors.slice(0, 10).forEach(msg => this.showError(msg));
+
+        //  If backend has more than 10 errors → push translated limit-message
+        if (newErrors.length > 10) {
+          this.showError('errorLimitMessage'); // translation happens inside showError()
+        }
+
         this.cdr.detectChanges();
       },
     });
+  }
+
+
+
+
+  private resetErrorVisibility() {
+    // Reset errors
+    this.templateErrors.set([]);
+    this.isTemplateFileHasErrors.set(false);
+  }
+
+  private isValidExtension(fileName: string): boolean {
+    return ['.xls', '.xlsx'].some(ext => fileName.toLowerCase().endsWith(ext));
+  }
+
+  private showError(key: string) {
+    const message = this.#translateService.instant(key);
+    const existing = this.templateErrors().find(e => e.message === message);
+
+    if (existing) {
+      existing.isVisible = true;
+      this.templateErrors.set([...this.templateErrors()]);
+    } else {
+      this.templateErrors.set([
+        ...this.templateErrors(),
+        { message, isVisible: true }
+      ]);
+    }
+
+    this.isTemplateFileHasErrors.set(true);
+  }
+
+  removeError(errorIndex: number) {
+    setTimeout(() => {
+      this.templateErrors().splice(errorIndex, 1);
+    }, 100);
   }
 
   onFileSelect(event: FileSelectEvent) {
     const file = event.files?.[0];
     if (!file) return;
 
-    const errors: string[] = [];
+    this.resetErrorVisibility();
 
-    const fileName = file.name.toLowerCase();
-    const fileSize = file.size;
-    const maxFileSize = 5 * 1024 * 1024;
+    const errors = [
+      { condition: !this.isValidExtension(file.name), key: 'excelFileExtension' },
+      { condition: file.size > 5 * 1024 * 1024, key: 'fileSizeExceedMsg' }
+    ];
 
-    const validExtensions = ['.xls', '.xlsx'];
-    const isValidType = validExtensions.some(ext => fileName.endsWith(ext));
+    let hasError = false;
 
-    if (!isValidType) {
-      errors.push(this.#translateService.instant('excelFileExtension'));
-    }
+    errors.forEach(err => {
+      if (err.condition) {
+        this.showError(err.key);
+        hasError = true;
+      }
+    });
 
-    if (fileSize > maxFileSize) {
-      errors.push(this.#translateService.instant('fileSizeExceedMsg'));
-    }
-
-    if (errors.length > 0) {
-      errors.forEach(err => {
-        this.#messageService.add({
-          severity: 'error',
-          summary: this.#translateService.instant('Error'),
-          detail: err,
-          life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
-        });
-      });
-
+    if (hasError) {
       this.cancelUpload();
+      this.reUpload.set(true);
+
       return;
     }
 
@@ -288,6 +298,7 @@ export class UploadFileComponent  {
     this.userActionTaken = false;
     this.uploadFile(file);
   }
+
 
 
 

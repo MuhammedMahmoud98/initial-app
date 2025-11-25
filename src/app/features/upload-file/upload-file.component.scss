@@ -323,6 +323,9 @@
   }
 }
 
+.custom-upload-message {
+  text-transform: lowercase !important;
+}
 
 :host {
  ::ng-deep {

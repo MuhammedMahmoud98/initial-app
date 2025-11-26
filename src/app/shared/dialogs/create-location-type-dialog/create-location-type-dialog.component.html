@@ -173,6 +173,6 @@
   <!-- FOOTER -->
   <div class="create-location-type__footer">
     <p-button [label]="'cancel' | translate" [outlined]="true" severity="secondary" (onClick)="closeDialog()" />
-    <p-button [label]="(dialogMode() === MODE.ADD ? 'create' : 'update') | translate" [disabled]="!form.valid || form.invalid || form.pristine || isLoading()" (onClick)="saveChanges()" severity="secondary" />
+    <p-button [label]="(dialogMode() === MODE.ADD ? 'create' : 'update') | translate" [disabled]="!form.valid || form.invalid || form.pristine || isLoading() || !isFormHadChanges()" (onClick)="saveChanges()" severity="secondary" />
   </div>
 </div>

@@ -9,7 +9,7 @@ import {InputLabelComponent} from '../../components/input-label/input-label.comp
 import {InputText} from 'primeng/inputtext';
 import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import {
-  CategoryTypes,
+  CategoryTypes, FormLocationType,
   LocationTypeForm,
   LocationTypeKeys,
   LocationTypePayload, LocationTypeResponse,
@@ -77,11 +77,15 @@ export class CreateLocationTypeDialogComponent {
 
   // FORM
   form!: FormGroup<LocationTypeForm>;
+  isFormHadChanges = signal(false);
+
+  initialFormValue = signal({} as FormLocationType);
 
   init = effect(() => {
     this.createLocationTypeForm();
     this.activateEditMode();
     this.listenToCategoryChanges();
+    this.listenToFormChanges();
   });
 
   createLocationTypeForm(): void {
@@ -174,9 +178,8 @@ export class CreateLocationTypeDialogComponent {
         }
 
         if (categoryValue === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION && surveyControl?.value) {
-          // eslint-disable-next-line max-len
           internalLinkControl?.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(500), noScriptValidator, noSqlInjectionValidator]);
-          // eslint-disable-next-line max-len
+
           externalLinkControl?.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(500), noScriptValidator, noSqlInjectionValidator]);
 
           // SET ASYNC VALIDATOR
@@ -188,11 +191,11 @@ export class CreateLocationTypeDialogComponent {
         }
 
 
-        if (this.dialogMode() === MODE.EDIT) {
-          this.form.markAsUntouched();
-          this.form.markAsPristine();
-          this.form.updateValueAndValidity({ emitEvent: false });
-        }
+        // if (this.dialogMode() === MODE.EDIT) {
+        //   this.form.markAsUntouched();
+        //   this.form.markAsPristine();
+        //   this.form.updateValueAndValidity({ emitEvent: false });
+        // }
 
         console.log(this.form);
       }),
@@ -316,6 +319,7 @@ export class CreateLocationTypeDialogComponent {
       this.handleDisableControlsForLinkedLocations();
       console.log(this.hasLinkedLocations(), 'HAS LINKED LOCATIONS');
 
+      this.initialFormValue.set(this.form.getRawValue());
       this.form.updateValueAndValidity();
 
       console.log(this.form.getRawValue(), 'EDIT MODE');
@@ -340,5 +344,14 @@ export class CreateLocationTypeDialogComponent {
     }
 
     ctrl.updateValueAndValidity();
+  }
+
+  private listenToFormChanges(): void {
+    this.form.valueChanges.pipe(
+      tap(() => {
+        this.isFormHadChanges.set(JSON.stringify(this.initialFormValue()) !== JSON.stringify(this.form.getRawValue()));
+      }),
+      takeUntilDestroyed(this.#destroyRef),
+    ).subscribe();
   }
 }

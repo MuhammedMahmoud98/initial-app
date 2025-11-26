@@ -46,6 +46,12 @@ export class PrintingSizeDimensionsComponent implements ControlValueAccessor{
     this.printingSizeOptions.update(options =>
       options.map(option => ({ ...option, isSelected: option.value === this._value }))
     );
+
+    if (this._value === '5*5') {
+      this.printingSizeOptions.update(options =>
+        options.map(option => ({ ...option, isSelected: option.label === '5x5' }))
+      );
+    }
   });
 
   // placeholders for the callbacks which are later provided

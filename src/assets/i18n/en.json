@@ -113,12 +113,12 @@
   "locationAssignedSubTitleEmpty": "When employees assign themselves to locations through their profiles, assigned locations will appear here.",
   "assignedLocationsPlaceHolder": "search by location code, employee email",
   "newLocationTypeSuccessMsg": "location type '{{typeName}}' created successfully",
-  "duplicatedTypeCode": "duplicated type code",
+  "duplicatedTypeCode": "location type code must be unique across all location types.",
   "updateLocationTypeSuccessMsg": "location Type updated successfully",
   "invalidServiceLink": "invalid service link",
   "errorLimitMessage": "please fix these 10 errors first and re-upload the sheet for further validation",
   "reUpload": "re-upload",
-  "whitespaceErrMsg": "no leading or trailing whitespace allowed",
+  "whitespaceErrMsg": "type code must contain only uppercase letters and numbers, no spaces or special character",
   "Bulk upload completed successfully!": "bulk upload completed successfully!",
   "locationAssignedSubTitleEmptyForSearch": "no assigned locations matched the code, mail entered."
 }

@@ -27,7 +27,7 @@ export const noWhitespaceValidator = (): ValidatorFn => {
     if (!value) return null;
 
     // Reject if there is ANY whitespace (beginning, middle or end)
-    const hasWhitespace = /\s/.test(value);
+    const hasWhitespace = /[^a-zA-Z0-9]/.test(value);
 
     if (hasWhitespace) {
       control.markAsUntouched();

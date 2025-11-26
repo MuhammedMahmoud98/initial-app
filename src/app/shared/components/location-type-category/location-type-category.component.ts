@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
+  Component, effect,
   forwardRef,
   inject,
   signal,
@@ -40,6 +40,15 @@ export class LocationTypeCategoryComponent implements ControlValueAccessor {
     {label: 'generalLocation', value: LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION, isSelected: true},
     {label: 'employeeLocation', value: LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION, isSelected: false},
   ]);
+
+  init = effect(() => {
+    this.locationTypeCategories.update((categories: LocationTypeCategory[]) =>
+      categories.map((category: LocationTypeCategory) => ({
+        ...category,
+        isSelected: category.value === this._value
+      }))
+    );
+  });
 
   private _value = 'General Location';
   disabled = false;

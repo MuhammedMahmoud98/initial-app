@@ -26,6 +26,7 @@ export interface LocationTypePayload {
   services: ServiceDto[];
 }
 
+export type FormLocationType = Omit<LocationTypePayload, 'has-linked-locations'>
 
 export interface LocationTypeResponse extends LocationTypePayload {
   id: string;

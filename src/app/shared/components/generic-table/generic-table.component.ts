@@ -6,7 +6,7 @@ import {
   inject,
   input,
   InputSignal,
-  output, signal
+  output, signal, untracked
 } from '@angular/core';
 import {TableHeaderCheckboxToggleEvent, TableModule, TablePageEvent} from 'primeng/table';
 import {TableColumn} from '../../models';
@@ -43,6 +43,7 @@ export class GenericTableComponent<T extends {id: number}> {
   showRecordInfo: InputSignal<boolean> = input(false);
   hasCheckBoxes: InputSignal<boolean> = input(false);
   first = signal(0);
+  currentPageOffset = signal(0);
 
   // COMPUTED
   currentLocale = computed(() => {
@@ -51,6 +52,13 @@ export class GenericTableComponent<T extends {id: number}> {
     }
 
     return 'en-US'
+  });
+
+  paginationIndex = computed(() => {
+    const offset = untracked(() => this.currentPageOffset());
+    const rows = untracked(() => this.rowsCounter);
+
+    return (offset * rows) + this.items().length;
   });
 
   cachedSelectionEffect = effect(() => {
@@ -64,6 +72,7 @@ export class GenericTableComponent<T extends {id: number}> {
   // EFFECTS
   onApplyingBulkSelection = effect(() => {
     this.listenToResetBulkActionsChanges();
+    this.listenToPaginationResetChanges();
 
     if (this.genericTableCacheService.isSelectingBulkAction()) {
       this.selectedLocations = this.items().filter((item): boolean => !this.genericTableCacheService.unSelectedItemsCache().includes(item.id));
@@ -112,6 +121,7 @@ export class GenericTableComponent<T extends {id: number}> {
     const {rows, first} = $event;
     const currentPage = (first / rows);
     this.currentPage.emit(currentPage);
+    this.currentPageOffset.set(currentPage);
     console.log(this.genericTableCacheService.selectedRecordsCache() as T[], 'T[] CACHE');
   }
 
@@ -125,6 +135,18 @@ export class GenericTableComponent<T extends {id: number}> {
         }
       }),
       takeUntilDestroyed(this.destroyRef)
+    ).subscribe();
+  }
+
+  listenToPaginationResetChanges(): void {
+    this.genericTableCacheService.resetPagination$.pipe(
+      tap((isResetPagination: boolean) => {
+        if (isResetPagination) {
+          this.first.set(0);
+          this.currentPageOffset.set(0);
+        }
+      }),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe();
   }
 

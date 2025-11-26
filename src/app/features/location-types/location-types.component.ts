@@ -154,6 +154,7 @@ export class LocationTypesComponent implements OnDestroy {
   onFilterValueChanges(filterValues: HubFilters): void {
     this.isApplyingFilter.set(!!filterValues.filter);
     this.updateFilterPayload({...filterValues, page: 0});
+    this.genericTableCacheService.resetPagination$.next(true);
     this.getLocationTypes();
   }
 

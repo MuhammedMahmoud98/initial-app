@@ -15,6 +15,7 @@ export class GenericTableCacheService {
 
   // SUBJECTS
   resetBulkActions$: Subject<boolean> = new Subject<boolean>();
+  resetPagination$: Subject<boolean> = new Subject<boolean>();
 
   // CHECK IF USER SELECT ALL RECORDS IN DB
   isSelectingBulkAction = signal(false);

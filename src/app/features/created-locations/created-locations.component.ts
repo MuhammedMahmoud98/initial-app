@@ -172,6 +172,7 @@ export class CreatedLocationsComponent implements OnDestroy {
   onFilterValueChanges(filterValues: HubFilters) {
     this.isApplyingFilter.set(!!filterValues.filter);
     this.updateFilterPayload({...filterValues, page: 0});
+    this.genericTableCacheService.resetPagination$.next(true);
     this.getCreatedLocations();
   }
 

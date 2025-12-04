@@ -63,7 +63,7 @@
 <ng-template #unlinkCustomColumn let-row>
   @let locationType = genericCasting(row);
 
-  {{ locationType.linkedAt | date:'dd MMM yyyy hh:mm a' }}
+  {{ locationType.linkedAt | timezoneDate:'dd MMM yyyy hh:mm a'}}
 </ng-template>
 
 

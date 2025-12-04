@@ -38,6 +38,7 @@ import { CopyToClipboardComponent } from '../../shared/components/copy-to-clipbo
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
+import { TimezoneDatePipe } from '../../shared/pipes/timezone-date.pipe';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -50,10 +51,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     HubFiltersComponent,
     CopyToClipboardComponent,
     TranslatePipe,
+    TimezoneDatePipe,
     CommonModule
 
   ],
-  providers: [DialogService],
+  providers: [DialogService, TimezoneDatePipe],
   standalone: true,
   templateUrl: './assigned-locations.component.html',
   styleUrl: './assigned-locations.component.scss',

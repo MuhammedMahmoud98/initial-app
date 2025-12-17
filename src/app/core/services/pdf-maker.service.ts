@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {TDocumentDefinitions} from 'pdfmake/interfaces';
 import {PrintQRCodeDto} from '../../features/created-locations/models/created-location.model';
 import {
-  displayQrDimension, getUniqueServiceBottomMargin,
+  displayQrDimension, displayTypeNumber, getUniqueServiceBottomMargin,
   handleEmployeeIconPosition,
   handleEmployeeIconWidth,
   handleFooterFontSize, handleFooterTextRightMargin, handleIconsWidth, handleIconTopMargin,
@@ -14,13 +14,15 @@ import {
 } from '../../shared/helpers/helpers';
 import {environment} from '../../environment/environment';
 import {DatePipe} from '@angular/common';
+import {QrCodeStylingService} from '../../shared/services/qr-code-styling.service';
+import {whiteQRwithSharpCornersOptions } from '../../shared/constants/qr-code-styling-options';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PdfMakerService {
   readonly #datePipe: DatePipe = inject(DatePipe);
-
+  readonly #qrCodeStylingService: QrCodeStylingService = inject(QrCodeStylingService);
   // Cached pdfMake instance and initializer promise to avoid repeated font fetches
   private pdfMakeInstance: unknown | null = null;
   private pdfMakePromise: Promise<unknown> | null = null;
@@ -152,7 +154,19 @@ export class PdfMakerService {
     const content: unknown[] = [];
 
     // Add each QR code
-    records.forEach((record, index) => {
+    for (const [index, record] of records.entries()) {
+      const qrImage = await this.#qrCodeStylingService.generateQRCodePNG(
+        `${environment.qrCodeUrl}/qr-guest/user-guest/${record.qrCode}`, {
+          ...whiteQRwithSharpCornersOptions,
+          width: displayQrDimension(handlePDFSize(records) as never),
+          height: displayQrDimension(handlePDFSize(records) as never),
+          qrOptions: {
+            ...whiteQRwithSharpCornersOptions.qrOptions,
+            typeNumber: displayTypeNumber(handlePDFSize(records) as never),
+          }
+        },
+      );
+
       content.push({
         stack: [
           {
@@ -179,12 +193,14 @@ export class PdfMakerService {
             font: 'STCFont'  // ✅ Add font property here
           },
           {
-            qr: `${environment.qrCodeUrl}/qr-guest/user-guest/${record.qrCode}`,
-            alignment: 'start',
-            foreground: '#000',
-            fit: displayQrDimension(handlePDFSize(records) as never),
+            // qr: `${environment.qrCodeUrl}/qr-guest/user-guest/${record.qrCode}`,
+            image: qrImage,
             width: displayQrDimension(handlePDFSize(records) as never),
             height: displayQrDimension(handlePDFSize(records) as never),
+            alignment: 'start',
+            // alignment: 'start',
+            // foreground: '#000',
+            // fit: displayQrDimension(handlePDFSize(records) as never),
             margin: [0, handleQRTopMargin(records), 0, handleQRBottomMargin(records)],  // Bottom margin before QR code
           },
           {
@@ -285,7 +301,7 @@ export class PdfMakerService {
         margin: [0, 0, 0, 0],
         pageBreak: (index < (records.length - 1)) && 'after'
       } as unknown as never);
-    });
+    };
 
     const docDefinition = {
       pageSize: handlePDFSize(records), // TODO:: IF SIZE INCLUDES *; RETURN OBJECT WITH WIDTH AND HEIGHT

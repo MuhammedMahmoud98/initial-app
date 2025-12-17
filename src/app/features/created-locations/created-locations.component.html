@@ -70,6 +70,15 @@
             (selectedItems)="onSelectedItemsChange($event)"
             (currentPage)="onPageChange($event)"
           />
+<!--          @if (qrCodeObjectUrl) {-->
+<!--            <img-->
+<!--              [src]="qrCodeObjectUrl"-->
+<!--              alt="Guest QR Code for {{ guestId }}"-->
+<!--              class="qr-image"-->
+<!--            />-->
+<!--          } @else {-->
+<!--            <p>Generating QR code...</p>-->
+<!--          }-->
         </div>
       } @else if (isEmptyState() && !isErrorState()) {
         <app-component-state

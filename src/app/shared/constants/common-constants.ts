@@ -67,3 +67,4 @@ export const HEADER_LESS_ROUTES = [
   MAIN_ROUTES.UPLOAD_FILE
 ];
 
+export const PDF_BG_COLOR = '#512B84';

@@ -6,6 +6,7 @@ import QRCodeStyling from 'qr-code-styling';
   providedIn: 'root'
 })
 export class QrCodeStylingService {
+
   async generateQRCodePNG(data: string, options?: Partial<QRCodeOptions>): Promise<string> {
     const defaultOptions = {
       width: 280,

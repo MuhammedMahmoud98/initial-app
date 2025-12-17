@@ -98,8 +98,8 @@ export const handleSTCLogoDimension = (items: PrintQRCodeDto[]) => {
 
   if (currentSize.includes('9x11')) {
     return {
-      width: 20,
-      height: 10,
+      width: 30,
+      height: 16,
     }
   }
 
@@ -289,7 +289,7 @@ export const handleIconTopMargin = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('9x11')) {
-    return 2;
+    return 0;
   }
 
   if (currentSize.includes('*')) {
@@ -341,7 +341,7 @@ export const handlePDFMargins  = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('9x11')) {
-    return [10, 15, 10, 10];
+    return [10, 30, 10, 20];
   }
 
   if (currentSize.includes('*')) {
@@ -367,7 +367,7 @@ export const handleLogoMargins  = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('9x11')) {
-    return [10, 5, 0, 0];
+    return [10, 20, 0, 5];
   }
 
   if (currentSize.includes('*')) {
@@ -411,7 +411,7 @@ export const handleLineMargins= (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('9x11')) {
-    return [0, 3, 0, 3];
+    return [0, 10, 0, 10];
   }
 
   if (currentSize.includes('*')) {
@@ -508,7 +508,7 @@ export const handleMiddleSpacing = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('9x11')) {
-    return 25;
+    return 110;
   }
 
   if (currentSize.includes('*')) {
@@ -534,7 +534,7 @@ export const handleEmployeeIconWidth = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('9x11')) {
-    return 55;
+    return 160;
   }
 
   if (currentSize.includes('*')) {
@@ -542,4 +542,30 @@ export const handleEmployeeIconWidth = (items: PrintQRCodeDto[]) => {
   }
 
   return 40;
+}
+
+export const handleEmployeeIconPosition = (items: PrintQRCodeDto[]) => {
+  const currentSize = getPdfSize(items);
+
+  if (currentSize?.includes('A4')) {
+    return { x: 300, y: 550 };
+  }
+
+  if (currentSize?.includes('A5')) {
+    return { x: 200, y: 380 };
+  }
+
+  if (currentSize?.includes('A6')) {
+    return { x: 140, y: 260 };
+  }
+
+  if (currentSize.includes('9x11')) {
+    return { x: 100, y: 160 };
+  }
+
+  if (currentSize.includes('*')) {
+    return { x: 50, y: 100 };
+  }
+
+  return { x: 50, y: 100 };
 }

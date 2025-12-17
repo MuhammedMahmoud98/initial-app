@@ -3,6 +3,7 @@ import {TDocumentDefinitions} from 'pdfmake/interfaces';
 import {PrintQRCodeDto} from '../../features/created-locations/models/created-location.model';
 import {
   displayQrDimension, getUniqueServiceBottomMargin,
+  handleEmployeeIconPosition,
   handleEmployeeIconWidth,
   handleFooterFontSize, handleFooterTextRightMargin, handleIconsWidth, handleIconTopMargin,
   handleLineMargins, handleLineSeparatorWidth, handleLineWidth,
@@ -366,7 +367,7 @@ export class PdfMakerService {
                 alignment: 'start',
                 bold: true,
                 fontSize: handleTextFontSize(records),
-                margin: [0, 0, 0, handleTextMarginBottom(records)],
+                margin: [0, 18, 0, handleTextMarginBottom(records)],
                 font: 'STCFont'
               },
               {
@@ -427,6 +428,21 @@ export class PdfMakerService {
                   }
                 ],
               },
+              // White separator line
+              {
+                canvas: [
+                  {
+                    type: 'line',
+                    x1: 0,
+                    y1: 0,
+                    x2: handleLineSeparatorWidth(records),
+                    y2: 0,
+                    lineWidth: handleLineWidth(records),
+                    lineColor: 'white'
+                  }
+                ],
+                margin: handleLineMargins(records)
+              },
               // Shared services section
               {
                 columns: [
@@ -443,7 +459,7 @@ export class PdfMakerService {
                       '  <path d="M15.9617 4.02957C18.6607 4.03057 21.3527 5.05657 23.4117 7.11557C25.4707 9.17457 26.4977 11.8666 26.4977 14.5656H27.8737C27.8747 11.5196 26.7097 8.46657 24.3847 6.14257C22.0607 3.81756 19.0077 2.65257 15.9617 2.65357V4.02957Z" fill="white"/>\n' +
                       '</svg>',
                     width: handleIconsWidth(records),
-                    margin: [0, handlePhoneIconTopMargin(records), 3, 0]
+                    margin: [0, handleIconTopMargin(records), 3, 0]
                   },
                   {
                     stack: [
@@ -468,7 +484,7 @@ export class PdfMakerService {
             ],
             width: '50%',
           },
-          // Right column - QR Code
+          // Right column - QR Code only
           {
             stack: [
               {
@@ -476,20 +492,21 @@ export class PdfMakerService {
                 alignment: 'center',
                 foreground: '#FF375E',
                 fit: displayQrDimension(handlePDFSize(records) as never),
-              },
-              {
-                svg: employeeSvg,
-                width: handleEmployeeIconWidth(records),
-                alignment: 'center',
-                foreground: '#FF375E',
               }
             ],
             width: '50%',
             alignment: 'center'
           }
         ],
-        columnGap: 10,
+        columnGap: 15,
         margin: [0, 0, 0, 0]
+      } as unknown as never);
+
+      // Employee illustration at bottom right - using absolute position
+      content.push({
+        svg: employeeSvg,
+        width: handleEmployeeIconWidth(records),
+        absolutePosition: handleEmployeeIconPosition(records)
       } as unknown as never);
     })
 

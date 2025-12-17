@@ -57,6 +57,10 @@ export const displayQrDimension = (pdfSize: string | {width: number; height: num
     return 220;
   }
 
+  if ((pdfSize as string).includes('9x11')) {
+    return 65;
+  }
+
   return 20;
 }
 
@@ -92,6 +96,13 @@ export const handleSTCLogoDimension = (items: PrintQRCodeDto[]) => {
     }
   }
 
+  if (currentSize.includes('9x11')) {
+    return {
+      width: 20,
+      height: 10,
+    }
+  }
+
   if (currentSize.includes('*')) {
     return {
       width: 20,
@@ -120,6 +131,10 @@ export const handleQRTopMargin = (items: PrintQRCodeDto[]) => {
     return 35;
   }
 
+  if (currentSize.includes('9x11')) {
+    return 35;
+  }
+
   if (currentSize.includes('*')) {
     return 2;
   }
@@ -140,6 +155,10 @@ export const handleQRBottomMargin = (items: PrintQRCodeDto[]) => {
 
   if (currentSize?.includes('A6')) {
     return 15;
+  }
+
+  if (currentSize.includes('9x11')) {
+    return 25;
   }
 
   if (currentSize.includes('*')) {
@@ -164,6 +183,10 @@ export const handleTextFontSize = (items: PrintQRCodeDto[]) => {
     return 16;
   }
 
+  if (currentSize.includes('9x11')) {
+    return 11;
+  }
+
   if (currentSize.includes('*')) {
     return 5;
   }
@@ -184,6 +207,10 @@ export const handleFooterFontSize= (items: PrintQRCodeDto[]) => {
 
   if (currentSize?.includes('A6')) {
     return 14;
+  }
+
+  if (currentSize.includes('9x11')) {
+    return 7;
   }
 
   if (currentSize.includes('*')) {
@@ -208,6 +235,10 @@ export const handleLineSeparatorWidth = (items: PrintQRCodeDto[]) => {
     return 250;
   }
 
+  if (currentSize.includes('9x11')) {
+    return 110;
+  }
+
   if (currentSize.includes('*')) {
     return 110;
   }
@@ -228,6 +259,10 @@ export const handleIconsWidth = (items: PrintQRCodeDto[]) => {
 
   if (currentSize?.includes('A6')) {
     return 10;
+  }
+
+  if (currentSize.includes('9x11')) {
+    return 8;
   }
 
   if (currentSize.includes('*')) {
@@ -253,6 +288,10 @@ export const handleIconTopMargin = (items: PrintQRCodeDto[]) => {
     return 5;
   }
 
+  if (currentSize.includes('9x11')) {
+    return 2;
+  }
+
   if (currentSize.includes('*')) {
     return 3;
   }
@@ -273,6 +312,10 @@ export const handlePhoneIconTopMargin = (items: PrintQRCodeDto[]) => {
 
   if (currentSize?.includes('A6')) {
     return 8;
+  }
+
+  if (currentSize.includes('9x11')) {
+    return 3;
   }
 
   if (currentSize.includes('*')) {
@@ -297,6 +340,10 @@ export const handlePDFMargins  = (items: PrintQRCodeDto[]) => {
     return [20, 55, 10, 0];
   }
 
+  if (currentSize.includes('9x11')) {
+    return [10, 15, 10, 10];
+  }
+
   if (currentSize.includes('*')) {
     return [15, 20, 10, 0];
   }
@@ -319,6 +366,10 @@ export const handleLogoMargins  = (items: PrintQRCodeDto[]) => {
     return [20, 15, 0, 0];
   }
 
+  if (currentSize.includes('9x11')) {
+    return [10, 5, 0, 0];
+  }
+
   if (currentSize.includes('*')) {
     return [15, 5, 0, 0];
   }
@@ -335,6 +386,10 @@ export const handleLineWidth= (items: PrintQRCodeDto[]) => {
 
   if (currentSize?.includes('A5')) {
     return 2;
+  }
+
+  if (currentSize.includes('9x11')) {
+    return 0.3;
   }
 
   if (currentSize.includes('*')) {
@@ -355,6 +410,10 @@ export const handleLineMargins= (items: PrintQRCodeDto[]) => {
     return [0, 10, 0, 10];
   }
 
+  if (currentSize.includes('9x11')) {
+    return [0, 3, 0, 3];
+  }
+
   if (currentSize.includes('*')) {
     return [0, 4, 0, 4];
   }
@@ -372,6 +431,10 @@ export const getUniqueServiceBottomMargin= (items: PrintQRCodeDto[]) => {
 
   if (currentSize?.includes('A5')) {
     return 15;
+  }
+
+  if (currentSize.includes('9x11')) {
+    return 5;
   }
 
   if (currentSize.includes('*')) {
@@ -396,6 +459,10 @@ export const handleFooterTextRightMargin= (items: PrintQRCodeDto[]) => {
     return 10;
   }
 
+  if (currentSize.includes('9x11')) {
+    return 5;
+  }
+
   if (currentSize.includes('*')) {
     return 4;
   }
@@ -414,9 +481,65 @@ export const handleTextMarginBottom = (items: PrintQRCodeDto[]) => {
     return 5;
   }
 
+  if (currentSize.includes('9x11')) {
+    return 2;
+  }
+
   if (currentSize.includes('*')) {
     return 1;
   }
 
   return 1;
+}
+
+export const handleMiddleSpacing = (items: PrintQRCodeDto[]) => {
+  const currentSize = getPdfSize(items);
+
+  if (currentSize?.includes('A4')) {
+    return 50;
+  }
+
+  if (currentSize?.includes('A5')) {
+    return 30;
+  }
+
+  if (currentSize?.includes('A6')) {
+    return 20;
+  }
+
+  if (currentSize.includes('9x11')) {
+    return 40;
+  }
+
+  if (currentSize.includes('*')) {
+    return 10;
+  }
+
+  return 10;
+}
+
+export const handleEmployeeIconWidth = (items: PrintQRCodeDto[]) => {
+  const currentSize = getPdfSize(items);
+
+  if (currentSize?.includes('A4')) {
+    return 120;
+  }
+
+  if (currentSize?.includes('A5')) {
+    return 80;
+  }
+
+  if (currentSize?.includes('A6')) {
+    return 60;
+  }
+
+  if (currentSize.includes('9x11')) {
+    return 55;
+  }
+
+  if (currentSize.includes('*')) {
+    return 40;
+  }
+
+  return 40;
 }

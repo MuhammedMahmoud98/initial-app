@@ -156,7 +156,7 @@ export class CreatedLocationsComponent implements OnDestroy {
   async downloadAndPrintPDF(records: PrintQRCodeDto[]) {
     console.log('%cTEST', 'color: green');
     try {
-      await this.#pdfMakerService.generatePdfSingleColumn(records);
+      await this.#pdfMakerService.generatePdf9x11(records);
     } catch (error) {
       console.error('Error generating PDF:', error);
     }

@@ -3,7 +3,7 @@
 
   <div class="printing-size-dimensions__options">
     @for (option of printingSizeOptions(); track option.value) {
-      <button class="printing-size-dimensions__options--option" [class.printing-size-dimensions__options--selected]="option.isSelected" (click)="select(option.value)">
+      <button class="printing-size-dimensions__options--option" [class.printing-size-dimensions__options--selected]="option.isSelected" >
         {{option.label}}
       </button>
     }

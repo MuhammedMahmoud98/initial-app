@@ -34,6 +34,7 @@ export const handlePDFSize = (items: PrintQRCodeDto[], isFileName?: boolean) => 
     return {
       width: cmToPt(+dimensions[0]),
       height: cmToPt(+dimensions[1]),
+
     }
   } else {
     return currentItemSize?.replace('*', 'x');

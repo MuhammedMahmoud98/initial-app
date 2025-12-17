@@ -15,7 +15,7 @@ import {
 import {environment} from '../../environment/environment';
 import {DatePipe} from '@angular/common';
 import {QrCodeStylingService} from '../../shared/services/qr-code-styling.service';
-import {whiteQRwithSharpCornersOptions } from '../../shared/constants/qr-code-styling-options';
+import {whiteQRwithSharpCornersOptions, pinkBgPurpleDotsWithLogoOptions } from '../../shared/constants/qr-code-styling-options';
 
 @Injectable({
   providedIn: 'root',
@@ -369,7 +369,21 @@ export class PdfMakerService {
 
     const content: unknown[] = [];
 
-    records.forEach((record, index) =>{
+    // Use for...of loop to handle async QR code generation
+    for (const [index, record] of records.entries()) {
+      // Generate styled QR code image
+      const qrImage = await this.#qrCodeStylingService.generateQRCodePNG(
+        `${environment.qrCodeUrl}/qr-guest/user-guest/${record.qrCode}`, {
+          ...pinkBgPurpleDotsWithLogoOptions,
+          width: displayQrDimension(handlePDFSize(records) as never),
+          height: displayQrDimension(handlePDFSize(records) as never),
+          qrOptions: {
+            ...pinkBgPurpleDotsWithLogoOptions.qrOptions,
+            typeNumber: displayTypeNumber(handlePDFSize(records) as never),
+          }
+        },
+      );
+
       content.push({
         columns: [
           // Left column - Text and Info
@@ -500,14 +514,14 @@ export class PdfMakerService {
             ],
             width: '50%',
           },
-          // Right column - QR Code only
+          // Right column - QR Code only (styled)
           {
             stack: [
               {
-                qr: `${environment.qrCodeUrl}/qr-guest/user-guest/${record.qrCode}`,
+                image: qrImage,
+                width: displayQrDimension(handlePDFSize(records) as never),
+                height: displayQrDimension(handlePDFSize(records) as never),
                 alignment: 'center',
-                foreground: '#FF375E',
-                fit: displayQrDimension(handlePDFSize(records) as never),
               }
             ],
             width: '50%',
@@ -524,7 +538,7 @@ export class PdfMakerService {
         width: handleEmployeeIconWidth(records),
         absolutePosition: handleEmployeeIconPosition(records)
       } as unknown as never);
-    })
+    }
 
 
     const docDefinition = {

@@ -32,3 +32,36 @@ export const whiteQRwithSharpCornersOptions = {
   },
   margin: 0,
 } as Partial<QRCodeOptions>;
+
+// Purple background with pink dots and stc logo in center
+export const pinkBgPurpleDotsWithLogoOptions = {
+  image: 'assets/images/svg-logo.svg',
+  backgroundOptions: {
+    color: PDF_BG_COLOR, // Purple background (#512B84) - matches page background
+  } as never,
+  dotsOptions: {
+    color: '#FF375E', // Pink/coral dots
+    type: 'square' as const
+  },
+  cornersSquareOptions: {
+    color: '#FF375E', // Pink/coral corner squares
+    type: 'square' as const
+  },
+  cornersDotOptions: {
+    color: '#FF375E', // Pink/coral corner dots
+    type: 'square' as const
+  },
+  qrOptions: {
+    margin: 0,
+    typeNumber: 12,
+    mode: 'Byte',
+    errorCorrectionLevel: 'Q' as const,
+    quietZone: 0,
+  },
+  imageOptions: {
+    crossOrigin: 'anonymous',
+    margin: 0, // Space around logo
+    imageSize: 0.50 // Logo size (35% of QR code)
+  },
+  margin: 0,
+} as Partial<QRCodeOptions>;

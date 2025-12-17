@@ -10,9 +10,9 @@ export class QrCodeStylingService {
     const defaultOptions = {
       width: 280,
       height: 280,
-      type: 'canvas' as const,
+      type: 'svg' as const,
       data: data,
-      image: 'assets/images/stc-logo.jpg',
+      image: 'assets/images/svg-logo.svg',
       dotsOptions: {
         color: '#000000',
         type: 'rounded' as const

@@ -377,10 +377,6 @@ export class PdfMakerService {
           ...pinkBgPurpleDotsWithLogoOptions,
           width: displayQrDimension(handlePDFSize(records) as never),
           height: displayQrDimension(handlePDFSize(records) as never),
-          qrOptions: {
-            ...pinkBgPurpleDotsWithLogoOptions.qrOptions,
-            typeNumber: displayTypeNumber(handlePDFSize(records) as never),
-          }
         },
       );
 

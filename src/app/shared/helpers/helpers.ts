@@ -44,7 +44,7 @@ export const handlePDFSize = (items: PrintQRCodeDto[], isFileName?: boolean) => 
 
 export const displayQrDimension = (pdfSize: string | {width: number; height: number}) => {
   if ((pdfSize as {width: number; height: number})?.width) {
-    return 65;
+    return 98;
   }
 
   if ((pdfSize as string).includes('A4')) {
@@ -60,7 +60,7 @@ export const displayQrDimension = (pdfSize: string | {width: number; height: num
   }
 
   if ((pdfSize as string).includes('9x11')) {
-    return 65;
+    return 98;
   }
 
   return 20;
@@ -206,7 +206,7 @@ export const handleTextFontSize = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('9x11')) {
-    return 11;
+    return 13;
   }
 
   if (currentSize.includes('*')) {
@@ -258,7 +258,7 @@ export const handleLineSeparatorWidth = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('9x11')) {
-    return 110;
+    return 100;
   }
 
   if (currentSize.includes('*')) {
@@ -363,7 +363,7 @@ export const handlePDFMargins  = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('9x11')) {
-    return [10, 30, 10, 20];
+    return [10, 40, 10, 20];
   }
 
   if (currentSize.includes('*')) {
@@ -389,7 +389,7 @@ export const handleLogoMargins  = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('9x11')) {
-    return [10, 20, 0, 5];
+    return [10, 20, 0, 20];
   }
 
   if (currentSize.includes('*')) {
@@ -482,7 +482,7 @@ export const handleFooterTextRightMargin= (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('9x11')) {
-    return 5;
+    return -4;
   }
 
   if (currentSize.includes('*')) {
@@ -504,7 +504,7 @@ export const handleTextMarginBottom = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('9x11')) {
-    return 2;
+    return 5;
   }
 
   if (currentSize.includes('*')) {
@@ -530,7 +530,7 @@ export const handleMiddleSpacing = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('9x11')) {
-    return 110;
+    return 90;
   }
 
   if (currentSize.includes('*')) {

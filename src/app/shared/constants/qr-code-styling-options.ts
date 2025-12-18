@@ -53,15 +53,14 @@ export const pinkBgPurpleDotsWithLogoOptions = {
   },
   qrOptions: {
     margin: 0,
-    typeNumber: 12,
+    typeNumber: 0, // Auto-calculate based on data length
     mode: 'Byte',
-    errorCorrectionLevel: 'Q' as const,
-    quietZone: 0,
+    errorCorrectionLevel: 'H' as const, // Highest error correction (30%) for logo overlay
   },
   imageOptions: {
     crossOrigin: 'anonymous',
     margin: 0, // Space around logo
-    imageSize: 0.50 // Logo size (35% of QR code)
+    imageSize: 0.25 // Logo size (25% of QR code) - safe size for scannability
   },
   margin: 0,
 } as Partial<QRCodeOptions>;

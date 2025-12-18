@@ -1,5 +1,5 @@
-import {QRCodeOptions} from '../models/qr-code-styling.model';
-import {PDF_BG_COLOR} from './common-constants';
+import { QRCodeOptions } from '../models/qr-code-styling.model';
+import { PDF_BG_COLOR } from './common-constants';
 
 export const whiteQRwithSharpCornersOptions = {
   image: '',

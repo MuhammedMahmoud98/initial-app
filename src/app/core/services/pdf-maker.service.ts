@@ -27,6 +27,7 @@ export class PdfMakerService {
   private pdfMakeInstance: unknown | null = null;
   private pdfMakePromise: Promise<unknown> | null = null;
   private readonly FONT_KEY = 'STCForward-Regular.ttf.base64';
+  private readonly FONT_KEY_MEDIUM = 'STCForward-Medium.ttf.base64';
   private employeeLocationSvg: string | null = null;
 
   // protected async initializePdfMake() {
@@ -120,6 +121,33 @@ export class PdfMakerService {
 
       (pdfMake as unknown as {vfs: Record<string, string>}).vfs['STCForward-Regular.ttf'] = base64Font;
 
+      // Load Medium font
+      let base64FontMedium: string | null = null;
+      try {
+        base64FontMedium = localStorage.getItem(this.FONT_KEY_MEDIUM);
+      } catch (e) {
+        console.log(e);
+        base64FontMedium = null;
+      }
+
+      if (!base64FontMedium) {
+        const fontUrlMedium = `${environment.baseHref}${environment.production ? '/': ''}assets/layouts/fonts/STCForward-Medium.ttf`;
+        const responseMedium = await fetch(fontUrlMedium, { cache: 'force-cache' });
+        if (!responseMedium.ok) throw new Error(`Font not found at ${fontUrlMedium}`);
+        const fontDataMedium = await responseMedium.arrayBuffer();
+        try {
+          base64FontMedium = await this.arrayBufferToBase64Async(fontDataMedium);
+        } catch (e) {
+          console.log(e);
+          base64FontMedium = this.arrayBufferToBase64(fontDataMedium);
+        }
+        try { localStorage.setItem(this.FONT_KEY_MEDIUM, base64FontMedium); } catch (e) {
+          console.log(e);
+        }
+      }
+
+      (pdfMake as unknown as {vfs: Record<string, string>}).vfs['STCForward-Medium.ttf'] = base64FontMedium;
+
       // Define the font family
       (pdfMake as unknown as {fonts: unknown}).fonts = {
         ...(pdfMake as unknown as {fonts: unknown}).fonts || {},
@@ -128,6 +156,12 @@ export class PdfMakerService {
           bold: 'STCForward-Regular.ttf',
           italics: 'STCForward-Regular.ttf',
           bolditalics: 'STCForward-Regular.ttf',
+        },
+        STCFontMedium: {
+          normal: 'STCForward-Medium.ttf',
+          bold: 'STCForward-Medium.ttf',
+          italics: 'STCForward-Medium.ttf',
+          bolditalics: 'STCForward-Medium.ttf',
         },
       };
 
@@ -228,7 +262,7 @@ export class PdfMakerService {
                     text: record.locationCode,
                     color: '#FF375E',  // Pink/red color
                     fontSize: handleFooterFontSize(records),
-                    margin: [handleFooterTextRightMargin(records), 0, 0, 0]
+                    margin: [handleFooterTextRightMargin(records), 10, 0, 0]
                   }
                 ],
                 width: '*'
@@ -394,7 +428,7 @@ export class PdfMakerService {
                 bold: true,
                 fontSize: handleTextFontSize(records),
                 margin: [0, 18, 0, handleTextMarginBottom(records)],
-                font: 'STCFont'
+                font: 'STCFontMedium'
               },
               {
                 text: 'workspace needs',
@@ -404,7 +438,7 @@ export class PdfMakerService {
                 color: '#fff',
                 fontSize: handleTextFontSize(records),
                 margin: [0, 0, 0, handleTextMarginBottom(records)],
-                font: 'STCFont'
+                font: 'STCFontMedium'
               },
               {
                 text: [
@@ -417,7 +451,7 @@ export class PdfMakerService {
                 bold: true,
                 fontSize: handleTextFontSize(records),
                 margin: [0, 0, 0, getUniqueServiceBottomMargin(records)],
-                font: 'STCFont'
+                font: 'STCFontMedium'
               },
               // Spacer to push footer to bottom
               {
@@ -433,6 +467,8 @@ export class PdfMakerService {
                       '  <path d="M18.4367 12.6277H17.7157C17.7157 13.9537 17.1807 15.1467 16.3117 16.0167C15.4427 16.8847 14.2487 17.4197 12.9237 17.4197C11.5977 17.4197 10.4047 16.8847 9.53471 16.0167C8.66671 15.1467 8.13171 13.9537 8.13171 12.6277C8.13171 11.3027 8.66671 10.1087 9.53471 9.2387C10.4047 8.3707 11.5977 7.8357 12.9237 7.8357C14.2487 7.8357 15.4427 8.3707 16.3117 9.2387C17.1807 10.1087 17.7157 11.3027 17.7157 12.6277H18.4367H19.1577C19.1577 10.9087 18.4587 9.3457 17.3317 8.2197C16.2057 7.0927 14.6427 6.3937 12.9237 6.3937C11.2047 6.3937 9.64071 7.0927 8.51571 8.2197C7.38771 9.3457 6.68871 10.9087 6.68971 12.6277C6.68871 14.3467 7.38771 15.9097 8.51571 17.0357C9.64071 18.1627 11.2047 18.8627 12.9237 18.8617C14.6427 18.8627 16.2057 18.1627 17.3317 17.0357C18.4587 15.9097 19.1577 14.3467 19.1577 12.6277H18.4367Z" fill="white"/>\n' +
                       '</svg>',
                     width: handleIconsWidth(records),
+                    margin: [0, handleIconTopMargin(records), 3, 0]
+
                   },
                   {
                     stack: [
@@ -584,7 +620,7 @@ export class PdfMakerService {
         },
       },
       defaultStyle: {
-        font: 'STCFont',
+        font: 'STCFontMedium',
       },
     } as unknown as TDocumentDefinitions;
 

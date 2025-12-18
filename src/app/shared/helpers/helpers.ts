@@ -206,7 +206,7 @@ export const handleTextFontSize = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('9x11')) {
-    return 13;
+    return 12;
   }
 
   if (currentSize.includes('*')) {
@@ -311,7 +311,7 @@ export const handleIconTopMargin = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('9x11')) {
-    return 0;
+    return 2;
   }
 
   if (currentSize.includes('*')) {

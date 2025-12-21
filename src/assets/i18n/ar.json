@@ -94,7 +94,7 @@
   "internal survey link": "رابط الاستبيان الداخلي",
   "external survey link": "رابط الاستبيان الخارجي",
   "max 500 characters": "الحد الأقصى 500 حرف",
-  "max 20 characters": "الحد الأقصى 20 حرف",
+  "max 50 characters": "الحد الأقصى 50 حرف",
   "max 10 characters": "الحد الأقصى 10 حرف",
   "maxLengthField": "الحد الأقصي {{length}} حرف",
   "minLengthField": "الحد الأدني {{length}} حرف",

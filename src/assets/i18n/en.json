@@ -92,7 +92,7 @@
   "internal survey link": "internal survey link",
   "external survey link": "external survey link",
   "max 500 characters": "max 500 characters",
-  "max 20 characters": "max 20 characters",
+  "max 50 characters": "max 50 characters",
   "max 10 characters": "max 10 characters",
   "maxLengthField": "max {{length}} characters",
   "minLengthField": "min {{length}} characters",

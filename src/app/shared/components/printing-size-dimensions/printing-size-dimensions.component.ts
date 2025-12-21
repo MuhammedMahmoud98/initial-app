@@ -33,23 +33,24 @@ export class PrintingSizeDimensionsComponent implements ControlValueAccessor{
   readonly #cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   // SIGNALS
   printingSizeOptions: WritableSignal<PrintingSizeDimension[]> = signal([
-    { label: 'A4', value: 'A4', isSelected: true },
-    { label: 'A5', value: 'A5', isSelected: false },
+    // { label: 'A4', value: 'A4', isSelected: true },
+    // { label: 'A5', value: 'A5', isSelected: false },
     { label: 'A6', value: 'A6', isSelected: false },
-    { label: '5x5', value: '5x5', isSelected: false },
+    { label: '6x9', value: '6x9', isSelected: false },
+    // { label: '5x5', value: '5x5', isSelected: false },
   ]);
 
-  private _value = 'A4';
+  private _value: WritableSignal<string> = signal('A6');
   disabled = false;
 
   init = effect(() => {
     this.printingSizeOptions.update(options =>
-      options.map(option => ({ ...option, isSelected: option.value === this._value }))
+      options.map(option => ({ ...option, isSelected: option.value === this._value() }))
     );
 
-    if (this._value === '5*5') {
+    if (this._value() === 'A6') {
       this.printingSizeOptions.update(options =>
-        options.map(option => ({ ...option, isSelected: option.label === '5x5' }))
+        options.map(option => ({ ...option, isSelected: option.label === 'A6' }))
       );
     }
   });
@@ -63,7 +64,7 @@ export class PrintingSizeDimensionsComponent implements ControlValueAccessor{
 
   // Called by the forms API to write to the view when programmatic changes from model to view are requested
   writeValue(value: string): void {
-    this._value = value;
+    this._value.set(value);
     // ensure view updates for OnPush
     this.#cdr.markForCheck();
   }
@@ -88,16 +89,16 @@ export class PrintingSizeDimensionsComponent implements ControlValueAccessor{
   // Templates should call this method (e.g. (click)="select(category)")
   select(value: string) {
     if (this.disabled) return;
-    this._value = value;
+    this._value.set(value);
 
     this.printingSizeOptions.update((options: PrintingSizeDimension[]) => {
       return options.map((option: PrintingSizeDimension) => ({
         ...option,
-        isSelected: option.value === this._value,
+        isSelected: option.value === this._value(),
       }));
     });
 
-    this.onChange(this._value);
+    this.onChange(this._value());
     this.onTouched();
     this.#cdr.markForCheck();
   }

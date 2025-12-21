@@ -93,7 +93,7 @@ export class CreateLocationTypeDialogComponent {
 
     this.form = new FormGroup(({
       category: new FormControl<LocationTypePayload['category']>(LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION),
-      size: new FormControl<LocationTypePayload['size']>('A4'),
+      size: new FormControl<LocationTypePayload['size']>('A6'),
       name: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(20), noScriptValidator, noSqlInjectionValidator]),
       code: new FormControl('', [Validators.required,Validators.minLength(2), Validators.maxLength(10), noScriptValidator, noSqlInjectionValidator, noWhitespaceValidator()]),
       services: new FormArray([serviceFormGroup])
@@ -144,51 +144,58 @@ export class CreateLocationTypeDialogComponent {
     return serviceFormGroup;
   }
 
-  listenToCategoryChanges(): void {
-    this.getControl('category').valueChanges.pipe(
-      tap((categoryValue: CategoryTypes) => {
-        const surveyControl = this.getControl('services')?.get('0')?.get('serviceType');
-        const internalLinkControl = this.getControl('services')?.get('0')?.get('internalLink');
-        const externalLinkControl = this.getControl('services')?.get('0')?.get('externalLink');
+listenToCategoryChanges(): void {
+  this.getControl('category').valueChanges.pipe(
+    tap((categoryValue: CategoryTypes) => {
+      const surveyControl = this.getControl('services')?.get('0')?.get('serviceType');
+      const internalLinkControl = this.getControl('services')?.get('0')?.get('internalLink');
+      const externalLinkControl = this.getControl('services')?.get('0')?.get('externalLink');
 
-        if (categoryValue === LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION) {
-          internalLinkControl?.clearAsyncValidators();
-          externalLinkControl?.clearAsyncValidators();
+      // AUTOMATICALLY UPDATE PRINT SIZE BASED ON CATEGORY
+      if (categoryValue === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION) {
+        this.getControl('size').setValue('A6');
+      } else if (categoryValue === LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION) {
+        this.getControl('size').setValue('6x9');
+      }
 
-          internalLinkControl?.markAsTouched();
-          internalLinkControl?.markAsDirty();
-          internalLinkControl?.setErrors(null);
+      if (categoryValue === LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION) {
+        internalLinkControl?.clearAsyncValidators();
+        externalLinkControl?.clearAsyncValidators();
 
-          externalLinkControl?.markAsTouched();
-          externalLinkControl?.markAsDirty();
-          externalLinkControl?.setErrors(null);
+        internalLinkControl?.markAsTouched();
+        internalLinkControl?.markAsDirty();
+        internalLinkControl?.setErrors(null);
 
-          // Update validity
-          internalLinkControl?.updateValueAndValidity({ emitEvent: false });
-          externalLinkControl?.updateValueAndValidity({ emitEvent: false });
-        }
+        externalLinkControl?.markAsTouched();
+        externalLinkControl?.markAsDirty();
+        externalLinkControl?.setErrors(null);
 
-        if (categoryValue === LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION && surveyControl?.value) {
-          internalLinkControl?.setValidators([noScriptValidator, noSqlInjectionValidator]);
-          externalLinkControl?.setValidators([noScriptValidator, noSqlInjectionValidator]);
+        // Update validity
+        internalLinkControl?.updateValueAndValidity({ emitEvent: false });
+        externalLinkControl?.updateValueAndValidity({ emitEvent: false });
+      }
 
-          // Update validity
-          internalLinkControl?.updateValueAndValidity({ emitEvent: false });
-          externalLinkControl?.updateValueAndValidity({ emitEvent: false });
-        }
+      if (categoryValue === LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION && surveyControl?.value) {
+        internalLinkControl?.setValidators([noScriptValidator, noSqlInjectionValidator]);
+        externalLinkControl?.setValidators([noScriptValidator, noSqlInjectionValidator]);
 
-        if (categoryValue === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION && surveyControl?.value) {
-          internalLinkControl?.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(500), noScriptValidator, noSqlInjectionValidator]);
+        // Update validity
+        internalLinkControl?.updateValueAndValidity({ emitEvent: false });
+        externalLinkControl?.updateValueAndValidity({ emitEvent: false });
+      }
 
-          externalLinkControl?.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(500), noScriptValidator, noSqlInjectionValidator]);
+      if (categoryValue === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION && surveyControl?.value) {
+        internalLinkControl?.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(500), noScriptValidator, noSqlInjectionValidator]);
 
-          // SET ASYNC VALIDATOR
-          internalLinkControl?.setAsyncValidators([ServiceLinkValidator(this.#locationTypeActionsService)]);
-          externalLinkControl?.setAsyncValidators([ServiceLinkValidator(this.#locationTypeActionsService)]);
-          // Update validity
-          internalLinkControl?.updateValueAndValidity({ emitEvent: false });
-          externalLinkControl?.updateValueAndValidity({ emitEvent: false });
-        }
+        externalLinkControl?.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(500), noScriptValidator, noSqlInjectionValidator]);
+
+        // SET ASYNC VALIDATOR
+        internalLinkControl?.setAsyncValidators([ServiceLinkValidator(this.#locationTypeActionsService)]);
+        externalLinkControl?.setAsyncValidators([ServiceLinkValidator(this.#locationTypeActionsService)]);
+        // Update validity
+        internalLinkControl?.updateValueAndValidity({ emitEvent: false });
+        externalLinkControl?.updateValueAndValidity({ emitEvent: false });
+      }
 
 
         // if (this.dialogMode() === MODE.EDIT) {
@@ -197,11 +204,11 @@ export class CreateLocationTypeDialogComponent {
         //   this.form.updateValueAndValidity({ emitEvent: false });
         // }
 
-        console.log(this.form);
-      }),
-      takeUntilDestroyed(this.#destroyRef),
-    ).subscribe();
-  }
+      console.log(this.form);
+    }),
+    takeUntilDestroyed(this.#destroyRef),
+  ).subscribe();
+}
 
   saveChanges(): void {
     console.log(this.form.getRawValue(), 'form value');

@@ -36,7 +36,7 @@ export class PrintingSizeDimensionsComponent implements ControlValueAccessor{
     // { label: 'A4', value: 'A4', isSelected: true },
     // { label: 'A5', value: 'A5', isSelected: false },
     { label: 'A6', value: 'A6', isSelected: false },
-    { label: '9x11', value: '9x11', isSelected: false },
+    { label: '6x9', value: '6x9', isSelected: false },
     // { label: '5x5', value: '5x5', isSelected: false },
   ]);
 

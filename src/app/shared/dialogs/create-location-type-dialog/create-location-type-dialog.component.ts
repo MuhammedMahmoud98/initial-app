@@ -155,7 +155,7 @@ listenToCategoryChanges(): void {
       if (categoryValue === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION) {
         this.getControl('size').setValue('A6');
       } else if (categoryValue === LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION) {
-        this.getControl('size').setValue('9x11');
+        this.getControl('size').setValue('6x9');
       }
 
       if (categoryValue === LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION) {

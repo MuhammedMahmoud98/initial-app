@@ -421,6 +421,10 @@ export class PdfMakerService {
             stack: [
               // Main text section
               {
+                text: '',
+                margin: [0, 20, 0, 0]
+              },
+              {
                 text: 'everything your',
                 color: '#fff',
                 style: 'qrSubtext',
@@ -554,13 +558,14 @@ export class PdfMakerService {
                 width: displayQrDimension(handlePDFSize(records) as never),
                 height: displayQrDimension(handlePDFSize(records) as never),
                 alignment: 'center',
+                margin: [0, 20, 0, 0]
               }
             ],
             width: '50%',
             alignment: 'center'
           }
         ],
-        columnGap: 15,
+        columnGap: 8,
         margin: [0, 0, 0, 0]
       } as unknown as never);
 

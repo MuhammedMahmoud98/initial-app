@@ -40,15 +40,15 @@ export const pinkBgPurpleDotsWithLogoOptions = {
     color: PDF_BG_COLOR, // Purple background (#512B84) - matches page background
   } as never,
   dotsOptions: {
-    color: '#FF375E', // Pink/coral dots
+    color: '#EB4B62', // Pink/coral dots
     type: 'square' as const
   },
   cornersSquareOptions: {
-    color: '#FF375E', // Pink/coral corner squares
+    color: '#EB4B62', // Pink/coral corner squares
     type: 'square' as const
   },
   cornersDotOptions: {
-    color: '#FF375E', // Pink/coral corner dots
+    color: '#EB4B62', // Pink/coral corner dots
     type: 'square' as const
   },
   qrOptions: {
@@ -67,7 +67,7 @@ export const pinkBgPurpleDotsWithLogoOptions = {
 
 // Mauve/light purple background with purple dots and stc logo in center (for A6 size)
 export const purpleBgPurpleDotsWithLogoOptions = {
-  image: 'assets/images/svg-logo.svg',
+  image: 'assets/images/stc-purple-logo.svg',
   backgroundOptions: {
     color: '#EDE7F6', // Light mauve/lavender background
   } as never,

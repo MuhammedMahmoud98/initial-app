@@ -202,17 +202,23 @@ export class PdfMakerService {
 
     // Add each QR code
     for (const [index, record] of records.entries()) {
+      // Generate at 5x resolution for maximum sharpness
+      const qrResolutionMultiplier = 5;
+      const qrDisplaySize = displayQrDimension(handlePDFSize(records) as never);
+      const qrGenerationSize = qrDisplaySize * qrResolutionMultiplier;
       const qrImage = await this.#qrCodeStylingService.generateQRCodePNG(
         `${environment.qrCodeUrl}/qr-guest/user-guest/${record.qrCode}`, {
           ...whiteQRwithSharpCornersOptions,
-          width: displayQrDimension(handlePDFSize(records) as never),
-          height: displayQrDimension(handlePDFSize(records) as never),
+          width: qrGenerationSize,
+          height: qrGenerationSize,
           qrOptions: {
             ...whiteQRwithSharpCornersOptions.qrOptions,
             typeNumber: displayTypeNumber(handlePDFSize(records) as never),
           }
         },
       );
+      const qrDisplayWidth = qrDisplaySize;
+      const qrDisplayHeight = qrDisplaySize;
 
       content.push({
         stack: [
@@ -242,8 +248,8 @@ export class PdfMakerService {
           {
             // qr: `${environment.qrCodeUrl}/qr-guest/user-guest/${record.qrCode}`,
             image: qrImage,
-            width: displayQrDimension(handlePDFSize(records) as never),
-            height: displayQrDimension(handlePDFSize(records) as never),
+            width: qrDisplayWidth,
+            height: qrDisplayHeight,
             alignment: 'start',
             // alignment: 'start',
             // foreground: '#000',
@@ -420,12 +426,16 @@ export class PdfMakerService {
     // Use for...of loop to handle async QR code generation
     for (const [index, record] of records.entries()) {
       // Generate styled QR code image - use different styling based on size
+      // Generate at 5x resolution for maximum sharpness, pdfmake will scale down for display
       const qrOptions = isA6Size ? purpleBgPurpleDotsWithLogoOptions : pinkBgPurpleDotsWithLogoOptions;
+      const qrResolutionMultiplier = 5;
+      const qrDisplaySize = displayQrDimension(handlePDFSize(records) as never);
+      const qrGenerationSize = qrDisplaySize * qrResolutionMultiplier;
       const qrImage = await this.#qrCodeStylingService.generateQRCodePNG(
         `${environment.qrCodeUrl}/qr-guest/user-guest/${record.qrCode}`, {
           ...qrOptions,
-          width: displayQrDimension(handlePDFSize(records) as never),
-          height: displayQrDimension(handlePDFSize(records) as never),
+          width: qrGenerationSize,
+          height: qrGenerationSize,
         },
       );
 
@@ -442,13 +452,17 @@ export class PdfMakerService {
               // Main text section - different text for A6 vs 9x11
               ...(isA6Size ? [
                 // A6 text: "scan to enhance the experience!"
+                     {
+                  text: '',
+                margin: [0, 80, 0, 0]
+              },
                 {
                   text: 'scan to enhance',
                   color: '#512B84',
                   style: 'qrSubtext',
                   alignment: 'start',
                   bold: true,
-                  fontSize: 16,
+                  fontSize: 20,
                   margin: [0, 30, 0, 2],
                   font: 'STCFontMedium'
                 },
@@ -460,7 +474,7 @@ export class PdfMakerService {
                   ],
                   style: 'qrSubtext',
                   alignment: 'start',
-                  fontSize: 16,
+                  fontSize: 20,
                   margin: [0, 0, 0, 0],
                   font: 'STCFontMedium'
                 },
@@ -468,7 +482,7 @@ export class PdfMakerService {
                 // 6x9 text: "everything your workspace needs starts here!"
                 {
                   text: '',
-                margin: [0, 20, 0, 0]
+                margin: [0, 30, 0, 0]
               },
               {
                 text: 'everything your',
@@ -493,7 +507,7 @@ export class PdfMakerService {
                 {
                   text: [
                     { text: 'starts ', color: 'white' },
-                    { text: 'here', color: '#FF375E' },
+                    { text: 'here', color: '#EB4B62' },
                     { text: '!', color: 'white' }
                   ],
                   style: 'qrSubtext',
@@ -507,7 +521,7 @@ export class PdfMakerService {
               // Spacer to push footer to bottom
               {
                 text: '',
-                margin: [0, 0, 0, isA6Size ? 140 : handleMiddleSpacing(records)]
+                margin: [0, 0, 0, isA6Size ? 50 : handleMiddleSpacing(records)]
               },
               // Location code section
               {
@@ -530,7 +544,7 @@ export class PdfMakerService {
                       },
                       {
                         text: record.locationCode,
-                        color: '#FF375E',
+                        color: '#EB4B62',
                         fontSize: isA6Size ? 9: handleFooterFontSize(records),
                         bold: true,
                         margin: [isA6Size ? 0 : handleFooterTextRightMargin(records), 0, 0, 0]
@@ -571,7 +585,7 @@ export class PdfMakerService {
   <path d="M15.9617 4.02957C18.6607 4.03057 21.3527 5.05657 23.4117 7.11557C25.4707 9.17457 26.4977 11.8666 26.4977 14.5656H27.8737C27.8747 11.5196 26.7097 8.46657 24.3847 6.14257C22.0607 3.81756 19.0077 2.65257 15.9617 2.65357V4.02957Z" fill="${iconFillColor}"/>
 </svg>`,
                     width: isA6Size ? 14 : handleIconsWidth(records),
-                    margin: [0, isA6Size ? 0 : handleIconTopMargin(records), 8, 0]
+                    margin: [0, isA6Size ? 0 : 3, 8, 0]
                   },
                   {
                     stack: [
@@ -583,7 +597,7 @@ export class PdfMakerService {
                       },
                       {
                         text: '0114599999',
-                        color: '#FF375E',
+                        color: '#EB4B62',
                         fontSize: isA6Size ? 9 : handleFooterFontSize(records),
                         bold: true,
                         margin: [isA6Size ? 0 : handleFooterTextRightMargin(records), 0, 0, 0]
@@ -594,7 +608,7 @@ export class PdfMakerService {
                 ]
               }
             ],
-            width: isA6Size ? '55%' : '70%',
+            width:  '80%',
           },
           // Right column - QR Code only (styled)
           {
@@ -604,10 +618,10 @@ export class PdfMakerService {
                 width: isA6Size ? 120 : displayQrDimension(handlePDFSize(records) as never),
                 height: isA6Size ? 120 : displayQrDimension(handlePDFSize(records) as never),
                 alignment: 'right',
-                margin: isA6Size ? [0, 15, 0, 0] : [0, -30, 0, 0]
+                margin:  [0, -30, 0, 0]
               }
             ],
-            width: isA6Size ? '45%' : '30%',
+            width:  '20%',
             alignment: 'right'
           }
         ],

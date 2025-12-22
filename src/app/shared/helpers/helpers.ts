@@ -206,7 +206,7 @@ export const handleTextFontSize = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('6x9')) {
-    return 11;
+    return 12;
   }
 
   if (currentSize.includes('*')) {
@@ -534,7 +534,7 @@ export const handleMiddleSpacing = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('6x9')) {
-    return 40;
+    return 36;
   }
 
   if (currentSize.includes('*')) {
@@ -586,7 +586,7 @@ export const handleEmployeeIconPosition = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('6x9')) {
-    return { x: 80, y: 150 };
+    return { x: 80, y: 170 };
   }
 
   if (currentSize.includes('*')) {

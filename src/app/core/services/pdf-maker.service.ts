@@ -415,8 +415,32 @@ export class PdfMakerService {
   }
 
   async generatePdfTwoColumns(records: PrintQRCodeDto[]) {
+    console.log('DEBUG - All record sizes:', records.map(r => ({ size: r.size, locationCode: r.locationCode })));
+    
+    // Group records by size category (A6 vs non-A6) to generate separate PDFs
+    const recordsBySize = records.reduce((acc, record) => {
+      const sizeKey = record.size?.includes('A6') ? 'A6' : 'other';
+      if (!acc[sizeKey]) {
+        acc[sizeKey] = [];
+      }
+      acc[sizeKey].push(record);
+      return acc;
+    }, {} as Record<string, PrintQRCodeDto[]>);
+
+    // Generate a PDF for each size group sequentially with proper waiting
+    const sizeGroups = Object.keys(recordsBySize);
+    for (const size of sizeGroups) {
+      await this.generatePdfForSize(recordsBySize[size]);
+      // Add small delay between downloads to prevent browser issues
+      if (sizeGroups.length > 1) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+    }
+  }
+
+  private async generatePdfForSize(records: PrintQRCodeDto[]) {
     const pdfMake = await this.initializePdfMake();
-    const isA6Size = records[0]?.size === 'A6';
+    const isA6Size = records[0]?.size?.includes('A6') ?? false;
     const illustrationSvg = isA6Size ? await this.loadMobileSvg() : await this.loadEmployeeLocationSvg();
 
     console.log(pdfMake, isA6Size ? 'PDF MAKE A6' : 'PDF MAKE 6x9');
@@ -540,7 +564,7 @@ export class PdfMakerService {
                         text: 'location code',
                         color: textColor,
                         fontSize: isA6Size ? 9 : handleFooterFontSize(records),
-                        margin: [isA6Size ? 0 : handleFooterTextRightMargin(records), 0, 0, isA6Size ? 2 : handleTextMarginBottom(records)]
+                        margin: [isA6Size ? 0 : handleFooterTextRightMargin(records), 0, 0, isA6Size ? 4 : handleTextMarginBottom(records)]
                       },
                       {
                         text: record.locationCode,
@@ -593,7 +617,7 @@ export class PdfMakerService {
                         text: 'Shared Services',
                         color: textColor,
                         fontSize: isA6Size ? 9 : handleFooterFontSize(records),
-                        margin: [isA6Size ? 0 : handleFooterTextRightMargin(records), 0, 0, isA6Size ? 2 : handleTextMarginBottom(records)]
+                        margin: [isA6Size ? 0 : handleFooterTextRightMargin(records), 0, 0, isA6Size ? 4 : handleTextMarginBottom(records)]
                       },
                       {
                         text: '0114599999',
@@ -633,7 +657,8 @@ export class PdfMakerService {
       content.push({
         svg: illustrationSvg,
         width: isA6Size ? 100 : handleEmployeeIconWidth(records),
-        absolutePosition: isA6Size ? { x: 190, y: 210 } : handleEmployeeIconPosition(records)
+        absolutePosition: isA6Size ? { x: 190, y: 210 } : handleEmployeeIconPosition(records),
+        pageBreak: (index < (records.length - 1)) ? 'after' : undefined
       } as unknown as never);
     }
 
@@ -696,10 +721,18 @@ export class PdfMakerService {
       },
     } as unknown as TDocumentDefinitions;
 
+    // Wrap download in a Promise to ensure proper async handling
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
-    return pdfMake.createPdf(docDefinition,undefined, undefined, pdfMake.vfs).download(`${handlePDFSize(records, true)} Locations QR Codes - ${this.displayCurrentDate()}`);
+    const pdfDoc = pdfMake.createPdf(docDefinition, undefined, undefined, pdfMake.vfs);
+    
+    return new Promise<void>((resolve) => {
+      pdfDoc.download(`${handlePDFSize(records, true)} Locations QR Codes - ${this.displayCurrentDate()}`, () => {
+        resolve();
+      });
+    });
   }
+
   displayCurrentDate(): string {
     const date = new Date();
 

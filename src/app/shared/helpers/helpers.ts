@@ -504,7 +504,7 @@ export const handleTextMarginBottom = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('6x9')) {
-    return 5;
+    return 4;
   }
 
   if (currentSize.includes('*')) {

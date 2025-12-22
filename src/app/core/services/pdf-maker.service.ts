@@ -432,7 +432,7 @@ export class PdfMakerService {
                 bold: true,
                 fontSize: handleTextFontSize(records),
                 margin: [0, 18, 0, handleTextMarginBottom(records)],
-                font: 'STCFontMedium'
+                font: 'STCFont'
               },
               {
                 text: 'workspace needs',
@@ -442,7 +442,7 @@ export class PdfMakerService {
                 color: '#fff',
                 fontSize: handleTextFontSize(records),
                 margin: [0, 0, 0, handleTextMarginBottom(records)],
-                font: 'STCFontMedium'
+                font: 'STCFont'
               },
               {
                 text: [
@@ -455,7 +455,7 @@ export class PdfMakerService {
                 bold: true,
                 fontSize: handleTextFontSize(records),
                 margin: [0, 0, 0, getUniqueServiceBottomMargin(records)],
-                font: 'STCFontMedium'
+                font: 'STCFont'
               },
               // Spacer to push footer to bottom
               {
@@ -625,7 +625,7 @@ export class PdfMakerService {
         },
       },
       defaultStyle: {
-        font: 'STCFontMedium',
+        font: 'STCFont',
       },
     } as unknown as TDocumentDefinitions;
 

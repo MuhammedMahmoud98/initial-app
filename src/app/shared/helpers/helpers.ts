@@ -56,7 +56,7 @@ export const displayQrDimension = (pdfSize: string | {width: number; height: num
   }
 
   if ((pdfSize as string).includes('A6')) {
-    return 220;
+    return 100;
   }
 
   if ((pdfSize as string).includes('6x9')) {
@@ -202,11 +202,11 @@ export const handleTextFontSize = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize?.includes('A6')) {
-    return 16;
+    return 13;
   }
 
   if (currentSize.includes('6x9')) {
-    return 8;
+    return 11;
   }
 
   if (currentSize.includes('*')) {
@@ -232,7 +232,7 @@ export const handleFooterFontSize= (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('6x9')) {
-    return 4;
+    return 6;
   }
 
   if (currentSize.includes('*')) {
@@ -258,7 +258,7 @@ export const handleLineSeparatorWidth = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('6x9')) {
-    return 55;
+    return 75;
   }
 
   if (currentSize.includes('*')) {
@@ -389,7 +389,7 @@ export const handleLogoMargins  = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('6x9')) {
-    return [10, 20, 0, 20];
+    return [10, 10, 0, 0];
   }
 
   if (currentSize.includes('*')) {
@@ -503,6 +503,10 @@ export const handleTextMarginBottom = (items: PrintQRCodeDto[]) => {
     return 5;
   }
 
+  if (currentSize?.includes('A6')) {
+    return 2;
+  }
+
   if (currentSize.includes('6x9')) {
     return 4;
   }
@@ -530,7 +534,7 @@ export const handleMiddleSpacing = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('6x9')) {
-    return 60;
+    return 40;
   }
 
   if (currentSize.includes('*')) {
@@ -556,7 +560,7 @@ export const handleEmployeeIconWidth = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('6x9')) {
-    return 100;
+    return 80;
   }
 
   if (currentSize.includes('*')) {
@@ -582,7 +586,7 @@ export const handleEmployeeIconPosition = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('6x9')) {
-    return { x: 60, y: 150 };
+    return { x: 80, y: 150 };
   }
 
   if (currentSize.includes('*')) {

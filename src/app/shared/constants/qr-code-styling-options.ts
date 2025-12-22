@@ -64,3 +64,35 @@ export const pinkBgPurpleDotsWithLogoOptions = {
   },
   margin: 0,
 } as Partial<QRCodeOptions>;
+
+// Mauve/light purple background with purple dots and stc logo in center (for A6 size)
+export const purpleBgPurpleDotsWithLogoOptions = {
+  image: 'assets/images/svg-logo.svg',
+  backgroundOptions: {
+    color: '#EDE7F6', // Light mauve/lavender background
+  } as never,
+  dotsOptions: {
+    color: '#512B84', // Purple dots
+    type: 'square' as const
+  },
+  cornersSquareOptions: {
+    color: '#512B84', // Purple corner squares
+    type: 'square' as const
+  },
+  cornersDotOptions: {
+    color: '#512B84', // Purple corner dots
+    type: 'square' as const
+  },
+  qrOptions: {
+    margin: 0,
+    typeNumber: 0, // Auto-calculate based on data length
+    mode: 'Byte',
+    errorCorrectionLevel: 'H' as const, // Highest error correction (30%) for logo overlay
+  },
+  imageOptions: {
+    crossOrigin: 'anonymous',
+    margin: 0, // Space around logo
+    imageSize: 0.25 // Logo size (25% of QR code) - safe size for scannability
+  },
+  margin: 0,
+} as Partial<QRCodeOptions>;

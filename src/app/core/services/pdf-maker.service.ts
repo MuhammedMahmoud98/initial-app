@@ -415,9 +415,7 @@ export class PdfMakerService {
   }
 
   async generatePdfTwoColumns(records: PrintQRCodeDto[]) {
-    console.log('DEBUG - All record sizes:', records.map(r => ({ size: r.size, locationCode: r.locationCode })));
-    
-    // Group records by size category (A6 vs non-A6) to generate separate PDFs
+    // Group records by size - pdfMake requires all pages to have the same size
     const recordsBySize = records.reduce((acc, record) => {
       const sizeKey = record.size?.includes('A6') ? 'A6' : 'other';
       if (!acc[sizeKey]) {
@@ -427,7 +425,7 @@ export class PdfMakerService {
       return acc;
     }, {} as Record<string, PrintQRCodeDto[]>);
 
-    // Generate a PDF for each size group sequentially with proper waiting
+    // Generate a PDF for each size group sequentially
     const sizeGroups = Object.keys(recordsBySize);
     for (const size of sizeGroups) {
       await this.generatePdfForSize(recordsBySize[size]);
@@ -442,13 +440,12 @@ export class PdfMakerService {
     const pdfMake = await this.initializePdfMake();
     const isA6Size = records[0]?.size?.includes('A6') ?? false;
     const illustrationSvg = isA6Size ? await this.loadMobileSvg() : await this.loadEmployeeLocationSvg();
-
-    console.log(pdfMake, isA6Size ? 'PDF MAKE A6' : 'PDF MAKE 6x9');
-
+    
     const content: unknown[] = [];
 
     // Use for...of loop to handle async QR code generation
     for (const [index, record] of records.entries()) {
+      
       // Generate styled QR code image - use different styling based on size
       // Generate at 5x resolution for maximum sharpness, pdfmake will scale down for display
       const qrOptions = isA6Size ? purpleBgPurpleDotsWithLogoOptions : pinkBgPurpleDotsWithLogoOptions;
@@ -486,7 +483,7 @@ export class PdfMakerService {
                   style: 'qrSubtext',
                   alignment: 'start',
                   bold: true,
-                  fontSize: 20,
+                  fontSize: 21,
                   margin: [0, 30, 0, 2],
                   font: 'STCFontMedium'
                 },
@@ -498,7 +495,7 @@ export class PdfMakerService {
                   ],
                   style: 'qrSubtext',
                   alignment: 'start',
-                  fontSize: 20,
+                  fontSize: 21,
                   margin: [0, 0, 0, 0],
                   font: 'STCFontMedium'
                 },
@@ -513,20 +510,20 @@ export class PdfMakerService {
                   color: '#fff',
                   style: 'qrSubtext',
                   alignment: 'start',
-                  bold: true,
+                  bold: false,
                   fontSize: handleTextFontSize(records),
                   margin: [0, 18, 0, handleTextMarginBottom(records)],
-                  font: 'STCFontMedium'
+                  font: 'STCFont'
                 },
                 {
                   text: 'workspace needs',
                   style: 'qrSubtext',
                   alignment: 'start',
-                  bold: true,
+                  bold: false,
                   color: '#fff',
                   fontSize: handleTextFontSize(records),
                   margin: [0, 0, 0, handleTextMarginBottom(records)],
-                  font: 'STCFontMedium'
+                  font: 'STCFont'
                 },
                 {
                   text: [
@@ -536,10 +533,10 @@ export class PdfMakerService {
                   ],
                   style: 'qrSubtext',
                   alignment: 'start',
-                  bold: true,
+                  bold: false,
                   fontSize: handleTextFontSize(records),
                   margin: [0, 0, 0, getUniqueServiceBottomMargin(records)],
-                  font: 'STCFontMedium'
+                  font: 'STCFont'
                 },
               ]),
               // Spacer to push footer to bottom
@@ -564,14 +561,19 @@ export class PdfMakerService {
                         text: 'location code',
                         color: textColor,
                         fontSize: isA6Size ? 9 : handleFooterFontSize(records),
-                        margin: [isA6Size ? 0 : handleFooterTextRightMargin(records), 0, 0, isA6Size ? 4 : handleTextMarginBottom(records)]
+                        margin: [isA6Size ? 0 : handleFooterTextRightMargin(records), 0, 0, isA6Size ? 4 : handleTextMarginBottom(records)],
+                        bold: false,
+                        font: 'STCFont'
+
                       },
                       {
                         text: record.locationCode,
                         color: '#EB4B62',
                         fontSize: isA6Size ? 9: handleFooterFontSize(records),
-                        bold: true,
-                        margin: [isA6Size ? 0 : handleFooterTextRightMargin(records), 0, 0, 0]
+                        bold: false,
+                        margin: [isA6Size ? 0 : handleFooterTextRightMargin(records), 0, 0, 0],
+                        font: 'STCFont'
+
                       }
                     ],
                     width: '*'
@@ -591,7 +593,7 @@ export class PdfMakerService {
                     lineColor: lineColor
                   }
                 ],
-                margin: isA6Size ? [0, 8, 0, 8] : handleLineMargins(records)
+                margin: isA6Size ? [0, 14, 0, 14] : handleLineMargins(records)
               },
               // Shared services section
               {
@@ -617,14 +619,19 @@ export class PdfMakerService {
                         text: 'Shared Services',
                         color: textColor,
                         fontSize: isA6Size ? 9 : handleFooterFontSize(records),
-                        margin: [isA6Size ? 0 : handleFooterTextRightMargin(records), 0, 0, isA6Size ? 4 : handleTextMarginBottom(records)]
+                        margin: [isA6Size ? 0 : handleFooterTextRightMargin(records), 0, 0, isA6Size ? 4 : handleTextMarginBottom(records)],
+                        bold: false,
+                        font: 'STCFont'
+
                       },
                       {
                         text: '0114599999',
                         color: '#EB4B62',
                         fontSize: isA6Size ? 9 : handleFooterFontSize(records),
-                        bold: true,
-                        margin: [isA6Size ? 0 : handleFooterTextRightMargin(records), 0, 0, 0]
+                        bold: false,
+                        margin: [isA6Size ? 0 : handleFooterTextRightMargin(records), 0, 0, 0],
+                        font: 'STCFont'
+
                       }
                     ],
                     width: '*'
@@ -642,7 +649,7 @@ export class PdfMakerService {
                 width: isA6Size ? 120 : displayQrDimension(handlePDFSize(records) as never),
                 height: isA6Size ? 120 : displayQrDimension(handlePDFSize(records) as never),
                 alignment: 'right',
-                margin:  [0, -30, 0, 0]
+                margin: isA6Size ?   [0, -30, 5, 0] : [0, -30, 0, 0]
               }
             ],
             width:  '20%',
@@ -657,7 +664,7 @@ export class PdfMakerService {
       content.push({
         svg: illustrationSvg,
         width: isA6Size ? 100 : handleEmployeeIconWidth(records),
-        absolutePosition: isA6Size ? { x: 190, y: 210 } : handleEmployeeIconPosition(records),
+        absolutePosition: isA6Size ? { x: 182, y: 220 } : handleEmployeeIconPosition(records),
         pageBreak: (index < (records.length - 1)) ? 'after' : undefined
       } as unknown as never);
     }

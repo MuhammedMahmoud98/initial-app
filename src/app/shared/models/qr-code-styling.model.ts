@@ -34,5 +34,7 @@ export interface QRCodeOptions {
   imageOptions?: {
     crossOrigin?: string;
     margin?: number;
+    hideBackgroundDots?: boolean;
+    imageSize?: number;
   };
 }

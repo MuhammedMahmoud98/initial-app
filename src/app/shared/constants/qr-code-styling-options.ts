@@ -59,8 +59,9 @@ export const pinkBgPurpleDotsWithLogoOptions = {
   },
   imageOptions: {
     crossOrigin: 'anonymous',
-    margin: 0, // Space around logo
-    imageSize: 0.25 // Logo size (25% of QR code) - safe size for scannability
+    margin: -3, // Space around logo
+    imageSize: 0.25, // Logo size (25% of QR code) - safe size for scannability
+    hideBackgroundDots: true // Remove border around logo
   },
   margin: 0,
 } as Partial<QRCodeOptions>;
@@ -69,7 +70,7 @@ export const pinkBgPurpleDotsWithLogoOptions = {
 export const purpleBgPurpleDotsWithLogoOptions = {
   image: 'assets/images/stc-purple-logo.svg',
   backgroundOptions: {
-    color: '#EDE7F6', // Light mauve/lavender background
+    color: '#fff', // Light mauve/lavender background
   } as never,
   dotsOptions: {
     color: '#512B84', // Purple dots
@@ -91,8 +92,9 @@ export const purpleBgPurpleDotsWithLogoOptions = {
   },
   imageOptions: {
     crossOrigin: 'anonymous',
-    margin: 0, // Space around logo
-    imageSize: 0.25 // Logo size (25% of QR code) - safe size for scannability
+    margin: -4, // Space around logo
+    imageSize: 0.25, // Logo size (25% of QR code) - safe size for scannability
+    hideBackgroundDots: true // Remove border around logo
   },
   margin: 0,
 } as Partial<QRCodeOptions>;

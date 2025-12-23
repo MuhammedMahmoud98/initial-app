@@ -534,7 +534,7 @@ export const handleMiddleSpacing = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('6x9')) {
-    return 36;
+    return 27;
   }
 
   if (currentSize.includes('*')) {

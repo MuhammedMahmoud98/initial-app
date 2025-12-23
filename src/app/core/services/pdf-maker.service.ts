@@ -281,7 +281,9 @@ export class PdfMakerService {
                     text: record.locationCode,
                     color: '#FF375E',  // Pink/red color
                     fontSize: handleFooterFontSize(records),
-                    margin: [handleFooterTextRightMargin(records), 10, 0, 0]
+                    margin: [handleFooterTextRightMargin(records), 10, 0, 0],
+                    maxHeight: 40,
+                    lineHeight: 1
                   }
                 ],
                 width: '*'
@@ -440,12 +442,12 @@ export class PdfMakerService {
     const pdfMake = await this.initializePdfMake();
     const isA6Size = records[0]?.size?.includes('A6') ?? false;
     const illustrationSvg = isA6Size ? await this.loadMobileSvg() : await this.loadEmployeeLocationSvg();
-    
+
     const content: unknown[] = [];
 
     // Use for...of loop to handle async QR code generation
     for (const [index, record] of records.entries()) {
-      
+
       // Generate styled QR code image - use different styling based on size
       // Generate at 5x resolution for maximum sharpness, pdfmake will scale down for display
       const qrOptions = isA6Size ? purpleBgPurpleDotsWithLogoOptions : pinkBgPurpleDotsWithLogoOptions;
@@ -572,11 +574,12 @@ export class PdfMakerService {
                         fontSize: isA6Size ? 9: handleFooterFontSize(records),
                         bold: false,
                         margin: [isA6Size ? 0 : handleFooterTextRightMargin(records), 0, 0, 0],
-                        font: 'STCFont'
-
+                        font: 'STCFont',
+                        maxHeight:  40,
+                        lineHeight: 1.2
                       }
                     ],
-                    width: '*'
+                    width: '65%'
                   }
                 ],
               },
@@ -732,7 +735,7 @@ export class PdfMakerService {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     const pdfDoc = pdfMake.createPdf(docDefinition, undefined, undefined, pdfMake.vfs);
-    
+
     return new Promise<void>((resolve) => {
       pdfDoc.download(`${handlePDFSize(records, true)} Locations QR Codes - ${this.displayCurrentDate()}`, () => {
         resolve();

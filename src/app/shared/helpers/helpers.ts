@@ -232,7 +232,7 @@ export const handleFooterFontSize= (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('6x9')) {
-    return 6;
+    return 5;
   }
 
   if (currentSize.includes('*')) {

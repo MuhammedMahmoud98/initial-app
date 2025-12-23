@@ -36,6 +36,7 @@
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
     "primeng": "^19.1.0",
+    "qr-code-styling": "^1.9.2",
     "rxjs": "~7.8.0",
     "stylelint-config-recommended": "^16.0.0",
     "stylelint-config-recommended-scss": "^14.1.0",

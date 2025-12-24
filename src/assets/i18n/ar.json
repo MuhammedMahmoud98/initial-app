@@ -122,5 +122,6 @@
   "errorLimitMessage": "يرجى إصلاح هذه الأخطاء العشرة أولاً وإعادة تحميل الورقة لمزيد من التحقق",
   "reUpload": "إعادة إرفاق الملف",
   "Bulk upload completed successfully!": "تم التحميل الجماعي بنجاح!",
-  "locationAssignedSubTitleEmptyForSearch": "لا توجد مواقع معينة مطابقة لرمز المكان او بريد الموظف الذي تم إدخاله."
+  "locationAssignedSubTitleEmptyForSearch": "لا توجد مواقع معينة مطابقة لرمز المكان او بريد الموظف الذي تم إدخاله.",
+  "archived": "مؤرشف"
 }

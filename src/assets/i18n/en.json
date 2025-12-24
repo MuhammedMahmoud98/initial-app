@@ -120,5 +120,6 @@
   "reUpload": "re-upload",
   "whitespaceErrMsg": "type code must contain only uppercase letters and numbers, no spaces or special character",
   "Bulk upload completed successfully!": "bulk upload completed successfully!",
-  "locationAssignedSubTitleEmptyForSearch": "no assigned locations matched the code, mail entered."
+  "locationAssignedSubTitleEmptyForSearch": "no assigned locations matched the code, mail entered.",
+  "archived": "archived"
 }

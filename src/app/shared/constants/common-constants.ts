@@ -25,7 +25,12 @@ export const CORE_APP_ROUTES: CoreAppRoutes[] = [
   {
     path: MAIN_ROUTES.ASSIGNED_LOCATION,
     title:'assignedLocations',
+  },
+  {
+    path:MAIN_ROUTES.ARCHIVED_LOCATIONS,
+    title:'archived'
   }
+  
 ];
 
 export const INITIAL_FILTER_PAYLOAD: ItemFilter = {

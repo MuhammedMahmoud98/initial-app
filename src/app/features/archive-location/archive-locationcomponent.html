@@ -1,0 +1,146 @@
+<div class="hub-locations-types">
+  @if (isLoading()) {
+    <app-skeleton-loader/>
+  } @else {
+    <!-- FILTERS -->
+    <div class="hub-locations-types__filters">
+      <app-hub-filters (filterValues)="onFilterValueChanges($event)"/>
+
+      <!-- ADD LOCATION TYPE BUTTON -->
+      <p-button [severity]="'secondary'" [outlined]="true" [label]="'createNewType' | translate" (onClick)="openAddLocationTypeModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 23 23" fill="none">
+          <path d="M12.03 5L12.0117 19" stroke="#FF375E" stroke-linecap="square"/>
+          <path d="M5 12H19" stroke="#FF375E" stroke-linecap="square"/>
+        </svg>
+      </p-button>
+    </div>
+
+    @if ((!isApplyingFilter() && isEmptyState() && !items().length)) {
+      <app-component-state
+        [mainTitle]="'no location types available'"
+        [subTitle]="'add a location type to categories locations effectively'"
+        [iconUrl]="'assets/images/location-state.svg'"
+        [showReloadButton]="false"
+      />
+    } @else {
+
+      @if (!isEmptyState() && !isErrorState()) {
+        <div class="overflow-x-auto overflow-y-hidden">
+          <app-generic-table
+            [columns]="createTableColumns()"
+            [items]="items()"
+            [totalRecords]="genericTableCacheService.totalAvailableItems()"
+            [hasCheckBoxes]="false"
+            (currentPage)="onPageChange($event)"
+          />
+        </div>
+      } @else if (isEmptyState() && !isErrorState()) {
+        <app-component-state
+          [mainTitle]="'noLocationsTypeAvailable'"
+          [subTitle]="'locationTypeSubTitleEmpty'"
+          [iconUrl]="'assets/images/location-state.svg'"
+        />
+      } @else if (isErrorState() && !isEmptyState()) {
+        <app-component-state
+          [mainTitle]="'there is a network error'"
+          [subTitle]="'please check your network or contact system admin'"
+          [iconUrl]="'assets/images/refresh-state.svg'"
+          [showReloadButton]="true"
+        />
+      }
+    }
+  }
+</div>
+
+<!-- NAME CUSTOM COLUMN -->
+<ng-template #nameCustomColumn let-row>
+  @let location = genericCasting(row);
+
+  <app-title-with-icon [itemTitle]="location.name" [iconUrl]="'assets/images/location-state.svg'"/>
+</ng-template>
+
+<!-- SERVICE CUSTOM COLUMN -->
+<ng-template #serviceCustomColumn let-row>
+  @let locationType = genericCasting(row);
+
+  <app-text-with-bg-color
+    [textItems]="locationType.services"
+    [mapTextKey]="'serviceType'"
+    [bgColor]="'var(--silver-100)'"
+    [textColor]="'var(--onyx-500)'"
+  />
+</ng-template>
+
+<!-- CODE CUSTOM COLUMN -->
+<ng-template #codeCustomColumn let-row>
+  @let locationType = genericCasting(row);
+
+  <app-text-with-bg-color
+    [textItems]="locationType.code"
+    [bgColor]="'var(--monlight-100)'"
+    [textColor]="'var(--primary-500)'"
+  />
+</ng-template>
+
+
+<!-- CATEGORY CUSTOM COLUMN -->
+<ng-template #categoryCustomColumn let-row>
+  @let locationType = genericCasting(row);
+
+  <app-text-with-bg-color
+    [textItems]="locationType.category"
+    [bgColor]="'var(--silver-100)'"
+    [textColor]="'var(--onyx-500)'"
+  />
+</ng-template>
+
+<!-- LOCATION TYPE SERVICES CUSTOM COLUMN -->
+<ng-template #locationTypeServicesCustomColumn let-row>
+  @let locationType = genericCasting(row);
+
+  <app-service-availability [services]="locationType.services" (onToggleService)="updateLocationService($event, row)" />
+</ng-template>
+
+<ng-template #locationTypeActionsColumn let-row>
+  @let locationType = genericCasting(row);
+
+  <div class="flex justify-content-start">
+    <p-menu [appendTo]="'body'" #menu [model]="locationTypeActions(locationType)" [popup]="true">
+      <ng-template #item let-item>
+        <a pRipple class="flex items-center p-menu-item-link">
+          @if (item.alias === 'edit') {
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M1.77548 14.4998L4.60382 14.4999L14.9747 4.12895L12.1463 1.30054L1.77539 11.6715L1.77548 14.4998Z" stroke="#1D252D"/>
+              <path d="M9.31641 4.12915L12.1448 6.95758" stroke="#1D252D" stroke-linecap="square"/>
+            </svg>
+          }
+
+          @if (item.alias === 'delete') {
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <g clip-path="url(#clip0_115_7262)">
+                <path d="M3 3.33325V14.6666H11C12.1046 14.6666 13 13.7712 13 12.6666V3.33325H3Z" stroke="#FF375E"/>
+                <path d="M6.66602 6.66675V11.0001" stroke="#FF375E" stroke-linecap="square"/>
+                <path d="M9.33398 6.66675V11.0001" stroke="#FF375E" stroke-linecap="square"/>
+                <path d="M1.33398 3.33325H14.6673" stroke="#FF375E" stroke-linecap="square"/>
+                <path d="M5.33398 3.33325L6.43032 1.33325H9.59302L10.6673 3.33325H5.33398Z" stroke="#FF375E"/>
+              </g>
+              <defs>
+                <clipPath id="clip0_115_7262">
+                  <rect width="16" height="16" fill="white"/>
+                </clipPath>
+              </defs>
+            </svg>
+          }
+          <span class="ml-2" [class.stc-danger]="item.alias === 'delete'">{{ item.label | translate }}</span>
+        </a>
+      </ng-template>
+    </p-menu>
+    <button pRipple class="custom-actions-btn" (click)="menu.toggle($event)">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M6 13.5C6.82843 13.5 7.5 12.8284 7.5 12C7.5 11.1716 6.82843 10.5 6 10.5C5.17157 10.5 4.5 11.1716 4.5 12C4.5 12.8284 5.17157 13.5 6 13.5Z" fill="#1D252D"/>
+        <path d="M12 13.5C12.8284 13.5 13.5 12.8284 13.5 12C13.5 11.1716 12.8284 10.5 12 10.5C11.1716 10.5 10.5 11.1716 10.5 12C10.5 12.8284 11.1716 13.5 12 13.5Z" fill="#1D252D"/>
+        <path d="M18 13.5C18.8284 13.5 19.5 12.8284 19.5 12C19.5 11.1716 18.8284 10.5 18 10.5C17.1716 10.5 16.5 11.1716 16.5 12C16.5 12.8284 17.1716 13.5 18 13.5Z" fill="#1D252D"/>
+      </svg>
+    </button>
+  </div>
+</ng-template>

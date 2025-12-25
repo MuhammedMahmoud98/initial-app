@@ -343,9 +343,16 @@ listenToCategoryChanges(): void {
 
   private handleTypeCodeDuplicationError(err: HttpErrorResponse) {
     const ctrl = this.getControl('code');
+    const typeName = this.getControl('name');
 
     if (err?.error?.message?.[0]?.code === DUPLICATE_RECORD_CODE) {
-      ctrl.addValidators(duplicatedTypeCodeValidator(ctrl.value));
+      if(err?.error.message?.[0].source.message.includes('Location Type name')){
+        typeName.addValidators(duplicatedTypeCodeValidator(typeName.value))
+        typeName.updateValueAndValidity();
+      }
+      if(err?.error.message?.[0].source.message.includes('Location Type code')){
+        ctrl.addValidators(duplicatedTypeCodeValidator(ctrl.value));
+      }
     } else {
       ctrl.removeValidators(duplicatedTypeCodeValidator(ctrl.value));
     }

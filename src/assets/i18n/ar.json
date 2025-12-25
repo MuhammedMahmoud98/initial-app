@@ -114,6 +114,7 @@
   "assignedLocationsPlaceHolder": "البحث بكود المكان او بريد الموظف",
   "newLocationTypeSuccessMsg": "تم إنشاء نوع الموقع '{{typeName}}' بنجاح",
   "duplicatedTypeCode": "يجب ان يحتوي كود نوع المكان فريداََ عبر جميع انواع المواقع",
+  "duplicatedTypeName": "يجب ان يحتوي اسم نوع المكان فريداََ عبر جميع انواع المواقع",
   "updateLocationTypeSuccessMsg": "تم تحديث نوع الموقع بنجاح",
   "deleteLocationTypeConfirmMessageHeader": "تأكيد حذف نوع المكان",
   "deleteLocationTypeConfirmMessageBody": "هل أنت متأكد أنك تريد المتابعة بحذف نوع الموقع هذا؟",

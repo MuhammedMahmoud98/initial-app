@@ -30,6 +30,12 @@ export class LocationTypeActionsService {
     return this.#http.delete(uri);
   }
 
+  archiveLocationType(id: number): Observable<unknown> {
+    const uri = API_CONSTANTS.DELETE_LOCATION_TYPE.replace('{id}', id.toString());
+
+    return this.#http.post(uri,{});
+  }
+
   validateServiceLink(linkPayload: ServiceLinkPayload): Observable<ServiceLinkResponse> {
     return this.#http.post<ServiceLinkResponse>(API_CONSTANTS.LINK_VALIDATE_QR, linkPayload);
   }

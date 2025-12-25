@@ -98,6 +98,7 @@
   "minLengthField": "min {{length}} characters",
   "requiredField": "required field",
   "edit": "edit",
+  "archive": "archive",
   "assignedLocations": "assigned locations",
   "unlinkConfirmMessageHeader": "are you sure you want to proceed?",
   "unlinkConfirmMessageBody": "by confirming the unlinking the employee will be removed from this location and the location will be available for linking for other employees",
@@ -120,5 +121,8 @@
   "reUpload": "re-upload",
   "whitespaceErrMsg": "type code must contain only uppercase letters and numbers, no spaces or special character",
   "Bulk upload completed successfully!": "bulk upload completed successfully!",
-  "locationAssignedSubTitleEmptyForSearch": "no assigned locations matched the code, mail entered."
+  "locationAssignedSubTitleEmptyForSearch": "no assigned locations matched the code, mail entered.",
+  "kindlyArchiveAllTheRelatedLocations": "Kindly archive all the related locations to this location type first to be able to archive it.",
+  "archiveWarning": "Archive Warning",
+  "archivingTheLocationTypeWillRemove": "Archiving the location type will remove it from the available list of location types while creating new location and move it to archived location types."
 }

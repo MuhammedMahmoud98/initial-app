@@ -1,62 +1,61 @@
 import {
-  afterNextRender, AfterRenderRef,
+  afterNextRender,
+  AfterRenderRef,
   ChangeDetectionStrategy,
-  Component, computed, DestroyRef,
-  inject, model, OnDestroy,
-  signal,
-  TemplateRef,
-  viewChild,
-  WritableSignal
+  Component,
+  DestroyRef,
+  inject,
+  OnDestroy,
+  signal, TemplateRef, viewChild
 } from '@angular/core';
-import {LocalizationService, PdfMakerService} from '../../../core/services';
-import {COMMON_CONSTANTS, INITIAL_FILTER_PAYLOAD} from '../../../shared/constants/common-constants';
-import {GenericTableComponent} from '../../../shared/components/generic-table/generic-table.component';
-import {ItemFilter, TableColumn} from '../../../shared';
+import { GenericTableComponent } from '../../../shared/components/generic-table/generic-table.component';
+import { GenericTableCacheService } from '../../../shared/services';
+import { DialogService } from 'primeng/dynamicdialog';
+import { HubFilters } from '../../../shared/components/hub-filters/models/hub-filters.model';
 
-import {genericCasting} from '../../../shared/helpers/helpers';
-import {CustomStatusComponent} from '../../../shared/components/custom-status/custom-status.component';
-import {CopyToClipboardComponent} from '../../../shared/components/copy-to-clipboard/copy-to-clipboard.component';
-import {TableActionBulkComponent} from '../../../shared/components/table-action-bulk/table-action-bulk.component';
-import {Button} from 'primeng/button';
-import {GenericTableCacheService} from '../../../shared/services';
-import {HubFiltersComponent} from '../../../shared/components/hub-filters/hub-filters.component';
-import {ConfirmationService, MessageService} from 'primeng/api';
-import {HubFilters} from '../../../shared/components/hub-filters/models/hub-filters.model';
-import {DialogService} from 'primeng/dynamicdialog';
-import {LoadingDialogComponent} from '../../../shared/dialogs/loading-dialog/loading-dialog.component';
-import {LoadingDialogService} from '../../../shared/services/loading-dialog.service';
-import {catchError, concatMap, EMPTY, generate, Observable, switchMap, tap} from 'rxjs';
-import {TitleWithIconComponent} from '../../../shared/components/title-with-icon/title-with-icon.component';
-import {ComponentStateComponent} from '../../../shared/components/component-state/component-state.component';
-import {TranslatePipe, TranslateService} from '@ngx-translate/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {Dialog} from 'primeng/dialog';
-import {HttpErrorResponse} from '@angular/common/http';
-import {SkeletonLoaderComponent} from '../../../shared/components/skeleton-loader/skeleton-loader.component';
-import {TextWithBgColorComponent} from '../../../shared/components/text-with-bg-color/text-with-bg-color.component';
-import {DatePipe} from '@angular/common';
-import { CreatedLocation, CreatedLocationColumnType, CreatedLocationResponse, GenerateQrPayload, GenerateQrResponse, 
-  PrintQRCodeDto, PrintQrCodeResponse, ValidateQrResponse } from '../../created-locations/models/created-location.model';
-import { LocationsService } from '../../created-locations/services/locations.service';
+import { ItemFilter } from '../../../shared';
+import {
+  catchError,
+  EMPTY,
+
+  tap
+} from 'rxjs';
+import { genericCasting } from '../../../shared/helpers/helpers';
+
+import { ComponentStateComponent } from '../../../shared/components/component-state/component-state.component';
+import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
+
+import { TitleWithIconComponent } from '../../../shared/components/title-with-icon/title-with-icon.component';
+import { INITIAL_FILTER_PAYLOAD } from '../../../shared/constants/common-constants';
+import { HubFiltersComponent } from '../../../shared/components/hub-filters/hub-filters.component';
+import { CopyToClipboardComponent } from '../../../shared/components/copy-to-clipboard/copy-to-clipboard.component';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ConfirmationService, MenuItem } from 'primeng/api';
+import { CommonModule } from '@angular/common';
+import { TimezoneDatePipe } from '../../../shared/pipes/timezone-date.pipe';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ArchivedLocationTypeService } from './services/archived-location-type.service';
+import { archiveLocation, CreatedArchivedLocationColumnType, CreatedArchivedLocationResponse } from './models/location-types.model';
+import { TextWithBgColorComponent } from '../../../shared/components/text-with-bg-color/text-with-bg-color.component';
+import { MenuModule } from 'primeng/menu';
 
 @Component({
-  selector: 'app-created-locations',
+  selector: 'app-location-type',
   imports: [
     GenericTableComponent,
-    CustomStatusComponent,
-    CopyToClipboardComponent,
-    TableActionBulkComponent,
-    Button,
-    HubFiltersComponent,
-    TitleWithIconComponent,
     ComponentStateComponent,
-    Dialog,
-    LoadingDialogComponent,
     SkeletonLoaderComponent,
-    TextWithBgColorComponent,
+    TitleWithIconComponent,
+    HubFiltersComponent,
+    CopyToClipboardComponent,
     TranslatePipe,
+    TimezoneDatePipe,
+    CommonModule,
+    TextWithBgColorComponent,
+    MenuModule,
+
   ],
-  providers: [DialogService, DatePipe, PdfMakerService],
+  providers: [DialogService, TimezoneDatePipe],
   standalone: true,
   templateUrl: './location-types.component.html',
   styleUrl: './location-types.component.scss',
@@ -64,72 +63,67 @@ import { LocationsService } from '../../created-locations/services/locations.ser
 })
 export class LocationTypesComponent implements OnDestroy {
   // INJECTIONS
-  readonly #pdfMakerService: PdfMakerService = inject(PdfMakerService);
   readonly genericTableCacheService: GenericTableCacheService = inject(GenericTableCacheService);
   protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
-  readonly #locationsService: LocationsService = inject(LocationsService);
-  readonly loadingDialogService = inject(LoadingDialogService);
-  readonly #messageService: MessageService = inject(MessageService);
-  readonly #translateService: TranslateService = inject(TranslateService)
+  readonly #ArchivedLocationTypeService: ArchivedLocationTypeService = inject(ArchivedLocationTypeService);
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
-  readonly #localizaitionService: LocalizationService = inject(LocalizationService);
+
+  // readonly #messageService: MessageService = inject(MessageService);
+  readonly #translateService: TranslateService = inject(TranslateService);
 
   // SIGNALS
-  columns: WritableSignal<TableColumn<CreatedLocation>[]> = signal([]);
-  selectedItemsCounter = signal(0);
-  items = signal<CreatedLocation[]>([]);
-  locationsPayload = signal<ItemFilter>(INITIAL_FILTER_PAYLOAD);
-  isValidatingQr = signal(false);
-  showBulkSelection = computed(() => this.genericTableCacheService.hasMorePages());
-  // SIGNAL STATES
+  items = signal<archiveLocation[]>([]);
+
+  locationTypesPayload = signal<ItemFilter>(INITIAL_FILTER_PAYLOAD);
+  isApplyingFilter = signal(false);
   isEmptyState = signal(false);
   isErrorState = signal(false);
-  isApplyingFilter = signal(false);
-  showLoadingDialog = model(false);
-  loadingTitle = signal('');
   isLoading = signal(true);
 
-  // VIEW CHILDREN
-  qrStatusCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('qrStatusCustomColumn');
-  codeCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('codeCustomColumn');
-  districtCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('districtCustomColumn');
-  locationTypeCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('locationTypeCustomColumn');
-  buildingCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('buildingCustomColumn');
 
-  // CASTING
-  protected readonly genericCasting = genericCasting<CreatedLocation>;
+  // VIEW CHILDREN
+  qrStatusCustomColumn = viewChild<TemplateRef<{ $implicit: archiveLocation }>>('qrStatusCustomColumn');
+  codeCustomColumn = viewChild<TemplateRef<{ $implicit: archiveLocation }>>('codeCustomColumn');
+  districtCustomColumn = viewChild<TemplateRef<{ $implicit: archiveLocation }>>('districtCustomColumn');
+  locationTypeCustomColumn = viewChild<TemplateRef<{ $implicit: archiveLocation }>>('locationTypeCustomColumn');
+  buildingCustomColumn = viewChild<TemplateRef<{ $implicit: archiveLocation }>>('buildingCustomColumn');
+  locationTypeActionsColumn = viewChild<TemplateRef<{ $implicit: archiveLocation }>>('locationTypeActionsColumn');
+
+
+  protected readonly genericCasting = genericCasting<archiveLocation>;
 
   init: AfterRenderRef = afterNextRender(() => {
-    this.getCreatedLocations();
+    this.getAssignedLocationTypes();
+    // this.items.set([{
+    //   id: 1,
+    //   district: 'Nasr City',
+    //   category: 'Office',
+    //   building: 'B1',
+    //   floor: '3',
+    //   zone: 'Z2',
+    //   code: 'LC-001',
+    //   qrCode: 'QR-001',
+    //   serial: 'SR-001',
+    //   typeTitle: 'Archive',
+    //   typeCode: 'AR',
+    //   isSelected: false
+    // }]);
+    // this.isLoading.set(false)
   });
+
 
   ngOnDestroy(): void {
     this.genericTableCacheService.resetCache();
   }
 
-  createTableColumns(): CreatedLocationColumnType[] {
-    return [
-      {field: 'district', template: this.districtCustomColumn()},
-      {field: 'category'},
-      {field: 'building', template: this.buildingCustomColumn()},
-      {field: 'floor'},
-      {field: 'zone'},
-      {field: 'serial'},
-      {field: 'code', alias: 'locationCode', template: this.codeCustomColumn(), columnWidth: '15%'},
-    ]
-  }
-
-  getCreatedLocations(): void {
-    this.#locationsService.getCreatedLocations(this.locationsPayload()).pipe(
-      tap((createdLocations: CreatedLocationResponse) => {
-        console.log(createdLocations, 'CREATED LOCATIONS FROM API');
+  getAssignedLocationTypes(): void {
+    this.#ArchivedLocationTypeService.getLocationTypeArchived(this.locationTypesPayload()).pipe(
+      tap((locationTypesResponse: CreatedArchivedLocationResponse) => {
         this.isLoading.set(false);
-        if (createdLocations) {
-          this.genericTableCacheService.totalAvailableItems.set(createdLocations.totalElements);
-          this.genericTableCacheService.hasMorePages.set(createdLocations.totalPages > 1);
-          this.items.set(createdLocations.content);
-          this.isEmptyState.set(false);
-          this.isErrorState.set(false);
+        if (locationTypesResponse) {
+          this.genericTableCacheService.totalAvailableItems.set(locationTypesResponse.totalElements);
+          this.items.set(locationTypesResponse.content);
+          this.clearStates();
         } else {
           this.handleEmptyState();
         }
@@ -139,43 +133,86 @@ export class LocationTypesComponent implements OnDestroy {
         this.isLoading.set(false);
         this.handleErrorState();
         return EMPTY;
-      }),
+      })
     ).subscribe();
   }
 
+
+  locationTypeActions(row: archiveLocation): MenuItem[] {
+    return [
+      {
+        label: 'edit',
+        command: () => {
+          console.log('edited')
+        },
+        alias: 'edit'
+      },
+      {
+        label: 'delete',
+        command: () => {
+          console.log('delete')
+        },
+        alias: 'delete',
+        visible: !row['has-linked-locations']
+      }
+    ];
+  }
+
+  createTableColumns(): CreatedArchivedLocationColumnType[] {
+    return [
+      { field: 'district', template: this.districtCustomColumn() },
+      { field: 'category' },
+      { field: 'building', template: this.buildingCustomColumn() },
+      { field: 'floor' },
+      { field: 'zone' },
+      { field: 'serial' },
+      { field: 'type', alias: 'locationTypeCode', template: this.locationTypeCustomColumn() },
+      { field: 'code', alias: 'locationCode', template: this.codeCustomColumn(), columnWidth: '15%' },
+      { field: '', template: this.locationTypeActionsColumn() },
+    ]
+  }
+
+  onPageChange(currentPage: number) {
+    this.updateFilterPayload({ page: currentPage } as ItemFilter);
+    this.getAssignedLocationTypes();
+  }
+
+
   updateFilterPayload(newFilters: HubFilters | ItemFilter): void {
-    this.locationsPayload.update((current) => ({...current, ...newFilters}));
-    console.log(this.locationsPayload(), 'UPDATED PAYLOAD');
-  }
-
-  async downloadAndPrintPDF(records: PrintQRCodeDto[]) {
-    console.log('%cTEST', 'color: green');
-    try {
-      await this.#pdfMakerService.generatePdfTwoColumns(records);
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-    }
-  }
-
-  onSelectedItemsChange(selectedItemsIds: number[]) {
-    this.selectedItemsCounter.set(selectedItemsIds.length);
-    this.genericTableCacheService.selectedItemsCache.set(selectedItemsIds);
-    // this.genericTableCacheService.updateSelectedItems(selectedItemsIds);
-    console.log(selectedItemsIds, 'FROM CREATED LOCATIONS');
+    this.locationTypesPayload.update((current) => ({ ...current, ...newFilters }));
+    console.log(this.locationTypesPayload(), 'UPDATED PAYLOAD');
   }
 
   onFilterValueChanges(filterValues: HubFilters) {
     this.isApplyingFilter.set(!!filterValues.filter);
-    this.updateFilterPayload({...filterValues, page: 0});
-    this.genericTableCacheService.resetPagination$.next(true);
-    this.getCreatedLocations();
+    this.updateFilterPayload({ ...filterValues, page: 0 });
+    this.getAssignedLocationTypes();
   }
 
-  onPageChange(currentPage: number) {
-    console.log(currentPage, 'CURRENT PAGE FROM CREATED LOCATIONS');
-    this.updateFilterPayload({page: currentPage} as ItemFilter);
-    this.getCreatedLocations();
+
+  openUnlinkAssignedLocationDialog(id: number): void {
+    this.confirmationService.confirm({
+      header: this.#translateService.instant('unlinkConfirmMessageHeader'),
+      message: this.#translateService.instant('unlinkConfirmMessageBody'),
+      closable: false,
+      closeOnEscape: true,
+      rejectButtonProps: {
+        label: this.#translateService.instant('cancel'),
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: this.#translateService.instant('confirm'),
+        severity: 'secondary',
+      },
+      acceptVisible: true,
+      accept: (): void => {
+        console.log(id)
+      }
+    });
   }
+
+
 
   handleEmptyState(): void {
     this.isEmptyState.set(true);
@@ -189,304 +226,8 @@ export class LocationTypesComponent implements OnDestroy {
     this.genericTableCacheService.totalAvailableItems.set(0);
   }
 
-  confirmQrGeneration(): void {
-   this.confirmationService.confirm({
-      header: this.#translateService.instant('qrConfirmMessageHeader'),
-      message: this.#translateService.instant('qrConfirmMessageBody'),
-      closable: false,
-      closeOnEscape: true,
-      rejectButtonProps: {
-        label: this.#translateService.instant('cancel'),
-        severity: 'secondary',
-        outlined: true,
-      },
-      acceptButtonProps: {
-        label: this.#translateService.instant('confirm'),
-        severity: 'secondary',
-      },
-     acceptVisible: true,
-      accept: (): void => {
-        this.generateLocationsQR();
-      }
-    });
-  }
-
-  validateQRPrint(): void {
-    const payload = {
-      all: this.genericTableCacheService.isSelectingBulkAction(),
-      selectedLocationIds: this.genericTableCacheService.selectedItemsCache(),
-      excludedLocationIds: this.genericTableCacheService.unSelectedItemsCache(),
-      filter: this.locationsPayload().filter,
-    } as GenerateQrPayload;
-
-    this.isValidatingQr.set(true);
-    this.#locationsService.validateQRPrint(payload).pipe(
-      tap((validateQrResponse: ValidateQrResponse): void => {
-        this.isValidatingQr.set(false);
-        this.showQrPrintWarningDialog(validateQrResponse);
-        console.log(validateQrResponse, 'VALIDATE QR RESPONSE');
-      }),
-      catchError(() => {
-        this.isValidatingQr.set(false);
-        this.#messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: this.#translateService.instant('something went wrong'),
-          life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
-        });
-        return EMPTY;
-      }),
-      takeUntilDestroyed(this.#destroyRef),
-    ).subscribe();
-  }
-
-  handleWarningMessage(message: string, type: 'header' | 'body'): string {
-    if (!message) return '-';
-
-    const splitMessage: string[] = message.split(/[،,.]\s*/);
-
-    return (type === 'header' ? splitMessage[0] : splitMessage[1])?.trim() ?? '-';
-  }
-
-  showQrPrintWarningDialog(validateQrResponse: ValidateQrResponse): void {
-    switch (validateQrResponse['validation-status']) {
-      case 'NONE_HAVE_QR_CODES':
-        this.confirmationService.confirm({
-          header: this.handleWarningMessage(validateQrResponse.message, 'header'),
-          message: this.handleWarningMessage(validateQrResponse.message, 'body'),
-          closable: false,
-          closeOnEscape: true,
-          rejectButtonProps: {
-            label: this.#translateService.instant('cancel'),
-            severity: 'secondary',
-            outlined: true,
-          },
-          acceptButtonProps: {
-            label: this.#translateService.instant('confirm'),
-            severity: 'secondary',
-          },
-          acceptVisible: false,
-        });
-        break;
-      case 'PARTIAL_QR_CODES':
-        this.confirmationService.confirm({
-          header: this.handleWarningMessage(validateQrResponse.message, 'header'),
-          message: this.handleWarningMessage(validateQrResponse.message, 'body'),
-          closable: false,
-          closeOnEscape: true,
-          rejectButtonProps: {
-            label: this.#translateService.instant('cancel'),
-            severity: 'secondary',
-            outlined: true,
-          },
-          acceptButtonProps: {
-            label: this.#translateService.instant('confirm'),
-            severity: 'secondary',
-          },
-          acceptVisible: true,
-          accept: () => {
-            this.printQRCode().then();
-          }
-        });
-        break;
-      case 'ALL_HAVE_QR_CODES':
-        this.printQRCode().then();
-        break;
-      case 'INVALID_REQUEST':
-        this.#messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: validateQrResponse.message,
-          life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
-        });
-        break;
-    }
-  }
-
-  generateLocationsQR(): void {
-    const payload = {
-      all: this.genericTableCacheService.isSelectingBulkAction(),
-      selectedLocationIds: this.genericTableCacheService.selectedItemsCache(),
-      excludedLocationIds: this.genericTableCacheService.unSelectedItemsCache(),
-      filter: this.locationsPayload().filter,
-    } as GenerateQrPayload;
-
-    this.startLoading('generating QR code...');
-
-    this.#locationsService.generateQRCode(payload).pipe(
-      tap((generateQrResponse: GenerateQrResponse): void => {
-        this.stopLoading();
-
-        // LOAD LOCATIONS IN CASE OF NEWLY GENERATED QR CODES..
-        const warningResponseMsg: string = this.#localizaitionService.isRTL() ? 'لا توجد معرفات موقع لإنشاء رمز الاستجابة السريعة' : 'No Location Ids to Generate QR';
-        if (generateQrResponse.message !== warningResponseMsg) {
-          this.#messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: this.#translateService.instant(generateQrResponse.message),
-            life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
-          });
-
-          this.genericTableCacheService.resetBulkActions$.next(true);
-          // this.updateFilterPayload(INITIAL_FILTER_PAYLOAD);
-          this.getCreatedLocations();
-        } else {
-          this.#messageService.add({
-            severity: 'warn',
-            summary: 'Warn',
-            detail: this.#translateService.instant(generateQrResponse.message),
-            life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
-          });
-        }
-      }),
-      takeUntilDestroyed(this.#destroyRef),
-      catchError((err): Observable<never> => {
-        this.stopLoading();
-
-        this.#messageService.add({
-          severity: 'error',
-          summary: 'Rejected',
-          detail: this.#translateService.instant(err.error.message ?? 'something went wrong'),
-          life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
-        });
-        return EMPTY;
-      })
-    ).subscribe();
-  }
-
-  deleteLocationQR(): void {
-    const payload = {
-      all: this.genericTableCacheService.isSelectingBulkAction(),
-      selectedLocationIds: this.genericTableCacheService.selectedItemsCache(),
-      excludedLocationIds: this.genericTableCacheService.unSelectedItemsCache(),
-      filter: this.locationsPayload().filter,
-    } as GenerateQrPayload;
-
-    this.startLoading('deleting QR code...');
-
-    this.#locationsService.deleteQRCode(payload).pipe(
-      tap(() => {
-        console.log('%cIS DELETE SUCCESS', 'color: yellow');
-        this.stopLoading();
-        this.genericTableCacheService.resetBulkActions$.next(true);
-        this.#messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: this.#translateService.instant('location deleted successfully'),
-          life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
-        });
-
-        this.updateFilterPayload(INITIAL_FILTER_PAYLOAD);
-        this.getCreatedLocations();
-      }),
-      takeUntilDestroyed(this.#destroyRef),
-      catchError((err: HttpErrorResponse) => {
-        this.stopLoading();
-        const isQrCannotDeleteMessage = err?.error?.message?.[0]?.source?.message;
-
-        if (isQrCannotDeleteMessage) {
-          this.#messageService.add({
-            severity: 'warn',
-            summary: 'Warn',
-            detail: this.#translateService.instant(isQrCannotDeleteMessage ?? 'something went wrong'),
-            life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
-          });
-        } else {
-          this.genericTableCacheService.resetBulkActions$.next(true);
-          this.#messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: this.#translateService.instant(isQrCannotDeleteMessage ?? 'something went wrong'),
-            life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
-          });
-
-          // this.updateFilterPayload(INITIAL_FILTER_PAYLOAD);
-          this.getCreatedLocations();
-        }
-        return EMPTY;
-      })
-    ).subscribe();
-  }
-
-  startLoading(title: string): void {
-    this.showLoadingDialog.set(true);
-    this.loadingTitle.set(title);
-
-    this.loadingDialogService.startFakeProgress();
-  }
-
-  stopLoading(): void {
-    setTimeout(() => {
-      this.showLoadingDialog.set(false);
-    }, 1500);
-    this.loadingDialogService.completeProgress();
-  }
-
-  async printQRCode(): Promise<void> {
-    const payload = {
-      all: this.genericTableCacheService.isSelectingBulkAction(),
-      selectedLocationIds: this.genericTableCacheService.selectedItemsCache(),
-      excludedLocationIds: this.genericTableCacheService.unSelectedItemsCache(),
-      filter: this.locationsPayload().filter,
-    } as GenerateQrPayload;
-
-    const queryParams = {
-      page: 0,
-      size: 200,
-    } as ItemFilter;
-
-    this.startLoading('printing QR code...');
-
-    this.#locationsService.printQRCode(payload, queryParams).pipe(
-      switchMap((printResponse: PrintQrCodeResponse) => {
-        this.downloadAndPrintPDF(printResponse.content);
-
-        if (printResponse.totalPages > 1) {
-          const totalPages: number = printResponse.totalPages;
-
-          return generate({
-            initialState: 1,
-            condition: (page) => page < totalPages,
-            iterate: (page) => page + 1,
-          }).pipe(
-            concatMap((page: number): Observable<PrintQrCodeResponse> => this.#locationsService.printQRCode(payload , {...queryParams, page}).pipe(
-              tap((nestedPrintResponse) => {
-                this.downloadAndPrintPDF(nestedPrintResponse.content);
-                console.log(nestedPrintResponse, 'NESTED QR PRINT RESPONSE');
-                if (page === totalPages - 1) {
-                  this.stopLoading();
-                }
-              }),
-              takeUntilDestroyed(this.#destroyRef),
-            ))
-          )
-        }
-
-        this.stopLoading();
-        return EMPTY;
-      }),
-      catchError((err: HttpErrorResponse) => {
-        const hasNonGeneratedQRMsg = err?.error?.message?.[0]?.source?.message;
-
-        if (hasNonGeneratedQRMsg) {
-          this.#messageService.add({
-            severity: 'warn',
-            summary: 'Warn',
-            detail: this.#translateService.instant(hasNonGeneratedQRMsg),
-            life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
-          });
-        } else {
-          this.#messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: this.#translateService.instant('something went wrong'),
-            life: COMMON_CONSTANTS.TOASTER_LIFE_TIME
-          });
-        }
-
-        this.stopLoading();
-        return EMPTY;
-      })
-    ).subscribe();
+  clearStates(): void {
+    this.isEmptyState.set(false);
+    this.isErrorState.set(false);
   }
 }

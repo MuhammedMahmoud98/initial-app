@@ -1,27 +1,27 @@
-import {LocationBase, ModeType, TableColumn} from '../../../../shared';
+import { LocationBase, TableColumn } from '../../../../shared';
 
-export interface LocationType {
-  id:       number;
-  name:     string;
-  code:     string;
-  size:     string;
-  category: string;
-  'has-linked-locations'?: boolean;
-  services: LocationService[];
-}
-
-export interface LocationService {
-  id?:          number;
-  serviceType:  string;
-  internalLink: string;
-  externalLink: string;
-  available:    boolean;
-}
-
-export interface LocationServicePayload {
+export interface archiveLocation {
   id: number;
-  serviceId: number;
+  district: string;
+  category: string;
+  building: string;
+  floor: string;
+  zone: string;
+  code: string;
+  qrCode: string;
+  serial: string;
+  typeTitle: string;
+  typeCode: string;
+  isSelected?: boolean;
+  'has-linked-locations'?: boolean;
+
 }
+
+export type CustomArchivedLocationColumn = archiveLocation;
+export type CreatedArchivedLocationColumnType = TableColumn<CustomArchivedLocationColumn>;
+
+export type CreatedArchivedLocationResponse = LocationBase<archiveLocation>;
+
 
 export interface LocationServiceResponse {
   message: string;
@@ -31,23 +31,6 @@ export interface LocationServiceBody {
   available: boolean;
 }
 
-export interface ToggleServiceEvent {
-  isAvailable: boolean | null;
-  serviceId: number | undefined;
-}
-
-export interface LocationServiceEvent extends ToggleServiceEvent{
-  id: number | null;
-}
-
-export type LocationColumnType = TableColumn<LocationType>;
-
-export type LocationTypeResponse = LocationBase<LocationType>;
-
-export interface LocationTypeDialogData {
-  mode: ModeType;
-  locationTypeData?: LocationType;
-}
 
 export interface BackendErrorSource {
   pointer: string;

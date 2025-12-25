@@ -31,7 +31,7 @@ import {LocationType, LocationTypeDialogData} from '../../../features/location-t
 import {SpinnerLoaderComponent} from '../../components/spinner-loader/spinner-loader.component';
 import {MessageService} from 'primeng/api';
 import {HttpErrorResponse} from '@angular/common/http';
-import {DUPLICATE_RECORD_CODE} from '../../constants/common-constants';
+import {DUPLICATE_LOCATION_TYPE_CODE_MSG, DUPLICATE_LOCATION_TYPE_NAME_MSG, DUPLICATE_RECORD_CODE} from '../../constants/common-constants';
 
 @Component({
   selector: 'app-create-location-type-dialog',
@@ -346,11 +346,11 @@ listenToCategoryChanges(): void {
     const typeName = this.getControl('name');
 
     if (err?.error?.message?.[0]?.code === DUPLICATE_RECORD_CODE) {
-      if(err?.error.message?.[0].source.message.includes('Location Type name')){
+      if(err?.error.message?.[0].source.message.includes(DUPLICATE_LOCATION_TYPE_NAME_MSG)){
         typeName.addValidators(duplicatedTypeCodeValidator(typeName.value))
         typeName.updateValueAndValidity();
       }
-      if(err?.error.message?.[0].source.message.includes('Location Type code')){
+      if(err?.error.message?.[0].source.message.includes(DUPLICATE_LOCATION_TYPE_CODE_MSG)){
         ctrl.addValidators(duplicatedTypeCodeValidator(ctrl.value));
       }
     } else {

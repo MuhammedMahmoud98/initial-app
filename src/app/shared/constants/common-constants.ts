@@ -36,6 +36,8 @@ export const INITIAL_FILTER_PAYLOAD: ItemFilter = {
 
 
 export const DUPLICATE_RECORD_CODE = 'dobox.duplicate.records';
+export const DUPLICATE_LOCATION_TYPE_CODE_MSG = 'Location Type code';
+export const DUPLICATE_LOCATION_TYPE_NAME_MSG = 'Location Type name';
 
 export const SQL_INJECTION_PATTERNS: RegExp[] = [
   /('|(\\')|(;)|(\\;)|(--|#|\/\*|\*\/))/gi,

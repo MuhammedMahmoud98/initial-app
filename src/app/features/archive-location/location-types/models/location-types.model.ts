@@ -1,4 +1,4 @@
-import {LocationBase, ModeType, TableColumn} from '../../../shared';
+import {LocationBase, ModeType, TableColumn} from '../../../../shared';
 
 export interface LocationType {
   id:       number;

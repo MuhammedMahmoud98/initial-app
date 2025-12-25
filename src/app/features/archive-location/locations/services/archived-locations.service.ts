@@ -8,12 +8,12 @@ import { CreatedArchivedLocationResponse } from '../models/locations.model';
 @Injectable({
   providedIn: 'root'
 })
-export class ArchivedLocationTypeService {
+export class ArchivedLocationService {
   readonly #httpClient = inject(HttpClient);
 
 
-  getLocationTypeArchived(payload: ItemFilter): Observable<CreatedArchivedLocationResponse> {
+  getLocationsArchived(payload: ItemFilter): Observable<CreatedArchivedLocationResponse> {
     const params = new HttpParams({ fromObject: payload as never });
-    return this.#httpClient.get<CreatedArchivedLocationResponse>(API_CONSTANTS.ARCHIVED_LOCATIONS_TYPE, { params });
+    return this.#httpClient.get<CreatedArchivedLocationResponse>(API_CONSTANTS.ARCHIVED_LOCATIONS, { params });
   }
 }

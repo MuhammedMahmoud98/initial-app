@@ -34,7 +34,7 @@ import { ConfirmationService, MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { TimezoneDatePipe } from '../../../shared/pipes/timezone-date.pipe';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ArchivedLocationTypeService } from './services/archived-locations.service';
+import { ArchivedLocationService } from './services/archived-locations.service';
 import { archiveLocation, CreatedArchivedLocationColumnType, CreatedArchivedLocationResponse } from './models/locations.model';
 import { TextWithBgColorComponent } from '../../../shared/components/text-with-bg-color/text-with-bg-color.component';
 import { MenuModule } from 'primeng/menu';
@@ -65,7 +65,7 @@ export class ArchivedLocationsComponent implements OnDestroy {
   // INJECTIONS
   readonly genericTableCacheService: GenericTableCacheService = inject(GenericTableCacheService);
   protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
-  readonly #ArchivedLocationTypeService: ArchivedLocationTypeService = inject(ArchivedLocationTypeService);
+  readonly #ArchivedLocationService: ArchivedLocationService = inject(ArchivedLocationService);
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
 
   // readonly #messageService: MessageService = inject(MessageService);
@@ -117,7 +117,7 @@ export class ArchivedLocationsComponent implements OnDestroy {
   }
 
   getAssignedLocationTypes(): void {
-    this.#ArchivedLocationTypeService.getLocationTypeArchived(this.locationTypesPayload()).pipe(
+    this.#ArchivedLocationService.getLocationsArchived(this.locationTypesPayload()).pipe(
       tap((locationTypesResponse: CreatedArchivedLocationResponse) => {
         this.isLoading.set(false);
         if (locationTypesResponse) {

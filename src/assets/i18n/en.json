@@ -114,6 +114,7 @@
   "assignedLocationsPlaceHolder": "search by location code, employee email",
   "newLocationTypeSuccessMsg": "location type '{{typeName}}' created successfully",
   "duplicatedTypeCode": "location type code must be unique across all location types.",
+  "duplicatedTypeName": "location type name must be unique across all location types.",
   "updateLocationTypeSuccessMsg": "location Type updated successfully",
   "invalidServiceLink": "invalid service link",
   "errorLimitMessage": "please fix these 10 errors first and re-upload the sheet for further validation",

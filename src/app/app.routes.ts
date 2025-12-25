@@ -50,14 +50,14 @@ export const routes: Routes = [
             loadComponent: () =>
               import(
                 './features/archive-location/location-types/location-types.component'
-              ).then((m) => m.LocationTypesComponent),
+              ).then((m) => m.ArchivedLocationTypesComponent),
           },
           {
             path: 'locations',
             loadComponent: () =>
               import(
                 './features/archive-location/locations/locations.component'
-              ).then((m) => m.locationsComponent),
+              ).then((m) => m.ArchivedLocationsComponent),
           },
         ],
       },

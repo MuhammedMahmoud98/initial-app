@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_CONSTANTS, ItemFilter } from '../../../../shared';
-import { CreatedArchivedLocationResponse } from '../models/location-types.model';
+import { CreatedArchivedLocationResponse } from '../models/locations.model';
 
 
 @Injectable({

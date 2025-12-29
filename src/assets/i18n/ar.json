@@ -119,6 +119,7 @@
   "deleteLocationTypeConfirmMessageHeader": "تأكيد حذف نوع المكان",
   "deleteLocationTypeConfirmMessageBody": "هل أنت متأكد أنك تريد المتابعة بحذف نوع الموقع هذا؟",
   "locationTypeDeletedSuccessfully": "تم حذف نوع المكان بنجاح",
+  "locationTypeArchiveSuccessfully": "تم أرشفة نوع المكان بنجاح",
   "whitespaceErrMsg": "يجب أن يحتوي رمز النوع علي أحرف كبيرة وأرقام فقط، بدون مسافات أو رموز خاصة",
   "errorLimitMessage": "يرجى إصلاح هذه الأخطاء العشرة أولاً وإعادة تحميل الورقة لمزيد من التحقق",
   "reUpload": "إعادة إرفاق الملف",

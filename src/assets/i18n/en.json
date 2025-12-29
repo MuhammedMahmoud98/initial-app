@@ -111,6 +111,7 @@
   "deleteLocationTypeConfirmMessageHeader": "confirm delete location type",
   "deleteLocationTypeConfirmMessageBody": "are you sure you want to proceed with deleting this location type?",
   "locationTypeDeletedSuccessfully": "location type deleted successfully",
+  "locationTypeArchiveSuccessfully": "location type archived successfully",
   "locationAssignedSubTitleEmpty": "When employees assign themselves to locations through their profiles, assigned locations will appear here.",
   "assignedLocationsPlaceHolder": "search by location code, employee email",
   "newLocationTypeSuccessMsg": "location type '{{typeName}}' created successfully",

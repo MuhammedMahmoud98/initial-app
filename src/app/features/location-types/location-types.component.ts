@@ -329,7 +329,7 @@ export class LocationTypesComponent implements OnDestroy {
   archiveLocationType(locationTypeId: number): void {
     this.#locationTypeActionsService.archiveLocationType(locationTypeId).pipe(
       tap(() => {
-        this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant('locationTypeDeletedSuccessfully'), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
+        this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant('locationTypeArchiveSuccessfully'), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
         this.getLocationTypes();
       }),
       catchError((e) => {

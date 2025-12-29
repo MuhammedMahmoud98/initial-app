@@ -31,7 +31,7 @@ export class LocationTypeActionsService {
   }
 
   archiveLocationType(id: number): Observable<unknown> {
-    const uri = API_CONSTANTS.DELETE_LOCATION_TYPE.replace('{id}', id.toString());
+    const uri = API_CONSTANTS.ARCHIVE_LOCATIONS_TYPE.replace('{id}', id.toString());
 
     return this.#http.post(uri,{});
   }

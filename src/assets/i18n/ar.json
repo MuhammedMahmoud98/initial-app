@@ -100,6 +100,7 @@
   "minLengthField": "الحد الأدني {{length}} حرف",
   "requiredField": "حقل مطلوب",
   "edit": "تعديل",
+  "archive": "أرشفة",
   "deleteLocation": "مسح",
   "assignedLocations": "الأماكن المعينة",
   "Employee Name": "اسم الموظف",
@@ -119,9 +120,13 @@
   "deleteLocationTypeConfirmMessageHeader": "تأكيد حذف نوع المكان",
   "deleteLocationTypeConfirmMessageBody": "هل أنت متأكد أنك تريد المتابعة بحذف نوع الموقع هذا؟",
   "locationTypeDeletedSuccessfully": "تم حذف نوع المكان بنجاح",
+  "locationTypeArchiveSuccessfully": "تم أرشفة نوع المكان بنجاح",
   "whitespaceErrMsg": "يجب أن يحتوي رمز النوع علي أحرف كبيرة وأرقام فقط، بدون مسافات أو رموز خاصة",
   "errorLimitMessage": "يرجى إصلاح هذه الأخطاء العشرة أولاً وإعادة تحميل الورقة لمزيد من التحقق",
   "reUpload": "إعادة إرفاق الملف",
   "Bulk upload completed successfully!": "تم التحميل الجماعي بنجاح!",
-  "locationAssignedSubTitleEmptyForSearch": "لا توجد مواقع معينة مطابقة لرمز المكان او بريد الموظف الذي تم إدخاله."
+  "locationAssignedSubTitleEmptyForSearch": "لا توجد مواقع معينة مطابقة لرمز المكان او بريد الموظف الذي تم إدخاله.",
+  "kindlyArchiveAllTheRelatedLocations": "يرجى أرشفة جميع المواقع المرتبطة بنوع الموقع هذا أولاً لتتمكن من أرشفته.",
+  "archiveWarning": "تحذير الأرشفة",
+  "archivingTheLocationTypeWillRemove": "أرشفة نوع الموقع ستزيله من القائمة المتاحة لأنواع المواقع أثناء إنشاء موقع جديد وستنقله إلى أنواع المواقع المؤرشفة"
 }

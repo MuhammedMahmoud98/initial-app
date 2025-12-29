@@ -125,7 +125,6 @@ export class LocationTypesComponent implements OnDestroy {
           this.genericTableCacheService.totalAvailableItems.set(locationTypesResponse.totalElements);
           this.items.set(locationTypesResponse.content);
           this.clearStates();
-          console.log(locationTypesResponse, 'locationTypesResponse');
         } else {
           this.handleEmptyState();
         }
@@ -192,7 +191,6 @@ export class LocationTypesComponent implements OnDestroy {
 
   updateFilterPayload(newFilters: HubFilters | ItemFilter): void {
     this.locationTypesPayload.update((current) => ({...current, ...newFilters}));
-    console.log(this.locationTypesPayload(), 'UPDATED PAYLOAD');
   }
 
   handleEmptyState(): void {
@@ -213,7 +211,6 @@ export class LocationTypesComponent implements OnDestroy {
   }
 
   openAddLocationTypeModal(mode: ModeType = MODE.ADD, locationTypeData?: LocationType): void {
-    console.log(locationTypeData, 'INSIDE MAIN TABLE')
     const dialogRef = this.#dialogService.open(CreateLocationTypeDialogComponent, {
       header: this.#translateService.instant(mode === MODE.ADD ? 'createNewType' : 'editType'),
       width: '580px',
@@ -243,6 +240,14 @@ export class LocationTypesComponent implements OnDestroy {
           this.openAddLocationTypeModal(MODE.EDIT, row);
         },
         alias: 'edit'
+      },
+       {
+        label: 'archive',
+        command: () => {
+          this.openArchiveConfirmDialog(row.id);
+        },
+        alias: 'archive',
+        visible: row['has-linked-locations']
       },
       {
         label: 'delete',
@@ -277,6 +282,28 @@ export class LocationTypesComponent implements OnDestroy {
     });
   }
 
+  openArchiveConfirmDialog(locationTypeId: number): void {
+    this.confirmationService.confirm({
+      header: this.#translateService.instant('archiveWarning'),
+      message: this.#translateService.instant('archivingTheLocationTypeWillRemove'),
+      closable: false,
+      closeOnEscape: true,
+      rejectButtonProps: {
+        label: this.#translateService.instant('cancel'),
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: this.#translateService.instant('confirm'),
+        severity: 'secondary',
+      },
+      acceptVisible: true,
+      accept: (): void => {
+        this.archiveLocationType(locationTypeId);
+      }
+    });
+  }
+
   private getBackendErrorMessage(error: BackendErrorResponse): string {
     return (
       error?.message?.[0]?.source?.message ||
@@ -289,6 +316,20 @@ export class LocationTypesComponent implements OnDestroy {
     this.#locationTypeActionsService.deleteLocationType(locationTypeId).pipe(
       tap(() => {
         this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant('locationTypeDeletedSuccessfully'), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
+        this.getLocationTypes();
+      }),
+      catchError((e) => {
+        this.#messageService.add({ severity: 'error', summary: 'Error', detail: this.getBackendErrorMessage(e.error) , life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
+        return EMPTY;
+      })
+    ).subscribe();
+  }
+
+
+  archiveLocationType(locationTypeId: number): void {
+    this.#locationTypeActionsService.archiveLocationType(locationTypeId).pipe(
+      tap(() => {
+        this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant('locationTypeArchiveSuccessfully'), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
         this.getLocationTypes();
       }),
       catchError((e) => {

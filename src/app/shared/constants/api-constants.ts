@@ -25,6 +25,7 @@ export const API_CONSTANTS = {
   CREATE_LOCATION_TYPE: serverUrl + '/location-types',
   UPDATE_LOCATION_TYPE: serverUrl + '/location-types/{id}',
   DELETE_LOCATION_TYPE: serverUrl + '/location-types/{id}',
+  ARCHIVE_LOCATIONS_TYPE: serverUrl + '/location-types/{id}/archive',
   // assignedLocation
   ASSIGNED_LOCATIONS: serverUrl + '/user-locations',
   ASSIGNED_LOCATIONS_UNLINK: serverUrl + '/user-locations/{id}/unlink',

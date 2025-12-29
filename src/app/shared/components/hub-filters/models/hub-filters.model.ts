@@ -9,6 +9,7 @@ export type FormControlsOf<T> = {
 export interface HubFilters {
   filter?: string;
   search?: string;
+  category?: string;
 }
 
 

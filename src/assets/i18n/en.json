@@ -123,6 +123,8 @@
   "reUpload": "re-upload",
   "whitespaceErrMsg": "type code must contain only uppercase letters and numbers, no spaces or special character",
   "Bulk upload completed successfully!": "bulk upload completed successfully!",
+  "selectClassification": "select classification",
+  "allClassifications": "All classifications",
   "locationAssignedSubTitleEmptyForSearch": "no assigned locations matched the code, mail entered.",
   "kindlyArchiveAllTheRelatedLocations": "Kindly archive all the related locations to this location type first to be able to archive it.",
   "archiveWarning": "Archive Warning",

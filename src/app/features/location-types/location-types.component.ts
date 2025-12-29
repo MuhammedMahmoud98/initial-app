@@ -22,7 +22,7 @@ import {
   ToggleServiceEvent
 } from './models/location-types.model';
 import {ItemFilter, ModeType} from '../../shared';
-import {COMMON_CONSTANTS, INITIAL_FILTER_PAYLOAD} from '../../shared/constants/common-constants';
+import {CLAASSIFICATION_FILTER, COMMON_CONSTANTS, INITIAL_FILTER_PAYLOAD} from '../../shared/constants/common-constants';
 import {
   catchError,
   debounceTime,
@@ -50,6 +50,8 @@ import {Ripple} from 'primeng/ripple';
 import {MODE} from '../../shared/enums/shared.enum';
 import { LocationTypeActionsService } from './services/location-type-actions.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import { Select } from 'primeng/select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-location-types',
@@ -64,8 +66,10 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
     Button,
     TranslatePipe,
     // Menu,
+    FormsModule,
     MenuModule,
-    Ripple
+    Ripple,
+    Select,
   ],
   providers: [DialogService],
   standalone: true,
@@ -87,11 +91,18 @@ export class LocationTypesComponent implements OnDestroy {
 
   // SIGNALS
   items = signal<LocationType[]>([]);
-  locationTypesPayload = signal<ItemFilter>(INITIAL_FILTER_PAYLOAD);
+  locationTypesPayload = signal<ItemFilter>({...INITIAL_FILTER_PAYLOAD});
   isApplyingFilter = signal(false);
   isEmptyState = signal(false);
   isErrorState = signal(false);
   isLoading = signal(true);
+  selectedClassification = signal<string>('');
+
+  classificationOptions = signal([
+    {name: this.#translateService.instant('allClassifications'), code: ''},
+    {name: this.#translateService.instant('employeeLocation'), code: CLAASSIFICATION_FILTER.EMPLOYEE_LOCATION},
+    {name: this.#translateService.instant('generalLocation'), code: CLAASSIFICATION_FILTER.GENERAL_LOCATION},
+  ]);
 
   // SUBJECTS
   private toggle$ = new Subject<LocationServiceEvent>();
@@ -103,6 +114,7 @@ export class LocationTypesComponent implements OnDestroy {
   nameCustomColumn = viewChild<TemplateRef<{$implicit: LocationType}>>('nameCustomColumn');
   locationTypeServicesCustomColumn = viewChild<TemplateRef<{$implicit: LocationType}>>('locationTypeServicesCustomColumn');
   locationTypeActionsColumn = viewChild<TemplateRef<{$implicit: LocationType}>>('locationTypeActionsColumn');
+  dimentionsCustomColumn = viewChild<TemplateRef<{$implicit: LocationType}>>('dimentionsCustomColumn');
 
 
   protected readonly genericCasting = genericCasting<LocationType>;
@@ -144,6 +156,7 @@ export class LocationTypesComponent implements OnDestroy {
       {field: 'name', alias: 'typeName', template: this.nameCustomColumn()},
       {field: 'category', alias: 'classification', template: this.categoryCustomColumn()},
       {field: 'code', alias: 'typeCode', template: this.codeCustomColumn()},
+      {field: 'dimentions', alias: 'dimentions', template: this.dimentionsCustomColumn()},
       {field: 'services', alias: 'availableServices', template: this.serviceCustomColumn()},
       {field: 'availability', template: this.locationTypeServicesCustomColumn()},
       {field: '', template: this.locationTypeActionsColumn()},
@@ -156,6 +169,18 @@ export class LocationTypesComponent implements OnDestroy {
     this.genericTableCacheService.resetPagination$.next(true);
     this.getLocationTypes();
   }
+
+  onClassificationChange(category: string | null): void {
+  this.selectedClassification.set(category ?? CLAASSIFICATION_FILTER.ALL_CLASSIFICATIONS);
+  
+  this.updateFilterPayload({
+    category: category ?? undefined,
+    page: 0
+  });
+
+  this.genericTableCacheService.resetPagination$.next(true);
+  this.getLocationTypes();
+}
 
   onPageChange(currentPage: number) {
     this.updateFilterPayload({page: currentPage} as ItemFilter);

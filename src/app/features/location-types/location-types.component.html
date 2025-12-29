@@ -7,12 +7,25 @@
       <app-hub-filters (filterValues)="onFilterValueChanges($event)"/>
 
       <!-- ADD LOCATION TYPE BUTTON -->
-      <p-button [severity]="'secondary'" [outlined]="true" [label]="'createNewType' | translate" (onClick)="openAddLocationTypeModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 23 23" fill="none">
-          <path d="M12.03 5L12.0117 19" stroke="#FF375E" stroke-linecap="square"/>
-          <path d="M5 12H19" stroke="#FF375E" stroke-linecap="square"/>
-        </svg>
-      </p-button>
+
+      <div>
+        <p-select
+          [options]="classificationOptions()"
+          optionLabel="name"
+          optionValue="code"
+          (onChange)="onClassificationChange($event.value)" 
+          [placeholder]="'selectClassification' | translate"
+          [showClear]="true"
+          [ngModel]="selectedClassification()"
+          class="classification" />
+
+        <p-button [severity]="'secondary'" [outlined]="true" [label]="'createNewType' | translate" (onClick)="openAddLocationTypeModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 23 23" fill="none">
+            <path d="M12.03 5L12.0117 19" stroke="#FF375E" stroke-linecap="square"/>
+            <path d="M5 12H19" stroke="#FF375E" stroke-linecap="square"/>
+          </svg>
+        </p-button>
+      </div>
     </div>
 
     @if ((!isApplyingFilter() && isEmptyState() && !items().length)) {
@@ -81,6 +94,16 @@
     [textColor]="'var(--primary-500)'"
   />
 </ng-template>
+
+<ng-template #dimentionsCustomColumn let-row>
+  @let locationType = genericCasting(row);
+  <app-text-with-bg-color
+    [textItems]="locationType.size"
+    [bgColor]="'var(--silver-100)'"
+    [textColor]="'var(--onyx-500)'"
+  />
+</ng-template>
+
 
 
 <!-- CATEGORY CUSTOM COLUMN -->

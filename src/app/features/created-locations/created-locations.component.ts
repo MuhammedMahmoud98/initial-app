@@ -25,7 +25,7 @@ import {TableActionBulkComponent} from '../../shared/components/table-action-bul
 import {Button} from 'primeng/button';
 import {GenericTableCacheService} from '../../shared/services';
 import {HubFiltersComponent} from '../../shared/components/hub-filters/hub-filters.component';
-import {ConfirmationService, MessageService} from 'primeng/api';
+import {ConfirmationService, MenuItem, MessageService} from 'primeng/api';
 import {HubFilters} from '../../shared/components/hub-filters/models/hub-filters.model';
 import {DialogService} from 'primeng/dynamicdialog';
 import {LoadingDialogComponent} from '../../shared/dialogs/loading-dialog/loading-dialog.component';
@@ -41,6 +41,8 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {SkeletonLoaderComponent} from '../../shared/components/skeleton-loader/skeleton-loader.component';
 import {TextWithBgColorComponent} from '../../shared/components/text-with-bg-color/text-with-bg-color.component';
 import {DatePipe} from '@angular/common';
+import { LocationType } from './models/location-types.model';
+import { Menu } from 'primeng/menu';
 
 @Component({
   selector: 'app-created-locations',
@@ -58,6 +60,7 @@ import {DatePipe} from '@angular/common';
     SkeletonLoaderComponent,
     TextWithBgColorComponent,
     TranslatePipe,
+    Menu,
   ],
   providers: [DialogService, DatePipe, PdfMakerService],
   standalone: true,
@@ -98,6 +101,7 @@ export class CreatedLocationsComponent implements OnDestroy {
   districtCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('districtCustomColumn');
   locationTypeCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('locationTypeCustomColumn');
   buildingCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('buildingCustomColumn');
+  locationTypeActionsColumn = viewChild<TemplateRef<{$implicit: LocationType}>>('locationTypeActionsColumn');
 
   // CASTING
   protected readonly genericCasting = genericCasting<CreatedLocation>;
@@ -121,13 +125,13 @@ export class CreatedLocationsComponent implements OnDestroy {
       {field: 'type', alias: 'locationTypeCode', template: this.locationTypeCustomColumn()},
       {field: 'code', alias: 'locationCode', template: this.codeCustomColumn(), columnWidth: '15%'},
       {field: '', template: this.qrStatusCustomColumn(), columnWidth: '15%'},
+      {field: '', template: this.locationTypeActionsColumn(), columnWidth: '15%'},
     ]
   }
 
   getCreatedLocations(): void {
     this.#locationsService.getCreatedLocations(this.locationsPayload()).pipe(
       tap((createdLocations: CreatedLocationResponse) => {
-        console.log(createdLocations, 'CREATED LOCATIONS FROM API');
         this.isLoading.set(false);
         if (createdLocations) {
           this.genericTableCacheService.totalAvailableItems.set(createdLocations.totalElements);
@@ -150,23 +154,20 @@ export class CreatedLocationsComponent implements OnDestroy {
 
   updateFilterPayload(newFilters: HubFilters | ItemFilter): void {
     this.locationsPayload.update((current) => ({...current, ...newFilters}));
-    console.log(this.locationsPayload(), 'UPDATED PAYLOAD');
   }
 
   async downloadAndPrintPDF(records: PrintQRCodeDto[]) {
-    console.log('%cTEST', 'color: green');
     try {
       await this.#pdfMakerService.generatePdfTwoColumns(records);
-    } catch (error) {
-      console.error('Error generating PDF:', error);
+    } catch {
+      console.error('Error while generating or printing PDF');
     }
   }
+
 
   onSelectedItemsChange(selectedItemsIds: number[]) {
     this.selectedItemsCounter.set(selectedItemsIds.length);
     this.genericTableCacheService.selectedItemsCache.set(selectedItemsIds);
-    // this.genericTableCacheService.updateSelectedItems(selectedItemsIds);
-    console.log(selectedItemsIds, 'FROM CREATED LOCATIONS');
   }
 
   onFilterValueChanges(filterValues: HubFilters) {
@@ -177,7 +178,6 @@ export class CreatedLocationsComponent implements OnDestroy {
   }
 
   onPageChange(currentPage: number) {
-    console.log(currentPage, 'CURRENT PAGE FROM CREATED LOCATIONS');
     this.updateFilterPayload({page: currentPage} as ItemFilter);
     this.getCreatedLocations();
   }
@@ -229,7 +229,6 @@ export class CreatedLocationsComponent implements OnDestroy {
       tap((validateQrResponse: ValidateQrResponse): void => {
         this.isValidatingQr.set(false);
         this.showQrPrintWarningDialog(validateQrResponse);
-        console.log(validateQrResponse, 'VALIDATE QR RESPONSE');
       }),
       catchError(() => {
         this.isValidatingQr.set(false);
@@ -371,7 +370,6 @@ export class CreatedLocationsComponent implements OnDestroy {
 
     this.#locationsService.deleteQRCode(payload).pipe(
       tap(() => {
-        console.log('%cIS DELETE SUCCESS', 'color: yellow');
         this.stopLoading();
         this.genericTableCacheService.resetBulkActions$.next(true);
         this.#messageService.add({
@@ -457,7 +455,6 @@ export class CreatedLocationsComponent implements OnDestroy {
             concatMap((page: number): Observable<PrintQrCodeResponse> => this.#locationsService.printQRCode(payload , {...queryParams, page}).pipe(
               tap((nestedPrintResponse) => {
                 this.downloadAndPrintPDF(nestedPrintResponse.content);
-                console.log(nestedPrintResponse, 'NESTED QR PRINT RESPONSE');
                 if (page === totalPages - 1) {
                   this.stopLoading();
                 }
@@ -494,4 +491,14 @@ export class CreatedLocationsComponent implements OnDestroy {
       })
     ).subscribe();
   }
+
+    locationTypeActions(): MenuItem[] {
+      return [
+        {
+          label: 'archive',
+          alias: 'archive',
+          visible: true,
+        }
+      ];
+    }
 }

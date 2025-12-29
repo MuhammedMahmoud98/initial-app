@@ -21,6 +21,7 @@ export interface ItemFilter {
   size: number;
   filter?: string;
   search?: string;
+  category?: string;
 }
 
 export type FormControlsOf<T> = {

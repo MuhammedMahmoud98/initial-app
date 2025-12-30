@@ -41,6 +41,6 @@ export const API_CONSTANTS = {
   SAVE_LOCATION_BY_FILEID: serverUrl + '/locations/upload/save',
 
   ARCHIVED_LOCATIONS_TYPE: serverUrl +'/location-types/archived',
-  ARCHIVED_LOCATIONS : serverUrl+ '/location/archived'
-
+  ARCHIVED_LOCATIONS : serverUrl+ '/locations/archived',
+   UNARCHIVED_LOCATIONS_ITEMS : serverUrl+ '/locations/unarchive'
 };

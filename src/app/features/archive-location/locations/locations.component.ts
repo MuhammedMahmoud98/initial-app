@@ -141,21 +141,48 @@ export class ArchivedLocationsComponent implements OnDestroy {
   locationTypeActions(row: archiveLocation): MenuItem[] {
     return [
       {
-        label: 'edit',
+        label: 'Un-archive',
         command: () => {
-          console.log('edited')
+          this.openConfirmDialog(row.id)
         },
-        alias: 'edit'
+        alias: 'Un-archive'
       },
-      {
-        label: 'delete',
-        command: () => {
-          console.log('delete')
-        },
-        alias: 'delete',
-        visible: !row['has-linked-locations']
-      }
     ];
+  }
+
+
+    openConfirmDialog(locationTypeId: number): void {
+    this.confirmationService.confirm({
+      header: this.#translateService.instant('unArchivedLocationConfirmMessageHeader'),
+      message: this.#translateService.instant('unArchivedLocationConfirmMessageBody'),
+      closable: false,
+      closeOnEscape: true,
+      rejectButtonProps: {
+        label: this.#translateService.instant('cancel'),
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: this.#translateService.instant('confirm'),
+        severity: 'secondary',
+      },
+      acceptVisible: true,
+      accept: (): void => {
+        this.unArchivedLocation(locationTypeId);
+      }
+    });
+  }
+
+  unArchivedLocation(locationTypeId: number): void {
+    this.#ArchivedLocationService.unarchiveLocation([locationTypeId]).pipe(
+      tap(() => {
+        this.getAssignedLocationTypes();
+      }),
+      takeUntilDestroyed(this.#destroyRef),
+      catchError(() => {
+        return EMPTY;
+      })
+    ).subscribe();
   }
 
   createTableColumns(): CreatedArchivedLocationColumnType[] {
@@ -190,27 +217,7 @@ export class ArchivedLocationsComponent implements OnDestroy {
   }
 
 
-  openUnlinkAssignedLocationDialog(id: number): void {
-    this.confirmationService.confirm({
-      header: this.#translateService.instant('unlinkConfirmMessageHeader'),
-      message: this.#translateService.instant('unlinkConfirmMessageBody'),
-      closable: false,
-      closeOnEscape: true,
-      rejectButtonProps: {
-        label: this.#translateService.instant('cancel'),
-        severity: 'secondary',
-        outlined: true,
-      },
-      acceptButtonProps: {
-        label: this.#translateService.instant('confirm'),
-        severity: 'secondary',
-      },
-      acceptVisible: true,
-      accept: (): void => {
-        console.log(id)
-      }
-    });
-  }
+
 
 
 

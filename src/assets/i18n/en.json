@@ -121,5 +121,10 @@
   "whitespaceErrMsg": "type code must contain only uppercase letters and numbers, no spaces or special character",
   "Bulk upload completed successfully!": "bulk upload completed successfully!",
   "locationAssignedSubTitleEmptyForSearch": "no assigned locations matched the code, mail entered.",
-  "archived": "archived"
+  "archived": "archived",
+  "unArchivedLocationConfirmMessageHeader": "confirm unarchive location",
+  "unArchivedLocationConfirmMessageBody": "unarchiving the location will enable employees to scan it and access all active services related to it",
+  "no location code matches the code entered": "no location code matches the code entered",
+  "When you archive locations, they will appear here for management and restoration": "when you archive locations, they will appear here for management and restoration.",
+  "No Archived Locations": "no archived locations"
 }

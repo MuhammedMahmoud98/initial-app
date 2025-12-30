@@ -16,4 +16,8 @@ export class ArchivedLocationService {
     const params = new HttpParams({ fromObject: payload as never });
     return this.#httpClient.get<CreatedArchivedLocationResponse>(API_CONSTANTS.ARCHIVED_LOCATIONS, { params });
   }
+
+  unarchiveLocation(locationIdS: number[]): Observable<void> {
+    return this.#httpClient.post<void>(`${API_CONSTANTS.UNARCHIVED_LOCATIONS_ITEMS}`, locationIdS);
+  }
 }

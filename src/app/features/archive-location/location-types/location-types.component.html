@@ -4,7 +4,7 @@
   } @else {
     <!-- FILTERS -->
     <div class="hub-locations-types__filters">
-      <app-hub-filters (filterValues)="onFilterValueChanges($event)"/>
+      <app-hub-filters  [placeHolder]="'searchPlaceholder'" (filterValues)="onFilterValueChanges($event)"/>
 
 
     </div>

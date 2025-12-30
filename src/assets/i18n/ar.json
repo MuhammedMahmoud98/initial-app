@@ -123,5 +123,10 @@
   "reUpload": "إعادة إرفاق الملف",
   "Bulk upload completed successfully!": "تم التحميل الجماعي بنجاح!",
   "locationAssignedSubTitleEmptyForSearch": "لا توجد مواقع معينة مطابقة لرمز المكان او بريد الموظف الذي تم إدخاله.",
-  "archived": "مؤرشف"
+  "archived": "مؤرشف",
+  "unArchivedLocationConfirmMessageHeader": "تأكيد إلغاء أرشفة المكان",
+  "unArchivedLocationConfirmMessageBody": "إلغاء أرشفة المكان سيتيح للموظفين من مسحه والوصول إلى جميع الخدمات النشطة المرتبطة به",
+  "no location code matches the code entered": "لا يوجد رمز مكان مطابق للرمز الذي تم إدخاله",
+  "When you archive locations, they will appear here for management and restoration": "عندما تقوم بأرشفة المواقع، ستظهر هنا للإدارة والاستعادة.",
+  "No Archived Locations": "لا توجد مواقع مؤرشفة"
 }

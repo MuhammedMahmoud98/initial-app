@@ -7,6 +7,7 @@ import {
   LocationTypeResponse,
   ServiceLinkPayload, ServiceLinkResponse
 } from '../../../shared/models/create-location-type.model';
+import {GenerateQrPayload} from '../../created-locations/models/created-location.model';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,12 @@ export class LocationTypeActionsService {
     const uri = API_CONSTANTS.ARCHIVE_LOCATIONS_TYPE.replace('{id}', id.toString());
 
     return this.#http.post(uri,{});
+  }
+
+  archiveLocation(body: GenerateQrPayload): Observable<unknown> {
+    const uri = API_CONSTANTS.ARCHIVE_LOCATIONS;
+    
+    return this.#http.post(uri, body);
   }
 
   validateServiceLink(linkPayload: ServiceLinkPayload): Observable<ServiceLinkResponse> {

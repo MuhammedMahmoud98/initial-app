@@ -99,6 +99,7 @@
   "requiredField": "required field",
   "edit": "edit",
   "archive": "archive",
+  "archive locations": "archive locations",
   "assignedLocations": "assigned locations",
   "unlinkConfirmMessageHeader": "are you sure you want to proceed?",
   "unlinkConfirmMessageBody": "by confirming the unlinking the employee will be removed from this location and the location will be available for linking for other employees",
@@ -112,6 +113,8 @@
   "deleteLocationTypeConfirmMessageBody": "are you sure you want to proceed with deleting this location type?",
   "locationTypeDeletedSuccessfully": "location type deleted successfully",
   "locationTypeArchiveSuccessfully": "location type archived successfully",
+  "locationArchivedSuccessfully": "location archived successfully",
+  "locationsArchivedSuccessfully": "locations archived successfully",
   "locationAssignedSubTitleEmpty": "When employees assign themselves to locations through their profiles, assigned locations will appear here.",
   "assignedLocationsPlaceHolder": "search by location code, employee email",
   "newLocationTypeSuccessMsg": "location type '{{typeName}}' created successfully",
@@ -128,5 +131,8 @@
   "locationAssignedSubTitleEmptyForSearch": "no assigned locations matched the code, mail entered.",
   "kindlyArchiveAllTheRelatedLocations": "Kindly archive all the related locations to this location type first to be able to archive it.",
   "archiveWarning": "Archive Warning",
-  "archivingTheLocationTypeWillRemove": "Archiving the location type will remove it from the available list of location types while creating new location and move it to archived location types."
+  "archivingTheLocationTypeWillRemove": "Archiving the location type will remove it from the available list of location types while creating new location and move it to archived location types.",
+  "archivelocationConfirmationMessage": "After confirming the location archiving if an employee scanned the location QR code he won't be able to access any service related to this location and he will be informed that this location is not existing anymore.",
+  "archivelocationsConfirmationMessage": "After confirming the locations archiving if an employee scanned any of the location QR codes he won't be able to access any service related to these locations and he will be informed that these locations are not existing anymore.",
+  "Printing Dimensions": "Printing Dimensions"
 }

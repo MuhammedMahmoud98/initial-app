@@ -86,6 +86,7 @@ export class GenericTableComponent<T extends {id: number}> {
 
   // OUTPUTS
   selectedItems = output<number[]>();
+  rowClick = output<T>();
   currentPage = output<number>();
 
   // VARIABLES
@@ -101,16 +102,13 @@ export class GenericTableComponent<T extends {id: number}> {
 
   onSelectionChange(selectedItems: T[]) {
     const selectedItemsEmitter: number[] = selectedItems.map((item: T): number => item?.id);
-    console.log('%cIS HEADER CHANGED', 'color: purple', this.isHeaderCheckboxChanged);
     // console.log('%cSELECTED ITEMS PURE', 'color: yellow', selectedItemsEmitter);
     if (this.hasCheckBoxes()) {
       this.genericTableCacheService.updateSelectedItems(this.items(), selectedItems);
-      console.log(this.genericTableCacheService.selectedRecordsCache() as T[], 'T[] CACHE');
       this.selectedItems.emit(this.genericTableCacheService.selectedRecordsCache().map((item) => item.id));
 
       if (this.genericTableCacheService.isSelectingBulkAction()) {
         this.genericTableCacheService.updateUnSelected(this.items(), selectedItemsEmitter);
-        console.log(this.genericTableCacheService.unSelectedItemsCache(), 'unSelectedItemsCache');
       }
 
       this.genericTableCacheService.handleSelectedItemsCounter(this.genericTableCacheService.selectedRecordsCache().length);
@@ -154,7 +152,6 @@ export class GenericTableComponent<T extends {id: number}> {
     this.isHeaderCheckboxChanged = $event.checked;
 
     this.updateCacheValues($event.checked);
-    console.log($event, 'HEADER CHECKBOX');
   }
 
   updateCacheValues(isChecked = false): void {
@@ -175,5 +172,9 @@ export class GenericTableComponent<T extends {id: number}> {
         );
       }
     });
+  }
+
+  onClick(rowData: T) {
+    this.rowClick.emit(rowData);
   }
 }

@@ -272,7 +272,7 @@ export class LocationTypesComponent implements OnDestroy {
           this.openArchiveConfirmDialog(row.id);
         },
         alias: 'archive',
-        visible: row['has-linked-locations']
+        visible: !row['has-linked-locations']
       },
       {
         label: 'delete',
@@ -331,7 +331,7 @@ export class LocationTypesComponent implements OnDestroy {
 
   private getBackendErrorMessage(error: BackendErrorResponse): string {
     return (
-      error?.message?.[0]?.source?.message ||
+      error?.message?.[0]?.source?.message || error?.message ||
       this.#translateService.instant('something went wrong')
     );
   }

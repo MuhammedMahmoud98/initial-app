@@ -133,6 +133,13 @@
   "archiveWarning": "تحذير الأرشفة",
   "archivingTheLocationTypeWillRemove": "أرشفة نوع الموقع ستزيله من القائمة المتاحة لأنواع المواقع أثناء إنشاء موقع جديد وستنقله إلى أنواع المواقع المؤرشفة",
   "archivelocationConfirmationMessage": "بعد تأكيد أرشفة الموقع، إذا قام موظف بمسح رمز QR الخاص بالموقع، فلن يتمكن من الوصول إلى أي خدمة مرتبطة بهذا الموقع وسيتم إعلامه بأن هذا الموقع لم يعد موجودًا بعد الآن.",
-  "archivelocationsConfirmationMessage": "بعد تأكيد أرشفة المواقع، إذا قام موظف بمسح رموز QR الخاصة بأي من المواقع، فلن يتمكن من الوصول إلى أي خدمة مرتبطة بهذه المواقع وسيتم إعلامه بأن هذه المواقع لم تعد موجودة بعد الآن.",
-  "Printing Dimensions": "أبعاد الطباعة"
+  "Printing Dimensions": "أبعاد الطباعة",
+  "locationType": "نوع المكان",
+  "locationTypecode": "كود نوع المكان",
+  "serialSystemGenerated": "التكويد",
+  "locationCodeSystemGenerated": "كود المكان",
+  "qrStatus": "حالة QR",
+  "qrGenerated": "تم الإنشاء",
+  "qrNotGenerated": "غير مُنشأ",
+  "location details": "تفاصيل المكان"
 }

@@ -133,6 +133,14 @@
   "archiveWarning": "Archive Warning",
   "archivingTheLocationTypeWillRemove": "Archiving the location type will remove it from the available list of location types while creating new location and move it to archived location types.",
   "archivelocationConfirmationMessage": "After confirming the location archiving if an employee scanned the location QR code he won't be able to access any service related to this location and he will be informed that this location is not existing anymore.",
-  "archivelocationsConfirmationMessage": "After confirming the locations archiving if an employee scanned any of the location QR codes he won't be able to access any service related to these locations and he will be informed that these locations are not existing anymore.",
-  "Printing Dimensions": "Printing Dimensions"
+  "Printing Dimensions": "Printing Dimensions",
+  "viewDetails": "view details",
+  "locationType": "Location Type",
+  "locationTypecode": "Location Type Code",
+  "serialSystemGenerated": "Serial",
+  "locationCodeSystemGenerated": "Location Code",
+  "qrStatus": "QR Status",
+  "qrGenerated": "Generated",
+  "qrNotGenerated": "Not Generated",
+  "location details": "location details"
 }

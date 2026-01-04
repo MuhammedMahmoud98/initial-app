@@ -82,6 +82,8 @@
             (selectedItems)="onSelectedItemsChange($event)"
             (currentPage)="onPageChange($event)"
           />
+                      <!-- (rowClick)="onRowClick($event)" -->
+
 <!--          @if (qrCodeObjectUrl) {-->
 <!--            <img-->
 <!--              [src]="qrCodeObjectUrl"-->
@@ -204,3 +206,11 @@
     </button>
   </div>
 </ng-template>
+
+<p-drawer 
+  [(visible)]="isViewLocationDetailsVisible" [header]="'location details' |translate" 
+  [position]="localizationService.isRTL() ?'left':'right'" 
+  [style]="{width: '30vw',color:'#000'}"
+   >
+  <app-view-location-details [locationDetails]="locationDetails()"/>
+</p-drawer>

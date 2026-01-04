@@ -19,6 +19,7 @@ export const API_CONSTANTS = {
   DELETE_LOCATIONS: serverUrl + '/locations/delete',
   BULK_UPLOAD_LOCATIONS: serverUrl + '/locations/bulk-upload',
   UPDATE_LOCATIONS: serverUrl + '/locations/{id}',
+  UPDATE_LOCATIONS_DETAILD: serverUrl + '/locations/{id}/details',
   // LOCATION TYPES
   LOCATION_TYPES: serverUrl + '/location-types',
   LOCATION_TYPE_SERVICES: serverUrl + '/location-types/{id}/service/{serviceId}',
@@ -27,6 +28,7 @@ export const API_CONSTANTS = {
   DELETE_LOCATION_TYPE: serverUrl + '/location-types/{id}',
   ARCHIVE_LOCATIONS_TYPE: serverUrl + '/location-types/{id}/archive',
   ARCHIVE_LOCATIONS: serverUrl + '/locations/archive',
+  VALIDATE_ARCHIVE_LOCATIONS: serverUrl + 'locations/archive/validate',
   // assignedLocation
   ASSIGNED_LOCATIONS: serverUrl + '/user-locations',
   ASSIGNED_LOCATIONS_UNLINK: serverUrl + '/user-locations/{id}/unlink',

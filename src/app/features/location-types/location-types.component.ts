@@ -50,8 +50,8 @@ import {Ripple} from 'primeng/ripple';
 import {MODE} from '../../shared/enums/shared.enum';
 import { LocationTypeActionsService } from './services/location-type-actions.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import { Select } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @Component({
   selector: 'app-location-types',
@@ -69,7 +69,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     MenuModule,
     Ripple,
-    Select,
+    MultiSelectModule
   ],
   providers: [DialogService],
   standalone: true,
@@ -99,7 +99,6 @@ export class LocationTypesComponent implements OnDestroy {
   selectedClassification = signal<string>('');
 
   classificationOptions = signal([
-    {name: this.#translateService.instant('allClassifications'), code: ''},
     {name: this.#translateService.instant('employeeLocation'), code: CLAASSIFICATION_FILTER.EMPLOYEE_LOCATION},
     {name: this.#translateService.instant('generalLocation'), code: CLAASSIFICATION_FILTER.GENERAL_LOCATION},
   ]);
@@ -170,11 +169,17 @@ export class LocationTypesComponent implements OnDestroy {
     this.getLocationTypes();
   }
 
-  onClassificationChange(category: string | null): void {
-  this.selectedClassification.set(category ?? CLAASSIFICATION_FILTER.ALL_CLASSIFICATIONS);
-  
+onClassificationChange(category: string[] | null): void {
+  let categoryValue: string | undefined;
+
+  if (!category || category.length === 0 || category.length > 1) {
+    categoryValue = '';
+  } else {
+    categoryValue = category[0];
+  }
+
   this.updateFilterPayload({
-    category: category ?? undefined,
+    category: categoryValue,
     page: 0
   });
 

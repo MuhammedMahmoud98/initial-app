@@ -30,7 +30,7 @@ import {HubFilters} from '../../shared/components/hub-filters/models/hub-filters
 import {DialogService} from 'primeng/dynamicdialog';
 import {LoadingDialogComponent} from '../../shared/dialogs/loading-dialog/loading-dialog.component';
 import {LoadingDialogService} from '../../shared/services/loading-dialog.service';
-import {catchError, concatMap, EMPTY, generate, Observable, switchMap, tap} from 'rxjs';
+import {catchError, concatMap, EMPTY, generate, Observable, Subject, switchMap, tap} from 'rxjs';
 import {LocationsService} from './services/locations.service';
 import {TitleWithIconComponent} from '../../shared/components/title-with-icon/title-with-icon.component';
 import {ComponentStateComponent} from '../../shared/components/component-state/component-state.component';
@@ -117,9 +117,12 @@ export class CreatedLocationsComponent implements OnDestroy {
 
   // CASTING
   protected readonly genericCasting = genericCasting<CreatedLocation>;
+ // SUBJECTS
+  private viewDetails$ = new Subject<number>();
 
   init: AfterRenderRef = afterNextRender(() => {
     this.getCreatedLocations();
+    this.initViewDetailsListener();
   });
 
   ngOnDestroy(): void {
@@ -518,27 +521,55 @@ export class CreatedLocationsComponent implements OnDestroy {
   }
 
   openArchiveConfirmDialog(locationTypeId: number): void {
-    this.confirmationService.confirm({
-      header: this.#translateService.instant('archiveWarning'),
-      message: this.#translateService.instant(
-        'archivelocationConfirmationMessage',
-      ),
-      closable: false,
-      closeOnEscape: true,
-      rejectButtonProps: {
-        label: this.#translateService.instant('cancel'),
-        severity: 'secondary',
-        outlined: true,
-      },
-      acceptButtonProps: {
-        label: this.#translateService.instant('confirm'),
-        severity: 'secondary',
-      },
-      acceptVisible: true,
-      accept: (): void => {
-        this.archiveLocation(locationTypeId);
-      },
-    });
+    const payload = {
+      all: false,
+      selectedLocationIds: [locationTypeId],
+      excludedLocationIds: [0],
+      filter: '',
+    };
+    this.startLoading('validating archive...');
+    this.#locationTypeActionsService
+      .validateArchiveLocation(payload)
+      .pipe(
+        tap(() => {
+          this.stopLoading();
+           setTimeout(() => {
+              this.confirmationService.confirm({
+                header: this.#translateService.instant('archiveWarning'),
+                message: this.#translateService.instant(
+                  'archivelocationConfirmationMessage',
+                ),
+                closable: false,
+                closeOnEscape: true,
+                rejectButtonProps: {
+                  label: this.#translateService.instant('cancel'),
+                  severity: 'secondary',
+                  outlined: true,
+                },
+                acceptButtonProps: {
+                  label: this.#translateService.instant('confirm'),
+                  severity: 'secondary',
+                },
+                acceptVisible: true,
+                accept: (): void => {
+                  this.archiveLocation(locationTypeId);
+                },
+            });
+           }, 1500);
+      }),
+      catchError((e) => {
+        this.isValidatingArchive.set(false);
+        this.stopLoading();
+        this.#messageService.add({
+          severity: 'error',
+          detail: this.getBackendErrorMessage(e.error),
+        });
+        
+        return EMPTY;
+      }),
+      takeUntilDestroyed(this.#destroyRef),
+      )
+      .subscribe();
   }
   
   openArchiveLocationsConfirmDialog(): void {
@@ -607,6 +638,7 @@ export class CreatedLocationsComponent implements OnDestroy {
       .pipe(
         tap((): void => {
           this.stopLoading();
+          this.genericTableCacheService.resetBulkActions$.next(true);
           this.#messageService.add({
             severity: 'success',
             summary: 'Success',
@@ -619,6 +651,7 @@ export class CreatedLocationsComponent implements OnDestroy {
         }),
         catchError(() => {
           this.stopLoading();
+          this.genericTableCacheService.resetBulkActions$.next(true);
           this.#messageService.add({
             severity: 'error',
             summary: 'Error',
@@ -673,7 +706,7 @@ export class CreatedLocationsComponent implements OnDestroy {
   }
 
   onRowClick(row: CreatedLocation): void {
-    this.viewDetails(row.id);
+    this.viewDetails$.next(row.id);
   }
 
   
@@ -686,4 +719,19 @@ export class CreatedLocationsComponent implements OnDestroy {
       takeUntilDestroyed(this.#destroyRef),
     ).subscribe();
   }  
+
+ private initViewDetailsListener(): void {
+  this.viewDetails$
+    .pipe(
+      switchMap((locationId) =>
+        this.#locationsService.locationTypeDetails(locationId)
+      ),
+      tap((locationDetails) => {
+        this.locationDetails.set(locationDetails);
+        this.isViewLocationDetailsVisible.set(true);
+      }),
+      takeUntilDestroyed(this.#destroyRef),
+    )
+    .subscribe();
+ }
 }

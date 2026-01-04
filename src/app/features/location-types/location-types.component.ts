@@ -272,7 +272,7 @@ export class LocationTypesComponent implements OnDestroy {
           this.openArchiveConfirmDialog(row.id);
         },
         alias: 'archive',
-        visible: !row['has-linked-locations']
+        visible: row['has-linked-locations']
       },
       {
         label: 'delete',

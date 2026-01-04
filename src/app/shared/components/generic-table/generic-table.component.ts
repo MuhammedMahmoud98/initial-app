@@ -120,7 +120,6 @@ export class GenericTableComponent<T extends {id: number}> {
     const currentPage = (first / rows);
     this.currentPage.emit(currentPage);
     this.currentPageOffset.set(currentPage);
-    console.log(this.genericTableCacheService.selectedRecordsCache() as T[], 'T[] CACHE');
   }
 
   listenToResetBulkActionsChanges(): void {
@@ -173,8 +172,17 @@ export class GenericTableComponent<T extends {id: number}> {
       }
     });
   }
+  
+  onRowClickGuard(event: MouseEvent, rowData: T): void {
+    const target = event.target as HTMLElement;
+    
+    if (
+      target.closest('.custom-actions-btn') ||
+      target.closest('.p-menu')
+    ) {
+      return;
+    }
 
-  onClick(rowData: T) {
     this.rowClick.emit(rowData);
   }
 }

@@ -7,12 +7,25 @@
       <app-hub-filters (filterValues)="onFilterValueChanges($event)"/>
 
       <!-- ADD LOCATION TYPE BUTTON -->
-      <p-button [severity]="'secondary'" [outlined]="true" [label]="'createNewType' | translate" (onClick)="openAddLocationTypeModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 23 23" fill="none">
-          <path d="M12.03 5L12.0117 19" stroke="#FF375E" stroke-linecap="square"/>
-          <path d="M5 12H19" stroke="#FF375E" stroke-linecap="square"/>
-        </svg>
-      </p-button>
+
+      <div>
+        <p-select
+          [options]="classificationOptions()"
+          optionLabel="name"
+          optionValue="code"
+          (onChange)="onClassificationChange($event.value)" 
+          [placeholder]="'selectClassification' | translate"
+          [showClear]="true"
+          [ngModel]="selectedClassification()"
+          class="classification" />
+
+        <p-button [severity]="'secondary'" [outlined]="true" [label]="'createNewType' | translate" (onClick)="openAddLocationTypeModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 23 23" fill="none">
+            <path d="M12.03 5L12.0117 19" stroke="#FF375E" stroke-linecap="square"/>
+            <path d="M5 12H19" stroke="#FF375E" stroke-linecap="square"/>
+          </svg>
+        </p-button>
+      </div>
     </div>
 
     @if ((!isApplyingFilter() && isEmptyState() && !items().length)) {
@@ -82,6 +95,16 @@
   />
 </ng-template>
 
+<ng-template #dimentionsCustomColumn let-row>
+  @let locationType = genericCasting(row);
+  <app-text-with-bg-color
+    [textItems]="locationType.size"
+    [bgColor]="'var(--silver-100)'"
+    [textColor]="'var(--onyx-500)'"
+  />
+</ng-template>
+
+
 
 <!-- CATEGORY CUSTOM COLUMN -->
 <ng-template #categoryCustomColumn let-row>
@@ -114,7 +137,13 @@
               <path d="M9.31641 4.12915L12.1448 6.95758" stroke="#1D252D" stroke-linecap="square"/>
             </svg>
           }
-
+          @if (item.alias === 'archive') {
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 13.3333H2.5H2ZM2 14H1.5V14.5H2V14ZM2.66667 4V4.5H13.3333V4V3.5H2.66667V4ZM13.3333 4V4.5C13.4254 4.5 13.5 4.57462 13.5 4.66667H14H14.5C14.5 4.02233 13.9777 3.5 13.3333 3.5V4ZM14 4.66667H13.5V12H14H14.5V4.66667H14ZM12 14V13.5H2.66667V14V14.5H12V14ZM2 13.3333H2.5V4.66667H2H1.5V13.3333H2ZM2 4.66667H2.5C2.5 4.57462 2.57462 4.5 2.66667 4.5V4V3.5C2.02233 3.5 1.5 4.02233 1.5 4.66667H2ZM2.66667 14V13.5H2V14V14.5H2.66667V14ZM2 14H2.5V13.3333H2H1.5V14H2ZM14 12H13.5C13.5 12.8284 12.8284 13.5 12 13.5V14V14.5C13.3807 14.5 14.5 13.3807 14.5 12H14Z" fill="#1D252D"/>
+              <path d="M5.98242 8.00269H9.98242" stroke="#1D252D" stroke-linejoin="round"/>
+              <path d="M2 4.33341L4.33333 1.66675H11.6667L14 4.33341" stroke="#1D252D" stroke-linejoin="round"/>
+            </svg>
+          }
           @if (item.alias === 'delete') {
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
               <g clip-path="url(#clip0_115_7262)">

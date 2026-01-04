@@ -22,7 +22,7 @@ import {
   ToggleServiceEvent
 } from './models/location-types.model';
 import {ItemFilter, ModeType} from '../../shared';
-import {COMMON_CONSTANTS, INITIAL_FILTER_PAYLOAD} from '../../shared/constants/common-constants';
+import {CLAASSIFICATION_FILTER, COMMON_CONSTANTS, INITIAL_FILTER_PAYLOAD} from '../../shared/constants/common-constants';
 import {
   catchError,
   debounceTime,
@@ -50,6 +50,8 @@ import {Ripple} from 'primeng/ripple';
 import {MODE} from '../../shared/enums/shared.enum';
 import { LocationTypeActionsService } from './services/location-type-actions.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import { Select } from 'primeng/select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-location-types',
@@ -64,8 +66,10 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
     Button,
     TranslatePipe,
     // Menu,
+    FormsModule,
     MenuModule,
-    Ripple
+    Ripple,
+    Select,
   ],
   providers: [DialogService],
   standalone: true,
@@ -87,11 +91,18 @@ export class LocationTypesComponent implements OnDestroy {
 
   // SIGNALS
   items = signal<LocationType[]>([]);
-  locationTypesPayload = signal<ItemFilter>(INITIAL_FILTER_PAYLOAD);
+  locationTypesPayload = signal<ItemFilter>({...INITIAL_FILTER_PAYLOAD});
   isApplyingFilter = signal(false);
   isEmptyState = signal(false);
   isErrorState = signal(false);
   isLoading = signal(true);
+  selectedClassification = signal<string>('');
+
+  classificationOptions = signal([
+    {name: this.#translateService.instant('allClassifications'), code: ''},
+    {name: this.#translateService.instant('employeeLocation'), code: CLAASSIFICATION_FILTER.EMPLOYEE_LOCATION},
+    {name: this.#translateService.instant('generalLocation'), code: CLAASSIFICATION_FILTER.GENERAL_LOCATION},
+  ]);
 
   // SUBJECTS
   private toggle$ = new Subject<LocationServiceEvent>();
@@ -103,6 +114,7 @@ export class LocationTypesComponent implements OnDestroy {
   nameCustomColumn = viewChild<TemplateRef<{$implicit: LocationType}>>('nameCustomColumn');
   locationTypeServicesCustomColumn = viewChild<TemplateRef<{$implicit: LocationType}>>('locationTypeServicesCustomColumn');
   locationTypeActionsColumn = viewChild<TemplateRef<{$implicit: LocationType}>>('locationTypeActionsColumn');
+  dimentionsCustomColumn = viewChild<TemplateRef<{$implicit: LocationType}>>('dimentionsCustomColumn');
 
 
   protected readonly genericCasting = genericCasting<LocationType>;
@@ -125,7 +137,6 @@ export class LocationTypesComponent implements OnDestroy {
           this.genericTableCacheService.totalAvailableItems.set(locationTypesResponse.totalElements);
           this.items.set(locationTypesResponse.content);
           this.clearStates();
-          console.log(locationTypesResponse, 'locationTypesResponse');
         } else {
           this.handleEmptyState();
         }
@@ -145,6 +156,7 @@ export class LocationTypesComponent implements OnDestroy {
       {field: 'name', alias: 'typeName', template: this.nameCustomColumn()},
       {field: 'category', alias: 'classification', template: this.categoryCustomColumn()},
       {field: 'code', alias: 'typeCode', template: this.codeCustomColumn()},
+      {field: 'dimentions', alias: 'Printing Dimensions', template: this.dimentionsCustomColumn()},
       {field: 'services', alias: 'availableServices', template: this.serviceCustomColumn()},
       {field: 'availability', template: this.locationTypeServicesCustomColumn()},
       {field: '', template: this.locationTypeActionsColumn()},
@@ -157,6 +169,18 @@ export class LocationTypesComponent implements OnDestroy {
     this.genericTableCacheService.resetPagination$.next(true);
     this.getLocationTypes();
   }
+
+  onClassificationChange(category: string | null): void {
+  this.selectedClassification.set(category ?? CLAASSIFICATION_FILTER.ALL_CLASSIFICATIONS);
+  
+  this.updateFilterPayload({
+    category: category ?? undefined,
+    page: 0
+  });
+
+  this.genericTableCacheService.resetPagination$.next(true);
+  this.getLocationTypes();
+}
 
   onPageChange(currentPage: number) {
     this.updateFilterPayload({page: currentPage} as ItemFilter);
@@ -192,7 +216,6 @@ export class LocationTypesComponent implements OnDestroy {
 
   updateFilterPayload(newFilters: HubFilters | ItemFilter): void {
     this.locationTypesPayload.update((current) => ({...current, ...newFilters}));
-    console.log(this.locationTypesPayload(), 'UPDATED PAYLOAD');
   }
 
   handleEmptyState(): void {
@@ -213,7 +236,6 @@ export class LocationTypesComponent implements OnDestroy {
   }
 
   openAddLocationTypeModal(mode: ModeType = MODE.ADD, locationTypeData?: LocationType): void {
-    console.log(locationTypeData, 'INSIDE MAIN TABLE')
     const dialogRef = this.#dialogService.open(CreateLocationTypeDialogComponent, {
       header: this.#translateService.instant(mode === MODE.ADD ? 'createNewType' : 'editType'),
       width: '580px',
@@ -243,6 +265,14 @@ export class LocationTypesComponent implements OnDestroy {
           this.openAddLocationTypeModal(MODE.EDIT, row);
         },
         alias: 'edit'
+      },
+       {
+        label: 'archive',
+        command: () => {
+          this.openArchiveConfirmDialog(row.id);
+        },
+        alias: 'archive',
+        visible: row['has-linked-locations']
       },
       {
         label: 'delete',
@@ -277,6 +307,28 @@ export class LocationTypesComponent implements OnDestroy {
     });
   }
 
+  openArchiveConfirmDialog(locationTypeId: number): void {
+    this.confirmationService.confirm({
+      header: this.#translateService.instant('archiveWarning'),
+      message: this.#translateService.instant('archivingTheLocationTypeWillRemove'),
+      closable: false,
+      closeOnEscape: true,
+      rejectButtonProps: {
+        label: this.#translateService.instant('cancel'),
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: this.#translateService.instant('confirm'),
+        severity: 'secondary',
+      },
+      acceptVisible: true,
+      accept: (): void => {
+        this.archiveLocationType(locationTypeId);
+      }
+    });
+  }
+
   private getBackendErrorMessage(error: BackendErrorResponse): string {
     return (
       error?.message?.[0]?.source?.message ||
@@ -289,6 +341,20 @@ export class LocationTypesComponent implements OnDestroy {
     this.#locationTypeActionsService.deleteLocationType(locationTypeId).pipe(
       tap(() => {
         this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant('locationTypeDeletedSuccessfully'), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
+        this.getLocationTypes();
+      }),
+      catchError((e) => {
+        this.#messageService.add({ severity: 'error', summary: 'Error', detail: this.getBackendErrorMessage(e.error) , life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
+        return EMPTY;
+      })
+    ).subscribe();
+  }
+
+
+  archiveLocationType(locationTypeId: number): void {
+    this.#locationTypeActionsService.archiveLocationType(locationTypeId).pipe(
+      tap(() => {
+        this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant('locationTypeArchiveSuccessfully'), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
         this.getLocationTypes();
       }),
       catchError((e) => {

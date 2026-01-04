@@ -61,3 +61,10 @@ export type ServiceLinkPayload = Partial<Record<ServiceLinkKeys, string>>;
 export interface ServiceLinkResponse {
   data: ServiceLink;
 }
+
+export interface archiveLocationPayload {
+  all: boolean;
+  selectedLocationIds: number[];
+  excludedLocationIds: number[];
+  filter: string;
+}

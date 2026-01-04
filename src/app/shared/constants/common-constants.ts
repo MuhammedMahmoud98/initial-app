@@ -33,6 +33,12 @@ export const CORE_APP_ROUTES: CoreAppRoutes[] = [
   
 ];
 
+export enum CLAASSIFICATION_FILTER {
+  ALL_CLASSIFICATIONS = 'All Classifications',
+  GENERAL_LOCATION = 'General Location',
+  EMPLOYEE_LOCATION = 'Employee Location}'
+}
+
 export const INITIAL_FILTER_PAYLOAD: ItemFilter = {
   page: 0,
   size: COMMON_CONSTANTS.ROWS_PER_PAGE,
@@ -41,6 +47,8 @@ export const INITIAL_FILTER_PAYLOAD: ItemFilter = {
 
 
 export const DUPLICATE_RECORD_CODE = 'dobox.duplicate.records';
+export const DUPLICATE_LOCATION_TYPE_CODE_MSG = 'Location Type code';
+export const DUPLICATE_LOCATION_TYPE_NAME_MSG = 'Location Type name';
 
 export const SQL_INJECTION_PATTERNS: RegExp[] = [
   /('|(\\')|(;)|(\\;)|(--|#|\/\*|\*\/))/gi,

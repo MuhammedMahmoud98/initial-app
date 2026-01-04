@@ -29,6 +29,10 @@
             @if (getControlError('name', 'maxlength')) {
               <span class="stc-danger">{{ 'maxLengthField' | translate:{length: getErrorRequiredLength('name', 'maxlength')} }}</span>
             }
+            
+            @if (getControlError('name', 'duplicatedTypeCode')) {
+              <span class="stc-danger">{{ 'duplicatedTypeName' | translate }}</span>
+            }
           </app-input-label>
         </div>
         <div class="md:col-6 col-12">

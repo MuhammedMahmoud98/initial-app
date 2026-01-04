@@ -17,6 +17,11 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 0.5rem;
+    
+    .classification {
+    padding-bottom: 3px;
+    margin-inline-end: 1rem;
+    }
   }
 }
 

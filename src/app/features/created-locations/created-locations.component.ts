@@ -548,7 +548,7 @@ export class CreatedLocationsComponent implements OnDestroy {
       filter: this.locationsPayload().filter,
     } as GenerateQrPayload;
 
-    this.isValidatingQr.set(true);
+    this.isLoading.set(true);
 
     this.#locationTypeActionsService
       .validateArchiveLocation(payload)
@@ -588,7 +588,7 @@ export class CreatedLocationsComponent implements OnDestroy {
         takeUntilDestroyed(this.#destroyRef),
       )
       .subscribe({
-        complete: () => this.isValidatingQr.set(false),
+        complete: () =>    this.isLoading.set(false)
       });
   }
 

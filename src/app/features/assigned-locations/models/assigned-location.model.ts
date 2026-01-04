@@ -22,5 +22,37 @@ export interface LinkAssignedLocation {
   message: string;
 }
 
+export interface locationTypeDetails {
+  id: number
+  district: string
+  districtAr: string
+  category: string
+  building: string
+  floor: string
+  zone: string
+  locationType: string
+  locationTypeAr: string
+  locationTypeCode: string
+  serial: string
+  locationCode: string
+  qrStatus: string
+  qrStatusAr: string
+  inheritedServices: InheritedService[]
+}
+
+export interface InheritedService {
+  serviceId: number
+  locationServiceId: number
+  serviceName: string
+  serviceNameAr: string
+  enabled: boolean
+  inherited: boolean
+  overridden: boolean
+  sourceLocationTypeName: string
+  sourceLocationTypeNameAr: string
+}
+
+
+
 export type AssignedLocationTypesResponse = LocationBase<AssignedLocationType>;
 export type AssignedLocationColumnType = TableColumn<AssignedLocationType>;

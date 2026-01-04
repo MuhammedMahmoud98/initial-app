@@ -128,7 +128,7 @@
   "whitespaceErrMsg": "type code must contain only uppercase letters and numbers, no spaces or special character",
   "Bulk upload completed successfully!": "bulk upload completed successfully!",
   "selectClassification": "select classification",
-  "allClassifications": "All classifications",
+  "allClassifications": "all classifications",
   "locationAssignedSubTitleEmptyForSearch": "no assigned locations matched the code, mail entered.",
   "kindlyArchiveAllTheRelatedLocations": "Kindly archive all the related locations to this location type first to be able to archive it.",
   "archiveWarning": "Archive Warning",
@@ -145,5 +145,15 @@
   "unarchiveLocationTypeConfirmMessageHeader": "confirm unarchive location",
   "unarchiveLocationTypeConfirmMessageBody": "by unarchiving this location type it will be available again for linking while creating new locations.",
   "unArchiveLocationTypeSuccessMsg": "location type restored successfully. It is now available when creating new locations.",
-  "un-archive": "un-archive"
+  "un-archive": "un-archive",
+  "viewDetails": "view details",
+  "locationType": "Location Type",
+  "locationTypecode": "Location Type Code",
+  "serialSystemGenerated": "Serial",
+  "locationCodeSystemGenerated": "Location Code",
+  "qrStatus": "QR Status",
+  "qrGenerated": "Generated",
+  "qrNotGenerated": "Not Generated",
+  "location details": "location details",
+  "archiving locations...": "archiving locations..."
 }

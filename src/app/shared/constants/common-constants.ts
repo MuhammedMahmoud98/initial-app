@@ -9,7 +9,7 @@ export const COMMON_CONSTANTS = {
     SEARCH_RESET_LENGTH: 0,
     SEARCH_MAX_LENGTH: 40,
     ROWS_PER_PAGE: 50,
-    TOKEN_LESS_URLS: ['validate', 'refresh_token'] as TokenLessUrls[],
+    TOKEN_LESS_URLS: ['auth/validate', 'refresh_token'] as TokenLessUrls[],
 };
 
 
@@ -36,7 +36,7 @@ export const CORE_APP_ROUTES: CoreAppRoutes[] = [
 export enum CLAASSIFICATION_FILTER {
   ALL_CLASSIFICATIONS = 'All Classifications',
   GENERAL_LOCATION = 'General Location',
-  EMPLOYEE_LOCATION = 'Employee Location}'
+  EMPLOYEE_LOCATION = 'Employee Location'
 }
 
 export const INITIAL_FILTER_PAYLOAD: ItemFilter = {

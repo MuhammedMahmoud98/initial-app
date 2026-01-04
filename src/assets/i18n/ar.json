@@ -145,5 +145,14 @@
   "unarchiveLocationTypeConfirmMessageHeader": "تأكيد إلغاء أرشفة المكان",
   "unarchiveLocationTypeConfirmMessageBody": "من خلال إلغاء أرشفة نوع الموقع هذا، سيكون متاحًا مرة أخرى للربط أثناء إنشاء مواقع جديدة",
   "unArchiveLocationTypeSuccessMsg": "تمت استعادة نوع الموقع بنجاح. وهو متاح الآن عند إنشاء مواقع جديدة.",
-  "un-archive": "إلغاء الأرشفة"
+  "un-archive": "إلغاء الأرشفة",
+  "locationType": "نوع المكان",
+  "locationTypecode": "كود نوع المكان",
+  "serialSystemGenerated": "التكويد",
+  "locationCodeSystemGenerated": "كود المكان",
+  "qrStatus": "حالة QR",
+  "qrGenerated": "تم الإنشاء",
+  "qrNotGenerated": "غير مُنشأ",
+  "location details": "تفاصيل المكان",
+  "archiving locations...": "جارٍ أرشفة الأماكن..."
 }

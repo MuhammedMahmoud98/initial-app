@@ -37,6 +37,12 @@ export class LocationTypeActionsService {
     return this.#http.post(uri,{});
   }
 
+  validateArchiveLocation(body: GenerateQrPayload): Observable<unknown> {
+    const uri = API_CONSTANTS.VALIDATE_ARCHIVE_LOCATIONS;
+    
+    return this.#http.post(uri, body);
+  }
+
   archiveLocation(body: GenerateQrPayload): Observable<unknown> {
     const uri = API_CONSTANTS.ARCHIVE_LOCATIONS;
     

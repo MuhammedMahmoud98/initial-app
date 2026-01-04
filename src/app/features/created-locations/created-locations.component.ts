@@ -45,6 +45,10 @@ import { LocationType } from './models/location-types.model';
 import { Menu } from 'primeng/menu';
 import { BackendErrorResponse } from '../location-types/models/location-types.model';
 import { LocationTypeActionsService } from '../location-types/services/location-type-actions.service';
+import { DrawerModule } from 'primeng/drawer';
+import { ViewLocationDetailsComponent } from './components/header/view-location-details.component';
+import { locationTypeDetails } from '../assigned-locations/models/assigned-location.model';
+
 
 @Component({
   selector: 'app-created-locations',
@@ -63,6 +67,8 @@ import { LocationTypeActionsService } from '../location-types/services/location-
     TextWithBgColorComponent,
     TranslatePipe,
     Menu,
+    DrawerModule,
+    ViewLocationDetailsComponent
   ],
   providers: [DialogService, DatePipe, PdfMakerService],
   standalone: true,
@@ -82,12 +88,15 @@ export class CreatedLocationsComponent implements OnDestroy {
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
   readonly #localizaitionService: LocalizationService = inject(LocalizationService);
   readonly #locationTypeActionsService = inject(LocationTypeActionsService);
+  readonly localizationService = inject(LocalizationService);
+
   // SIGNALS
   columns: WritableSignal<TableColumn<CreatedLocation>[]> = signal([]);
   selectedItemsCounter = signal(0);
   items = signal<CreatedLocation[]>([]);
   locationsPayload = signal<ItemFilter>(INITIAL_FILTER_PAYLOAD);
   isValidatingQr = signal(false);
+  isValidatingArchive = signal(false);
   showBulkSelection = computed(() => this.genericTableCacheService.hasMorePages());
   // SIGNAL STATES
   isEmptyState = signal(false);
@@ -96,7 +105,8 @@ export class CreatedLocationsComponent implements OnDestroy {
   showLoadingDialog = model(false);
   loadingTitle = signal('');
   isLoading = signal(true);
-
+  isViewLocationDetailsVisible = signal(false);
+  locationDetails = signal<locationTypeDetails >({} as locationTypeDetails);
   // VIEW CHILDREN
   qrStatusCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('qrStatusCustomColumn');
   codeCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('codeCustomColumn');
@@ -161,8 +171,8 @@ export class CreatedLocationsComponent implements OnDestroy {
   async downloadAndPrintPDF(records: PrintQRCodeDto[]) {
     try {
       await this.#pdfMakerService.generatePdfTwoColumns(records);
-    } catch {
-      console.error('Error while generating or printing PDF');
+    } catch (error) {
+      console.error('Error generating or printing PDF:', error);
     }
   }
 
@@ -532,27 +542,56 @@ export class CreatedLocationsComponent implements OnDestroy {
   }
   
   openArchiveLocationsConfirmDialog(): void {
-    this.confirmationService.confirm({
-      header: this.#translateService.instant('archiveWarning'),
-      message: this.#translateService.instant(
-        'archivelocationsConfirmationMessage',
-      ),
-      closable: false,
-      closeOnEscape: true,
-      rejectButtonProps: {
-        label: this.#translateService.instant('cancel'),
-        severity: 'secondary',
-        outlined: true,
-      },
-      acceptButtonProps: {
-        label: this.#translateService.instant('confirm'),
-        severity: 'secondary',
-      },
-      acceptVisible: true,
-      accept: (): void => {
-        this.archiveLocations();
-      },
-    });
+    const payload = {
+      all: this.genericTableCacheService.isSelectingBulkAction(),
+      selectedLocationIds: this.genericTableCacheService.selectedItemsCache(),
+      excludedLocationIds: this.genericTableCacheService.unSelectedItemsCache(),
+      filter: this.locationsPayload().filter,
+    } as GenerateQrPayload;
+    this.isValidatingArchive.set(true);
+
+    this.#locationTypeActionsService
+      .validateArchiveLocation(payload)
+      .pipe(
+        tap(() => {
+          this.isValidatingArchive.set(false);
+          this.confirmationService.confirm({
+            header: this.#translateService.instant('archiveWarning'),
+            message: this.#translateService.instant(
+              'archivelocationConfirmationMessage',
+            ),
+            closable: false,
+            closeOnEscape: true,
+            rejectButtonProps: {
+              label: this.#translateService.instant('cancel'),
+              severity: 'secondary',
+              outlined: true,
+            },
+            acceptButtonProps: {
+              label: this.#translateService.instant('confirm'),
+              severity: 'secondary',
+            },
+            acceptVisible: true,
+            accept: (): void => {
+              this.archiveLocations();
+            },
+          });
+        }),
+        catchError((e) => {
+          this.isValidatingArchive.set(false);
+          this.#messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail:this.getBackendErrorMessage(e.error),
+            life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
+          });
+          return EMPTY;
+        }),
+        takeUntilDestroyed(this.#destroyRef),
+      )
+      .subscribe({
+        complete: () =>    this.isLoading.set(false)
+      });
   }
 
   archiveLocations(): void {
@@ -562,11 +601,12 @@ export class CreatedLocationsComponent implements OnDestroy {
       excludedLocationIds: this.genericTableCacheService.unSelectedItemsCache(),
       filter: this.locationsPayload().filter,
     } as GenerateQrPayload;
-
+    this.startLoading('archiving locations...');
     this.#locationTypeActionsService
       .archiveLocation(payload)
       .pipe(
         tap((): void => {
+          this.stopLoading();
           this.#messageService.add({
             severity: 'success',
             summary: 'Success',
@@ -578,7 +618,7 @@ export class CreatedLocationsComponent implements OnDestroy {
           this.getCreatedLocations();
         }),
         catchError(() => {
-          this.isValidatingQr.set(false);
+          this.stopLoading();
           this.#messageService.add({
             severity: 'error',
             summary: 'Error',
@@ -631,4 +671,19 @@ export class CreatedLocationsComponent implements OnDestroy {
       this.#translateService.instant('something went wrong')
     );
   }
+
+  onRowClick(row: CreatedLocation): void {
+    this.viewDetails(row.id);
+  }
+
+  
+  viewDetails(locationTypeId: number): void {
+    this.#locationsService.locationTypeDetails(locationTypeId).pipe(
+      tap((locationDetails: locationTypeDetails) => {
+        this.locationDetails.set(locationDetails);
+         this.isViewLocationDetailsVisible.set(true);
+      }),
+      takeUntilDestroyed(this.#destroyRef),
+    ).subscribe();
+  }  
 }

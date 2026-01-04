@@ -22,18 +22,51 @@ export const routes: Routes = [
       {
         path: MAIN_ROUTES.LOCATION_TYPES,
         loadComponent: () =>
-          import(
-            './features/location-types/location-types.component'
-          ).then((m) => m.LocationTypesComponent)
+          import('./features/location-types/location-types.component').then(
+            (m) => m.LocationTypesComponent,
+          ),
       },
       {
         path: MAIN_ROUTES.ASSIGNED_LOCATION,
         loadComponent: () =>
-          import('./features/assigned-locations/assigned-locations.component').then((m) => m.AssignedLocationsComponent)
+          import(
+            './features/assigned-locations/assigned-locations.component'
+          ).then((m) => m.AssignedLocationsComponent),
+      },
+      {
+        path: MAIN_ROUTES.ARCHIVED_LOCATIONS,
+        loadComponent: () =>
+          import('./features/archive-location/archive-location.component').then(
+            (m) => m.archiveLocationComponent,
+          ),
+        children: [
+          {
+            path: '',
+            redirectTo: 'location-types',
+            pathMatch: 'full',
+          },
+          {
+            path: 'location-types',
+            loadComponent: () =>
+              import(
+                './features/archive-location/location-types/location-types.component'
+              ).then((m) => m.ArchivedLocationTypesComponent),
+          },
+          {
+            path: 'locations',
+            loadComponent: () =>
+              import(
+                './features/archive-location/locations/locations.component'
+              ).then((m) => m.ArchivedLocationsComponent),
+          },
+        ],
       },
       {
         path: `${MAIN_ROUTES.CREATED_LOCATIONS}/${MAIN_ROUTES.UPLOAD_FILE}`,
-        loadComponent: () => import('./features/upload-file/upload-file.component').then((m) => m.UploadFileComponent),
+        loadComponent: () =>
+          import('./features/upload-file/upload-file.component').then(
+            (m) => m.UploadFileComponent,
+          ),
         data: {
           hideSubHeader: true,
         },
@@ -45,7 +78,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import(
         './features/auth/components/not-authorized/not-authorized.component'
-        ).then((m) => m.NotAuthorizedComponent),
+      ).then((m) => m.NotAuthorizedComponent),
   },
   { path: '**', redirectTo: '/' },
 ];

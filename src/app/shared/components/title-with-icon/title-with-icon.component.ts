@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, input} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-title-with-icon',
@@ -11,4 +11,5 @@ import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 export class TitleWithIconComponent {
   itemTitle = input<string | undefined>();
   iconUrl = input.required<string>();
+  background = input<string>('transparent');
 }

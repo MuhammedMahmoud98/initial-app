@@ -2,7 +2,8 @@ export enum MAIN_ROUTES {
   CREATED_LOCATIONS = 'created-locations',
   LOCATION_TYPES = 'location-types',
   ASSIGNED_LOCATION = 'assigned-locations',
-  UPLOAD_FILE ='upload-file'
+  UPLOAD_FILE ='upload-file',
+  ARCHIVED_LOCATIONS = 'archived-location'
 }
 
 export enum LOCATION_TYPE_CATEGORIES {

@@ -5,6 +5,7 @@
   "profile": "معلوماتي",
   "paginationReport": "{{itemsLength}} من {{totalRecords}}",
   "createdLocations": "الأماكن",
+  "locations": "الأماكن",
   "locationTypes": "أنواع الأماكن",
   "notAccessTitle": "تم رفض الوصول",
   "notAccessSubtitle": "يرجى استخدام حساب مصرح له الدخول",
@@ -55,7 +56,7 @@
   "data could not be retrieved, kindly try again later": "تعذر استرجاع البيانات، يرجى المحاولة مرة أخرى لاحقًاََ",
   "service is available": "الخدمة متوفرة حاليًا",
   "Status Updated Successfully": "تم تحديث الحالة بنجاح",
-  "no location types available": "لا توجد أنواع مواقع متاحة",
+  "no location types available": "لم يتم العثور على أنواع أماكن مؤرشفة",
   "add a location type to categories locations effectively": "أضف نوع موقع لتصنيف المواقع بشكل فعال",
   "something went wrong": "لقد حدث خطأ ما",
   "location deleted successfully": "تم حذف الموقع بنجاح",
@@ -134,5 +135,15 @@
   "archivingTheLocationTypeWillRemove": "أرشفة نوع الموقع ستزيله من القائمة المتاحة لأنواع المواقع أثناء إنشاء موقع جديد وستنقله إلى أنواع المواقع المؤرشفة",
   "archivelocationConfirmationMessage": "بعد تأكيد أرشفة الموقع، إذا قام موظف بمسح رمز QR الخاص بالموقع، فلن يتمكن من الوصول إلى أي خدمة مرتبطة بهذا الموقع وسيتم إعلامه بأن هذا الموقع لم يعد موجودًا بعد الآن.",
   "archivelocationsConfirmationMessage": "بعد تأكيد أرشفة المواقع، إذا قام موظف بمسح رموز QR الخاصة بأي من المواقع، فلن يتمكن من الوصول إلى أي خدمة مرتبطة بهذه المواقع وسيتم إعلامه بأن هذه المواقع لم تعد موجودة بعد الآن.",
-  "Printing Dimensions": "أبعاد الطباعة"
+  "Printing Dimensions": "أبعاد الطباعة",
+  "archived": "مؤرشف",
+  "unArchivedLocationConfirmMessageHeader": "تأكيد إلغاء أرشفة المكان",
+  "unArchivedLocationConfirmMessageBody": "إلغاء أرشفة المكان سيتيح للموظفين من مسحه والوصول إلى جميع الخدمات النشطة المرتبطة به",
+  "no location code matches the code entered": "لا يوجد رمز مكان مطابق للرمز الذي تم إدخاله",
+  "When you archive locations, they will appear here for management and restoration": "عندما تقوم بأرشفة المواقع، ستظهر هنا للإدارة والاستعادة.",
+  "No Archived Locations": "لا توجد مواقع مؤرشفة",
+  "unarchiveLocationTypeConfirmMessageHeader": "تأكيد إلغاء أرشفة المكان",
+  "unarchiveLocationTypeConfirmMessageBody": "من خلال إلغاء أرشفة نوع الموقع هذا، سيكون متاحًا مرة أخرى للربط أثناء إنشاء مواقع جديدة",
+  "unArchiveLocationTypeSuccessMsg": "تمت استعادة نوع الموقع بنجاح. وهو متاح الآن عند إنشاء مواقع جديدة.",
+  "un-archive": "إلغاء الأرشفة"
 }

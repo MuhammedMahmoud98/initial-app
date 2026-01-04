@@ -96,6 +96,7 @@ export class CreatedLocationsComponent implements OnDestroy {
   items = signal<CreatedLocation[]>([]);
   locationsPayload = signal<ItemFilter>(INITIAL_FILTER_PAYLOAD);
   isValidatingQr = signal(false);
+  isValidatingArchive = signal(false);
   showBulkSelection = computed(() => this.genericTableCacheService.hasMorePages());
   // SIGNAL STATES
   isEmptyState = signal(false);
@@ -547,13 +548,13 @@ export class CreatedLocationsComponent implements OnDestroy {
       excludedLocationIds: this.genericTableCacheService.unSelectedItemsCache(),
       filter: this.locationsPayload().filter,
     } as GenerateQrPayload;
-
-    this.isLoading.set(true);
+    this.isValidatingArchive.set(true);
 
     this.#locationTypeActionsService
       .validateArchiveLocation(payload)
       .pipe(
         tap(() => {
+          this.isValidatingArchive.set(false);
           this.confirmationService.confirm({
             header: this.#translateService.instant('archiveWarning'),
             message: this.#translateService.instant(
@@ -577,6 +578,7 @@ export class CreatedLocationsComponent implements OnDestroy {
           });
         }),
         catchError((e) => {
+          this.isValidatingArchive.set(false);
           this.#messageService.add({
             severity: 'error',
             summary: 'Error',
@@ -599,11 +601,12 @@ export class CreatedLocationsComponent implements OnDestroy {
       excludedLocationIds: this.genericTableCacheService.unSelectedItemsCache(),
       filter: this.locationsPayload().filter,
     } as GenerateQrPayload;
-
+    this.startLoading('archiving locations...');
     this.#locationTypeActionsService
       .archiveLocation(payload)
       .pipe(
         tap((): void => {
+          this.stopLoading();
           this.#messageService.add({
             severity: 'success',
             summary: 'Success',
@@ -615,7 +618,7 @@ export class CreatedLocationsComponent implements OnDestroy {
           this.getCreatedLocations();
         }),
         catchError(() => {
-          this.isValidatingQr.set(false);
+          this.stopLoading();
           this.#messageService.add({
             severity: 'error',
             summary: 'Error',

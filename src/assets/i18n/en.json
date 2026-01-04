@@ -142,5 +142,6 @@
   "qrStatus": "QR Status",
   "qrGenerated": "Generated",
   "qrNotGenerated": "Not Generated",
-  "location details": "location details"
+  "location details": "location details",
+  "archiving locations...": "archiving locations..."
 }

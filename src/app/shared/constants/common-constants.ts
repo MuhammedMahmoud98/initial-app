@@ -9,7 +9,7 @@ export const COMMON_CONSTANTS = {
     SEARCH_RESET_LENGTH: 0,
     SEARCH_MAX_LENGTH: 40,
     ROWS_PER_PAGE: 50,
-    TOKEN_LESS_URLS: ['validate', 'refresh_token'] as TokenLessUrls[],
+    TOKEN_LESS_URLS: ['auth/validate', 'refresh_token'] as TokenLessUrls[],
 };
 
 

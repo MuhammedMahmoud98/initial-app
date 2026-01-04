@@ -141,5 +141,6 @@
   "qrStatus": "حالة QR",
   "qrGenerated": "تم الإنشاء",
   "qrNotGenerated": "غير مُنشأ",
-  "location details": "تفاصيل المكان"
+  "location details": "تفاصيل المكان",
+  "archiving locations...": "جارٍ أرشفة الأماكن..."
 }

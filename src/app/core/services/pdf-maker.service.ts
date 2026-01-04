@@ -30,6 +30,8 @@ export class PdfMakerService {
   private readonly FONT_KEY_MEDIUM = 'STCForward-Medium.ttf.base64';
   private employeeLocationSvg: string | null = null;
   private mobileSvg: string | null = null;
+  private stcPurpleLogoBase64: string | null = null;
+  private svgLogoBase64: string | null = null;
 
   // protected async initializePdfMake() {
   //   const pdfMakeModule = await import('pdfmake/build/pdfmake');
@@ -88,6 +90,48 @@ export class PdfMakerService {
       if (!response.ok) throw new Error(`SVG not found at ${svgUrl}`);
       this.mobileSvg = await response.text();
       return this.mobileSvg;
+    }
+
+    private async loadStcPurpleLogoBase64(): Promise<string> {
+      if (this.stcPurpleLogoBase64) {
+        return this.stcPurpleLogoBase64;
+      }
+
+      const logoUrl = `${environment.baseHref}${environment.production ? '/' : ''}assets/images/stc-purple-logo.svg`;
+      const response = await fetch(logoUrl);
+      if (!response.ok) throw new Error(`Logo not found at ${logoUrl}`);
+      const blob = await response.blob();
+
+      // Convert to base64
+      this.stcPurpleLogoBase64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+
+      return this.stcPurpleLogoBase64;
+    }
+
+    private async loadSvgLogoBase64(): Promise<string> {
+      if (this.svgLogoBase64) {
+        return this.svgLogoBase64;
+      }
+
+      const logoUrl = `${environment.baseHref}${environment.production ? '/' : ''}assets/images/svg-logo.svg`;
+      const response = await fetch(logoUrl);
+      if (!response.ok) throw new Error(`Logo not found at ${logoUrl}`);
+      const blob = await response.blob();
+
+      // Convert to base64
+      this.svgLogoBase64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+
+      return this.svgLogoBase64;
     }
 
     protected async initializePdfMake(): Promise<unknown> {
@@ -197,6 +241,10 @@ export class PdfMakerService {
     const pdfMake = await this.initializePdfMake();
 
     console.log(pdfMake, 'PDF MAKE');
+
+    // Preload logos as base64 to avoid multiple network requests
+    const stcPurpleLogoBase64 = await this.loadStcPurpleLogoBase64();
+    const svgLogoBase64 = await this.loadSvgLogoBase64();
 
     const content: unknown[] = [];
 
@@ -442,7 +490,9 @@ export class PdfMakerService {
     const pdfMake = await this.initializePdfMake();
     const isA6Size = records[0]?.size?.includes('A6') ?? false;
     const illustrationSvg = isA6Size ? await this.loadMobileSvg() : await this.loadEmployeeLocationSvg();
-
+    // Preload logos as base64 to avoid multiple network requests
+    const stcPurpleLogoBase64 = await this.loadStcPurpleLogoBase64();
+    const svgLogoBase64 = await this.loadSvgLogoBase64();
     const content: unknown[] = [];
 
     // Use for...of loop to handle async QR code generation
@@ -457,6 +507,7 @@ export class PdfMakerService {
       const qrImage = await this.#qrCodeStylingService.generateQRCodePNG(
         `${environment.qrCodeUrl}/qr-guest/user-guest/${record.qrCode}`, {
           ...qrOptions,
+          image: isA6Size ? stcPurpleLogoBase64 : svgLogoBase64,
           width: qrGenerationSize,
           height: qrGenerationSize,
         },

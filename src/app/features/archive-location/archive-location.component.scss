@@ -1,6 +1,7 @@
 :host {
   display: block;
   width: inherit;
+  height: calc(100% - 64px);
 }
 
 .hub-archive-custom-tabs {
@@ -45,7 +46,7 @@
     &.active-route {
       background-color: var(--primary-500);
       color: white;
-      
+
       &::after {
         width: 100%;
       }

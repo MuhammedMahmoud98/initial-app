@@ -42,5 +42,6 @@ export const API_CONSTANTS = {
 
   ARCHIVED_LOCATIONS_TYPE: serverUrl +'/location-types/archived',
   ARCHIVED_LOCATIONS : serverUrl+ '/locations/archived',
-   UNARCHIVED_LOCATIONS_ITEMS : serverUrl+ '/locations/unarchive'
+  UNARCHIVED_LOCATIONS_ITEMS : serverUrl+ '/locations/unarchive',
+  UNARCHIVED_LOCATION_TYPE : serverUrl+ '/location-types/{id}/unarchive'
 };

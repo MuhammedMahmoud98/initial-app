@@ -20,4 +20,8 @@ export class ArchivedLocationService {
   unarchiveLocation(locationIdS: number[]): Observable<void> {
     return this.#httpClient.post<void>(`${API_CONSTANTS.UNARCHIVED_LOCATIONS_ITEMS}`, locationIdS);
   }
+
+  unarchiveLocationType(locationTypeId: number): Observable<void> {
+    return this.#httpClient.post<void>(`${API_CONSTANTS.UNARCHIVED_LOCATION_TYPE.replace('{id}', locationTypeId.toString())}`, {});
+  }
 }

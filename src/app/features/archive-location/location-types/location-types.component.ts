@@ -47,6 +47,7 @@ import {Ripple} from 'primeng/ripple';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import { LocationTypeArchivedService } from './services/location-types-archived.service';
 import { LocationsService } from '../../created-locations/services/locations.service';
+import {ArchivedLocationService} from '../locations/services/archived-locations.service';
 
 @Component({
   selector: 'app-location-types',
@@ -80,6 +81,7 @@ export class ArchivedLocationTypesComponent  implements OnDestroy {
   readonly #translateService: TranslateService = inject(TranslateService);
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
   readonly #locationsService: LocationsService = inject(LocationsService);
+  readonly #archivedLocationService: ArchivedLocationService = inject(ArchivedLocationService);
 
   // SIGNALS
   items = signal<LocationType[]>([]);
@@ -114,7 +116,17 @@ export class ArchivedLocationTypesComponent  implements OnDestroy {
   }
 
   getLocationTypes(): void {
-    this.#LocationTypeArchivedService.getLocationTypes(this.locationTypesPayload()).pipe(
+    const payload = this.locationTypesPayload();
+
+    const customPayload = payload.filter
+      ? payload
+      : (() => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { filter, ...rest } = payload;
+        return rest;
+      })();
+
+    this.#LocationTypeArchivedService.getLocationTypes(customPayload).pipe(
       tap((locationTypesResponse: LocationTypeResponse) => {
         this.isLoading.set(false);
         if (locationTypesResponse) {
@@ -211,27 +223,19 @@ export class ArchivedLocationTypesComponent  implements OnDestroy {
   locationTypeActions(row: LocationType): MenuItem[] {
     return [
       {
-        label: 'edit',
+        label: 'un-archive',
         command: () => {
-         console.log('edited')
+          this.openUnarchiveConfirmDialog(row?.id);
         },
-        alias: 'edit'
+        alias: 'unarchive'
       },
-      {
-        label: 'delete',
-        command: () => {
-          this.openDeleteConfirmDialog(row.id);
-        },
-        alias: 'delete',
-        visible: !row['has-linked-locations']
-      }
     ];
   }
 
-  openDeleteConfirmDialog(locationTypeId: number): void {
+  openUnarchiveConfirmDialog(locationTypeId: number): void {
     this.confirmationService.confirm({
-      header: this.#translateService.instant('deleteLocationTypeConfirmMessageHeader'),
-      message: this.#translateService.instant('deleteLocationTypeConfirmMessageBody'),
+      header: this.#translateService.instant('unarchiveLocationTypeConfirmMessageHeader'),
+      message: this.#translateService.instant('unarchiveLocationTypeConfirmMessageBody'),
       closable: false,
       closeOnEscape: true,
       rejectButtonProps: {
@@ -245,9 +249,23 @@ export class ArchivedLocationTypesComponent  implements OnDestroy {
       },
       acceptVisible: true,
       accept: (): void => {
-        console.log('delete', locationTypeId)
+        this.unArchiveLocationType(locationTypeId);
       }
     });
+  }
+
+  unArchiveLocationType(locationTypeId: number): void {
+    this.#archivedLocationService.unarchiveLocationType(locationTypeId).pipe(
+      tap(() => {
+        this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant('unArchiveLocationTypeSuccessMsg'), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
+        this.getLocationTypes();
+      }),
+      takeUntilDestroyed(this.#destroyRef),
+      catchError((error: BackendErrorResponse) => {
+        this.#messageService.add({severity:'error', summary: 'Error', detail: this.getBackendErrorMessage(error), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
+        return EMPTY;
+      }
+    )).subscribe()
   }
 
   private getBackendErrorMessage(error: BackendErrorResponse): string {

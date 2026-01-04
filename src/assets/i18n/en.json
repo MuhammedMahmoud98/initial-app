@@ -4,6 +4,7 @@
   "logOut": "sign out",
   "profile": "profile",
   "createdLocations": "created locations",
+  "locations": "locations",
   "locationTypes": "location types",
   "notAccessTitle": "unauthorized access",
   "notAccessSubtitle": "please use the authorized service account",
@@ -54,7 +55,7 @@
   "reload": "reload",
   "service is available": "service is available",
   "Status Updated Successfully": "status Updated Successfully",
-  "no location types available": "no location types available",
+  "no location types available": "no archived location types found.",
   "add a location type to categories locations effectively": "add a location type to categories locations effectively",
   "something went wrong": "something went wrong",
   "location deleted successfully": "location deleted successfully",
@@ -126,5 +127,9 @@
   "unArchivedLocationConfirmMessageBody": "unarchiving the location will enable employees to scan it and access all active services related to it",
   "no location code matches the code entered": "no location code matches the code entered",
   "When you archive locations, they will appear here for management and restoration": "when you archive locations, they will appear here for management and restoration.",
-  "No Archived Locations": "no archived locations"
+  "No Archived Locations": "no archived locations",
+  "unarchiveLocationTypeConfirmMessageHeader": "confirm unarchive location",
+  "unarchiveLocationTypeConfirmMessageBody": "by unarchiving this location type it will be available again for linking while creating new locations.",
+  "unArchiveLocationTypeSuccessMsg": "location type restored successfully. It is now available when creating new locations.",
+  "un-archive": "un-archive"
 }

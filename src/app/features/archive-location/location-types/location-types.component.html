@@ -101,11 +101,8 @@
     <p-menu [appendTo]="'body'" #menu [model]="locationTypeActions(locationType)" [popup]="true">
       <ng-template #item let-item>
         <a pRipple class="flex items-center p-menu-item-link">
-          @if (item.alias === 'edit') {
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M1.77548 14.4998L4.60382 14.4999L14.9747 4.12895L12.1463 1.30054L1.77539 11.6715L1.77548 14.4998Z" stroke="#1D252D"/>
-              <path d="M9.31641 4.12915L12.1448 6.95758" stroke="#1D252D" stroke-linecap="square"/>
-            </svg>
+          @if (item.alias === 'unarchive') {
+            <img src="assets/images/archived.svg" [alt]="item.label"/>
           }
 
           @if (item.alias === 'delete') {

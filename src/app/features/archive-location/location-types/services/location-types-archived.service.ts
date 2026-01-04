@@ -10,8 +10,6 @@ import { LocationTypesResponse } from '../../../created-locations/models/locatio
 export class LocationTypeArchivedService {
   readonly #http = inject(HttpClient);
 
-
-
  getLocationTypes(payload: ItemFilter): Observable<LocationTypesResponse> {
     const params = new HttpParams({fromObject: payload as never});
     return this.#http.get<LocationTypesResponse>(API_CONSTANTS.ARCHIVED_LOCATIONS_TYPE, {params});

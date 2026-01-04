@@ -38,6 +38,7 @@ import { ArchivedLocationService } from './services/archived-locations.service';
 import { archiveLocation, CreatedArchivedLocationColumnType, CreatedArchivedLocationResponse } from './models/locations.model';
 import { TextWithBgColorComponent } from '../../../shared/components/text-with-bg-color/text-with-bg-color.component';
 import { MenuModule } from 'primeng/menu';
+import {Ripple} from 'primeng/ripple';
 
 @Component({
   selector: 'app-location-type',
@@ -49,10 +50,10 @@ import { MenuModule } from 'primeng/menu';
     HubFiltersComponent,
     CopyToClipboardComponent,
     TranslatePipe,
-    TimezoneDatePipe,
     CommonModule,
     TextWithBgColorComponent,
     MenuModule,
+    Ripple,
 
   ],
   providers: [DialogService, TimezoneDatePipe],
@@ -141,7 +142,7 @@ export class ArchivedLocationsComponent implements OnDestroy {
   locationTypeActions(row: archiveLocation): MenuItem[] {
     return [
       {
-        label: 'Un-archive',
+        label: 'un-archive',
         command: () => {
           this.openConfirmDialog(row.id)
         },

@@ -1,24 +1,20 @@
 <div class="hub-archive-custom-tabs">
-
     <div class="tab-sections">
- 
-  
     <a
       [routerLink]="['./location-types']"
       [routerLinkActive]="'active-route'"
       [routerLinkActiveOptions]="{ exact: true }"
       class="hub-archive-custom-tabs__item"
     >
-      location types
+      {{'locationTypes' | translate}}
     </a>
        <a
       [routerLink]="['./locations']"
       [routerLinkActive]="'active-route'"
       class="hub-archive-custom-tabs__item"
     >
-      locations
+     {{ 'locations' | translate }}
     </a>
   </div>
-  
 </div>
 <router-outlet/>

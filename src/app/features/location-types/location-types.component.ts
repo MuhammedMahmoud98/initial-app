@@ -313,25 +313,50 @@ onClassificationChange(category: string[] | null): void {
   }
 
   openArchiveConfirmDialog(locationTypeId: number): void {
-    this.confirmationService.confirm({
-      header: this.#translateService.instant('archiveWarning'),
-      message: this.#translateService.instant('archivingTheLocationTypeWillRemove'),
-      closable: false,
-      closeOnEscape: true,
-      rejectButtonProps: {
-        label: this.#translateService.instant('cancel'),
-        severity: 'secondary',
-        outlined: true,
-      },
-      acceptButtonProps: {
-        label: this.#translateService.instant('confirm'),
-        severity: 'secondary',
-      },
-      acceptVisible: true,
-      accept: (): void => {
-        this.archiveLocationType(locationTypeId);
+    this.isLoading.set(true)
+    this.#locationTypeActionsService.validateArchivingLocationTypes(locationTypeId).pipe(
+      tap((res) => {
+      this.isLoading.set(false);
+        if(res.isValid){
+           this.confirmationService.confirm({
+            header: this.#translateService.instant('archiveWarning'),
+            message: this.#translateService.instant('archivingTheLocationTypeWillRemove'),
+            closable: false,
+            closeOnEscape: true,
+            rejectButtonProps: {
+              label: this.#translateService.instant('cancel'),
+              severity: 'secondary',
+              outlined: true,
+            },
+            acceptButtonProps: {
+              label: this.#translateService.instant('confirm'),
+              severity: 'secondary',
+            },
+            acceptVisible: true,
+            accept: (): void => {
+              this.archiveLocationType(locationTypeId);
+            }
+          });
+        }
+        else {
+         this.#messageService.add({
+          severity: 'error',
+          detail: this.#translateService.instant(res.message || 'something went wrong'),
+        });
       }
-    });
+    }),
+     catchError((e) => {
+        this.isLoading.set(false);
+        this.#messageService.add({
+          severity: 'error',
+          detail: this.getBackendErrorMessage(e.error),
+        });
+        
+        return EMPTY;
+      }),
+      takeUntilDestroyed(this.#destroyRef),
+  ).
+  subscribe()
   }
 
   private getBackendErrorMessage(error: BackendErrorResponse): string {
@@ -357,12 +382,15 @@ onClassificationChange(category: string[] | null): void {
 
 
   archiveLocationType(locationTypeId: number): void {
+    this.isLoading.set(true)
     this.#locationTypeActionsService.archiveLocationType(locationTypeId).pipe(
       tap(() => {
+        this.isLoading.set(false);
         this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant('locationTypeArchiveSuccessfully'), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
         this.getLocationTypes();
       }),
       catchError((e) => {
+        this.isLoading.set(false);
         this.#messageService.add({ severity: 'error', summary: 'Error', detail: this.getBackendErrorMessage(e.error) , life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
         return EMPTY;
       })

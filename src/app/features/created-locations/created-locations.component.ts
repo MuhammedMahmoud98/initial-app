@@ -515,7 +515,6 @@ export class CreatedLocationsComponent implements OnDestroy {
           this.openArchiveConfirmDialog(row.id);
         },
         alias: 'archive',
-        visible: !!row.qrCode,
       },
     ];
   }

@@ -68,3 +68,9 @@ export interface archiveLocationPayload {
   excludedLocationIds: number[];
   filter: string;
 }
+
+export interface ValidateLocationTypeResponse {
+  message: string,
+  isValid: boolean
+  activeLocationCount: number
+}

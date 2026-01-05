@@ -5,7 +5,8 @@ import {API_CONSTANTS} from '../../../shared';
 import {
   LocationTypePayload,
   LocationTypeResponse,
-  ServiceLinkPayload, ServiceLinkResponse
+  ServiceLinkPayload, ServiceLinkResponse,
+  ValidateLocationTypeResponse
 } from '../../../shared/models/create-location-type.model';
 import {GenerateQrPayload} from '../../created-locations/models/created-location.model';
 
@@ -51,5 +52,11 @@ export class LocationTypeActionsService {
 
   validateServiceLink(linkPayload: ServiceLinkPayload): Observable<ServiceLinkResponse> {
     return this.#http.post<ServiceLinkResponse>(API_CONSTANTS.LINK_VALIDATE_QR, linkPayload);
+  }
+
+  validateArchivingLocationTypes(id: number): Observable<ValidateLocationTypeResponse> {
+    const uri = API_CONSTANTS.VALIDATE_ARCHIVE_LOCATION_TYPES.replace('{id}', id.toString());;
+    
+    return this.#http.post<ValidateLocationTypeResponse>(uri, {});
   }
 }

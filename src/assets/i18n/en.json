@@ -157,5 +157,6 @@
   "location details": "location details",
   "archiving locations...": "archiving locations...",
   "services displayed from the parent location type": "services displayed from the parent location type",
-  "validating archive...": "validating archive..."
+  "validating archive...": "validating archive...",
+  "services": "services"
 }

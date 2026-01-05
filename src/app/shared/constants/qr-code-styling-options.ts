@@ -35,7 +35,7 @@ export const whiteQRwithSharpCornersOptions = {
 
 // Purple background with pink dots and stc logo in center
 export const pinkBgPurpleDotsWithLogoOptions = {
-  image: 'assets/images/svg-logo.svg',
+  image: '', // Logo will be provided as base64 at runtime to avoid multiple network requests
   backgroundOptions: {
     color: PDF_BG_COLOR, // Purple background (#512B84) - matches page background
   } as never,
@@ -68,7 +68,7 @@ export const pinkBgPurpleDotsWithLogoOptions = {
 
 // Mauve/light purple background with purple dots and stc logo in center (for A6 size)
 export const purpleBgPurpleDotsWithLogoOptions = {
-  image: 'assets/images/stc-purple-logo.svg',
+  image: '', // Logo will be provided as base64 at runtime to avoid multiple network requests
   backgroundOptions: {
     color: '#fff', // Light mauve/lavender background
   } as never,

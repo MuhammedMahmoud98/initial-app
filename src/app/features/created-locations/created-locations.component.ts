@@ -631,12 +631,12 @@ export class CreatedLocationsComponent implements OnDestroy {
       excludedLocationIds: this.genericTableCacheService.unSelectedItemsCache(),
       filter: this.locationsPayload().filter,
     } as GenerateQrPayload;
-    this.startLoading('archiving locations...');
+    this.isLoading.set(true)
     this.#locationTypeActionsService
       .archiveLocation(payload)
       .pipe(
         tap((): void => {
-          this.stopLoading();
+          this.isLoading.set(false)
           this.genericTableCacheService.resetBulkActions$.next(true);
           this.#messageService.add({
             severity: 'success',
@@ -649,7 +649,7 @@ export class CreatedLocationsComponent implements OnDestroy {
           this.getCreatedLocations();
         }),
         catchError(() => {
-          this.stopLoading();
+          this.isLoading.set(false)
           this.genericTableCacheService.resetBulkActions$.next(true);
           this.#messageService.add({
             severity: 'error',
@@ -665,6 +665,7 @@ export class CreatedLocationsComponent implements OnDestroy {
   }
 
   archiveLocation(locationTypeId: number): void {
+    this.isLoading.set(true)
     this.#locationTypeActionsService
       .archiveLocation({
         all: false,
@@ -674,6 +675,7 @@ export class CreatedLocationsComponent implements OnDestroy {
       })
       .pipe(
         tap(() => {
+          this.isLoading.set(false)
           this.#messageService.add({
             severity: 'success',
             summary: 'Success',
@@ -685,6 +687,7 @@ export class CreatedLocationsComponent implements OnDestroy {
           this.getCreatedLocations();
         }),
         catchError((e) => {
+          this.isLoading.set(false)
           this.#messageService.add({
             severity: 'error',
             summary: 'Error',

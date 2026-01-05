@@ -175,3 +175,7 @@
     </button>
   </div>
 </ng-template>
+
+<p-dialog [(visible)]="showLoadingDialog" [modal]="true" [closable]="false" [style]="{width: '370px', height: '370px'}">
+  <app-loading-dialog [loadingTitle]="loadingTitle()" />
+</p-dialog>

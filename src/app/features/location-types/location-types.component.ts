@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component, DestroyRef,
   inject,
+  model,
   OnDestroy,
   signal, TemplateRef, viewChild
 } from '@angular/core';
@@ -52,6 +53,9 @@ import { LocationTypeActionsService } from './services/location-type-actions.ser
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { LoadingDialogService } from '../../shared/services/loading-dialog.service';
+import { LoadingDialogComponent } from '../../shared/dialogs/loading-dialog/loading-dialog.component';
+import { Dialog } from 'primeng/dialog';
 
 @Component({
   selector: 'app-location-types',
@@ -69,7 +73,9 @@ import { MultiSelectModule } from 'primeng/multiselect';
     FormsModule,
     MenuModule,
     Ripple,
-    MultiSelectModule
+    MultiSelectModule,
+    Dialog,
+    LoadingDialogComponent,
   ],
   providers: [DialogService],
   standalone: true,
@@ -88,6 +94,7 @@ export class LocationTypesComponent implements OnDestroy {
   readonly #messageService: MessageService = inject(MessageService);
   readonly #translateService: TranslateService = inject(TranslateService);
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
+  readonly loadingDialogService = inject(LoadingDialogService);
 
   // SIGNALS
   items = signal<LocationType[]>([]);
@@ -97,7 +104,8 @@ export class LocationTypesComponent implements OnDestroy {
   isErrorState = signal(false);
   isLoading = signal(true);
   selectedClassification = signal<string>('');
-
+  showLoadingDialog = model(false)
+  loadingTitle = signal('');
   classificationOptions = signal([
     {name: this.#translateService.instant('employeeLocation'), code: CLAASSIFICATION_FILTER.EMPLOYEE_LOCATION},
     {name: this.#translateService.instant('generalLocation'), code: CLAASSIFICATION_FILTER.GENERAL_LOCATION},
@@ -313,10 +321,10 @@ onClassificationChange(category: string[] | null): void {
   }
 
   openArchiveConfirmDialog(locationTypeId: number): void {
-    this.isLoading.set(true)
+    this.startLoading('validating archive...');
     this.#locationTypeActionsService.validateArchivingLocationTypes(locationTypeId).pipe(
       tap((res) => {
-      this.isLoading.set(false);
+       this.stopLoading();
         if(res.isValid){
            this.confirmationService.confirm({
             header: this.#translateService.instant('archiveWarning'),
@@ -346,7 +354,7 @@ onClassificationChange(category: string[] | null): void {
       }
     }),
      catchError((e) => {
-        this.isLoading.set(false);
+         this.stopLoading();
         this.#messageService.add({
           severity: 'error',
           detail: this.getBackendErrorMessage(e.error),
@@ -395,5 +403,19 @@ onClassificationChange(category: string[] | null): void {
         return EMPTY;
       })
     ).subscribe();
+  }
+
+   startLoading(title: string): void {
+    this.showLoadingDialog.set(true);
+    this.loadingTitle.set(title);
+
+    this.loadingDialogService.startFakeProgress();
+  }
+  
+   stopLoading(): void {
+    setTimeout(() => {
+      this.showLoadingDialog.set(false);
+    }, 1500);
+    this.loadingDialogService.completeProgress();
   }
 }

@@ -72,5 +72,6 @@ export interface archiveLocationPayload {
 export interface ValidateLocationTypeResponse {
   message: string,
   isValid: boolean
-  activeLocationCount: number
+  activeLocationCount?: number;
+  invalidLocationIds?:number[];
 }

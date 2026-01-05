@@ -29,6 +29,8 @@ export const API_CONSTANTS = {
   ARCHIVE_LOCATIONS_TYPE: serverUrl + '/location-types/{id}/archive',
   ARCHIVE_LOCATIONS: serverUrl + '/locations/archive',
   VALIDATE_ARCHIVE_LOCATIONS: serverUrl + '/locations/archive/validate',
+  VALIDATE_ARCHIVE_LOCATION_TYPES: serverUrl +'/location-types/{id}/archive/validate',
+  toggleLocationTypeStatus: serverUrl + '/locations/{locationId}/services/{locationServiceId}/toggle',
   // assignedLocation
   ASSIGNED_LOCATIONS: serverUrl + '/user-locations',
   ASSIGNED_LOCATIONS_UNLINK: serverUrl + '/user-locations/{id}/unlink',

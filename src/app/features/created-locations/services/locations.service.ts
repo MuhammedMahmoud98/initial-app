@@ -65,7 +65,6 @@ export class LocationsService {
       customPayload = rest;
     }
 
-    console.log(payload.all ? customPayload : payload, 'QR PAYLOAD');
     return this.#httpClient.post<GenerateQrResponse>(API_CONSTANTS.GENERATE_QR, customPayload);
   }
 
@@ -113,5 +112,15 @@ export class LocationsService {
  locationTypeDetails(id: number): Observable<locationTypeDetails> {
     const uri = API_CONSTANTS.UPDATE_LOCATIONS_DETAILD.replace('{id}', id.toString());
     return this.#httpClient.get<locationTypeDetails>(uri);
+  }
+
+ toggleLocationTypeStatus(locationId: number, locationServiceId: number, enabled: boolean): Observable<{message: string}> {
+    const url: string = API_CONSTANTS.toggleLocationTypeStatus
+      .replace('{locationId}', locationId.toString())
+      .replace('{locationServiceId}', locationServiceId.toString());
+
+    return this.#httpClient.post<{message: string}>(url, {}, {
+      params: { enabled: enabled.toString() }
+    });
   }
 }

@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component, DestroyRef,
   inject,
+  model,
   OnDestroy,
   signal, TemplateRef, viewChild
 } from '@angular/core';
@@ -50,8 +51,11 @@ import {Ripple} from 'primeng/ripple';
 import {MODE} from '../../shared/enums/shared.enum';
 import { LocationTypeActionsService } from './services/location-type-actions.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import { Select } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { LoadingDialogService } from '../../shared/services/loading-dialog.service';
+import { LoadingDialogComponent } from '../../shared/dialogs/loading-dialog/loading-dialog.component';
+import { Dialog } from 'primeng/dialog';
 
 @Component({
   selector: 'app-location-types',
@@ -69,7 +73,9 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     MenuModule,
     Ripple,
-    Select,
+    MultiSelectModule,
+    Dialog,
+    LoadingDialogComponent,
   ],
   providers: [DialogService],
   standalone: true,
@@ -88,6 +94,7 @@ export class LocationTypesComponent implements OnDestroy {
   readonly #messageService: MessageService = inject(MessageService);
   readonly #translateService: TranslateService = inject(TranslateService);
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
+  readonly loadingDialogService = inject(LoadingDialogService);
 
   // SIGNALS
   items = signal<LocationType[]>([]);
@@ -97,9 +104,9 @@ export class LocationTypesComponent implements OnDestroy {
   isErrorState = signal(false);
   isLoading = signal(true);
   selectedClassification = signal<string>('');
-
+  showLoadingDialog = model(false)
+  loadingTitle = signal('');
   classificationOptions = signal([
-    {name: this.#translateService.instant('allClassifications'), code: ''},
     {name: this.#translateService.instant('employeeLocation'), code: CLAASSIFICATION_FILTER.EMPLOYEE_LOCATION},
     {name: this.#translateService.instant('generalLocation'), code: CLAASSIFICATION_FILTER.GENERAL_LOCATION},
   ]);
@@ -170,11 +177,17 @@ export class LocationTypesComponent implements OnDestroy {
     this.getLocationTypes();
   }
 
-  onClassificationChange(category: string | null): void {
-  this.selectedClassification.set(category ?? CLAASSIFICATION_FILTER.ALL_CLASSIFICATIONS);
-  
+onClassificationChange(category: string[] | null): void {
+  let categoryValue: string | undefined;
+
+  if (!category || category.length === 0 || category.length > 1) {
+    categoryValue = '';
+  } else {
+    categoryValue = category[0];
+  }
+
   this.updateFilterPayload({
-    category: category ?? undefined,
+    category: categoryValue,
     page: 0
   });
 
@@ -272,7 +285,7 @@ export class LocationTypesComponent implements OnDestroy {
           this.openArchiveConfirmDialog(row.id);
         },
         alias: 'archive',
-        visible: !row['has-linked-locations']
+        visible: row['has-linked-locations']
       },
       {
         label: 'delete',
@@ -308,25 +321,50 @@ export class LocationTypesComponent implements OnDestroy {
   }
 
   openArchiveConfirmDialog(locationTypeId: number): void {
-    this.confirmationService.confirm({
-      header: this.#translateService.instant('archiveWarning'),
-      message: this.#translateService.instant('archivingTheLocationTypeWillRemove'),
-      closable: false,
-      closeOnEscape: true,
-      rejectButtonProps: {
-        label: this.#translateService.instant('cancel'),
-        severity: 'secondary',
-        outlined: true,
-      },
-      acceptButtonProps: {
-        label: this.#translateService.instant('confirm'),
-        severity: 'secondary',
-      },
-      acceptVisible: true,
-      accept: (): void => {
-        this.archiveLocationType(locationTypeId);
+    this.startLoading('validating archive...');
+    this.#locationTypeActionsService.validateArchivingLocationTypes(locationTypeId).pipe(
+      tap((res) => {
+       this.stopLoading();
+        if(res.isValid){
+           this.confirmationService.confirm({
+            header: this.#translateService.instant('archiveWarning'),
+            message: this.#translateService.instant('archivingTheLocationTypeWillRemove'),
+            closable: false,
+            closeOnEscape: true,
+            rejectButtonProps: {
+              label: this.#translateService.instant('cancel'),
+              severity: 'secondary',
+              outlined: true,
+            },
+            acceptButtonProps: {
+              label: this.#translateService.instant('confirm'),
+              severity: 'secondary',
+            },
+            acceptVisible: true,
+            accept: (): void => {
+              this.archiveLocationType(locationTypeId);
+            }
+          });
+        }
+        else {
+         this.#messageService.add({
+          severity: 'error',
+          detail: this.#translateService.instant(res.message || 'something went wrong'),
+        });
       }
-    });
+    }),
+     catchError((e) => {
+         this.stopLoading();
+        this.#messageService.add({
+          severity: 'error',
+          detail: this.getBackendErrorMessage(e.error),
+        });
+        
+        return EMPTY;
+      }),
+      takeUntilDestroyed(this.#destroyRef),
+  ).
+  subscribe()
   }
 
   private getBackendErrorMessage(error: BackendErrorResponse): string {
@@ -352,15 +390,32 @@ export class LocationTypesComponent implements OnDestroy {
 
 
   archiveLocationType(locationTypeId: number): void {
+    this.isLoading.set(true)
     this.#locationTypeActionsService.archiveLocationType(locationTypeId).pipe(
       tap(() => {
+        this.isLoading.set(false);
         this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant('locationTypeArchiveSuccessfully'), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
         this.getLocationTypes();
       }),
       catchError((e) => {
+        this.isLoading.set(false);
         this.#messageService.add({ severity: 'error', summary: 'Error', detail: this.getBackendErrorMessage(e.error) , life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
         return EMPTY;
       })
     ).subscribe();
+  }
+
+   startLoading(title: string): void {
+    this.showLoadingDialog.set(true);
+    this.loadingTitle.set(title);
+
+    this.loadingDialogService.startFakeProgress();
+  }
+  
+   stopLoading(): void {
+    setTimeout(() => {
+      this.showLoadingDialog.set(false);
+    }, 1500);
+    this.loadingDialogService.completeProgress();
   }
 }

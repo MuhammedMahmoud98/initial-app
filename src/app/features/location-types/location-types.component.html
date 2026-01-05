@@ -9,13 +9,15 @@
       <!-- ADD LOCATION TYPE BUTTON -->
 
       <div>
-        <p-select
+        <p-multiselect 
           [options]="classificationOptions()"
           optionLabel="name"
           optionValue="code"
           (onChange)="onClassificationChange($event.value)" 
           [placeholder]="'selectClassification' | translate"
           [showClear]="true"
+          [showToggleAll]="false"
+          [filter]="false"
           [ngModel]="selectedClassification()"
           class="classification" />
 
@@ -173,3 +175,7 @@
     </button>
   </div>
 </ng-template>
+
+<p-dialog [(visible)]="showLoadingDialog" [modal]="true" [closable]="false" [style]="{width: '370px', height: '370px'}">
+  <app-loading-dialog [loadingTitle]="loadingTitle()" />
+</p-dialog>

@@ -155,5 +155,6 @@
   "qrGenerated": "Generated",
   "qrNotGenerated": "Not Generated",
   "location details": "location details",
-  "archiving locations...": "archiving locations..."
+  "archiving locations...": "archiving locations...",
+  "unArchiveLocationSuccessMsg": "location restored successfully."
 }

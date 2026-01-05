@@ -155,6 +155,7 @@
   "qrNotGenerated": "غير مُنشأ",
   "location details": "تفاصيل المكان",
   "archiving locations...": "جارٍ أرشفة الأماكن...",
+  "unArchiveLocationSuccessMsg": "تمت استعادة المكان بنجاح.",
   "services displayed from the parent location type": "الخدمات مضمنة من نوع الموقع التابع للمكان",
   "validating archive...": "جارٍ التحقق من الأرشفة..."
 }

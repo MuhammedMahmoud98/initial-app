@@ -26,11 +26,11 @@ import { ComponentStateComponent } from '../../../shared/components/component-st
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 
 import { TitleWithIconComponent } from '../../../shared/components/title-with-icon/title-with-icon.component';
-import { INITIAL_FILTER_PAYLOAD } from '../../../shared/constants/common-constants';
+import {COMMON_CONSTANTS, INITIAL_FILTER_PAYLOAD} from '../../../shared/constants/common-constants';
 import { HubFiltersComponent } from '../../../shared/components/hub-filters/hub-filters.component';
 import { CopyToClipboardComponent } from '../../../shared/components/copy-to-clipboard/copy-to-clipboard.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ConfirmationService, MenuItem } from 'primeng/api';
+import {ConfirmationService, MenuItem, MessageService} from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { TimezoneDatePipe } from '../../../shared/pipes/timezone-date.pipe';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -39,6 +39,7 @@ import { archiveLocation, CreatedArchivedLocationColumnType, CreatedArchivedLoca
 import { TextWithBgColorComponent } from '../../../shared/components/text-with-bg-color/text-with-bg-color.component';
 import { MenuModule } from 'primeng/menu';
 import {Ripple} from 'primeng/ripple';
+import {BackendErrorResponse} from '../location-types/models/location-types.model';
 
 @Component({
   selector: 'app-location-type',
@@ -67,6 +68,7 @@ export class ArchivedLocationsComponent implements OnDestroy {
   readonly genericTableCacheService: GenericTableCacheService = inject(GenericTableCacheService);
   protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
   readonly #ArchivedLocationService: ArchivedLocationService = inject(ArchivedLocationService);
+  readonly #messageService: MessageService = inject(MessageService);
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
 
   // readonly #messageService: MessageService = inject(MessageService);
@@ -177,13 +179,22 @@ export class ArchivedLocationsComponent implements OnDestroy {
   unArchivedLocation(locationTypeId: number): void {
     this.#ArchivedLocationService.unarchiveLocation([locationTypeId]).pipe(
       tap(() => {
+        this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant('unArchiveLocationSuccessMsg'), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
         this.getAssignedLocationTypes();
       }),
       takeUntilDestroyed(this.#destroyRef),
-      catchError(() => {
+      catchError((error) => {
+        this.#messageService.add({severity:'error', summary: 'Error', detail: this.getBackendErrorMessage(error), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
         return EMPTY;
       })
     ).subscribe();
+  }
+
+  private getBackendErrorMessage(error: BackendErrorResponse): string {
+    return (
+      error?.message?.[0]?.source?.message ||
+      this.#translateService.instant('something went wrong')
+    );
   }
 
   createTableColumns(): CreatedArchivedLocationColumnType[] {

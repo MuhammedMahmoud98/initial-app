@@ -348,7 +348,7 @@ onClassificationChange(category: string[] | null): void {
         }
         else {
          this.#messageService.add({
-          severity: 'error',
+          severity: 'warn',
           detail: this.#translateService.instant(res.message || 'something went wrong'),
         });
       }

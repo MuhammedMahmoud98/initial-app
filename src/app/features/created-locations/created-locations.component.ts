@@ -48,6 +48,7 @@ import { LocationTypeActionsService } from '../location-types/services/location-
 import { DrawerModule } from 'primeng/drawer';
 import { ViewLocationDetailsComponent } from './components/header/view-location-details.component';
 import { locationTypeDetails } from '../assigned-locations/models/assigned-location.model';
+import { ValidateLocationTypeResponse } from '../../shared/models/create-location-type.model';
 
 
 @Component({
@@ -530,9 +531,10 @@ export class CreatedLocationsComponent implements OnDestroy {
     this.#locationTypeActionsService
       .validateArchiveLocation(payload)
       .pipe(
-        tap(() => {
+        tap((res:ValidateLocationTypeResponse) => {
           this.stopLoading();
-           setTimeout(() => {
+          if(res.isValid){
+            setTimeout(() => {
               this.confirmationService.confirm({
                 header: this.#translateService.instant('archiveWarning'),
                 message: this.#translateService.instant(
@@ -555,6 +557,12 @@ export class CreatedLocationsComponent implements OnDestroy {
                 },
             });
            }, 1500);
+          }else {
+            this.#messageService.add({
+              severity: 'warn',
+              detail:this.#translateService.instant(res.message || 'something went wrong'),
+            });
+          }
       }),
       catchError((e) => {
         this.isValidatingArchive.set(false);
@@ -583,29 +591,36 @@ export class CreatedLocationsComponent implements OnDestroy {
     this.#locationTypeActionsService
       .validateArchiveLocation(payload)
       .pipe(
-        tap(() => {
+        tap((res:ValidateLocationTypeResponse) => {
           this.isValidatingArchive.set(false);
-          this.confirmationService.confirm({
-            header: this.#translateService.instant('archiveWarning'),
-            message: this.#translateService.instant(
-              'archivelocationConfirmationMessage',
-            ),
-            closable: false,
-            closeOnEscape: true,
-            rejectButtonProps: {
-              label: this.#translateService.instant('cancel'),
-              severity: 'secondary',
-              outlined: true,
-            },
-            acceptButtonProps: {
-              label: this.#translateService.instant('confirm'),
-              severity: 'secondary',
-            },
-            acceptVisible: true,
-            accept: (): void => {
-              this.archiveLocations();
-            },
-          });
+          if(res.isValid){
+              this.confirmationService.confirm({
+                header: this.#translateService.instant('archiveWarning'),
+                message: this.#translateService.instant(
+                  'archivelocationConfirmationMessage',
+                ),
+                closable: false,
+                closeOnEscape: true,
+                rejectButtonProps: {
+                  label: this.#translateService.instant('cancel'),
+                  severity: 'secondary',
+                  outlined: true,
+                },
+                acceptButtonProps: {
+                  label: this.#translateService.instant('confirm'),
+                  severity: 'secondary',
+                },
+                acceptVisible: true,
+                accept: (): void => {
+                  this.archiveLocations();
+                },
+            });
+          } else {
+             this.#messageService.add({
+              severity: 'warn',
+              detail:this.#translateService.instant(res.message || 'something went wrong'),
+            });
+          }
         }),
         catchError((e) => {
           this.isValidatingArchive.set(false);

@@ -406,6 +406,7 @@ const stcPreset = definePreset(Aura, {
       }
     },
     multiselect: {
+      borderRadius: 'var(--stc-radius)',
       shadow: 'none',
       colorScheme: {
         light: {
@@ -421,10 +422,7 @@ const stcPreset = definePreset(Aura, {
               background: 'var(--gray-50)',
             },
           },
-          padding: {
-            x: '1.2rem',
-            y: '.81rem',
-          }
+         
         },
       },
    

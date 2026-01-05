@@ -371,6 +371,10 @@ const stcPreset = definePreset(Aura, {
             background: 'var(--success-200)',
             color: 'var(--success-500)',
           },
+          warn: {
+            background: 'var( --warning-100)',
+            color: 'var(--primary-900)',
+         },
           error: {
             background: 'var(--danger-200)',
             color: 'var(--danger-500)',

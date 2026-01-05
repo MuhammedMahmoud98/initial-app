@@ -19,12 +19,18 @@ export const API_CONSTANTS = {
   DELETE_LOCATIONS: serverUrl + '/locations/delete',
   BULK_UPLOAD_LOCATIONS: serverUrl + '/locations/bulk-upload',
   UPDATE_LOCATIONS: serverUrl + '/locations/{id}',
+  UPDATE_LOCATIONS_DETAILD: serverUrl + '/locations/{id}/details',
   // LOCATION TYPES
   LOCATION_TYPES: serverUrl + '/location-types',
   LOCATION_TYPE_SERVICES: serverUrl + '/location-types/{id}/service/{serviceId}',
   CREATE_LOCATION_TYPE: serverUrl + '/location-types',
   UPDATE_LOCATION_TYPE: serverUrl + '/location-types/{id}',
   DELETE_LOCATION_TYPE: serverUrl + '/location-types/{id}',
+  ARCHIVE_LOCATIONS_TYPE: serverUrl + '/location-types/{id}/archive',
+  ARCHIVE_LOCATIONS: serverUrl + '/locations/archive',
+  VALIDATE_ARCHIVE_LOCATIONS: serverUrl + '/locations/archive/validate',
+  VALIDATE_ARCHIVE_LOCATION_TYPES: serverUrl +'/location-types/{id}/archive/validate',
+  toggleLocationTypeStatus: serverUrl + '/locations/{locationId}/services/{locationServiceId}/toggle',
   // assignedLocation
   ASSIGNED_LOCATIONS: serverUrl + '/user-locations',
   ASSIGNED_LOCATIONS_UNLINK: serverUrl + '/user-locations/{id}/unlink',
@@ -40,4 +46,8 @@ export const API_CONSTANTS = {
   DISCARD_LOCATION_BY_FILEID: serverUrl + '/locations/upload/discard',
   SAVE_LOCATION_BY_FILEID: serverUrl + '/locations/upload/save',
 
+  ARCHIVED_LOCATIONS_TYPE: serverUrl +'/location-types/archived',
+  ARCHIVED_LOCATIONS : serverUrl+ '/locations/archived',
+  UNARCHIVED_LOCATIONS_ITEMS : serverUrl+ '/locations/unarchive',
+  UNARCHIVED_LOCATION_TYPE : serverUrl+ '/location-types/{id}/unarchive'
 };

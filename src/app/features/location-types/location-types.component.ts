@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component, DestroyRef,
   inject,
+  model,
   OnDestroy,
   signal, TemplateRef, viewChild
 } from '@angular/core';
@@ -22,7 +23,7 @@ import {
   ToggleServiceEvent
 } from './models/location-types.model';
 import {ItemFilter, ModeType} from '../../shared';
-import {COMMON_CONSTANTS, INITIAL_FILTER_PAYLOAD} from '../../shared/constants/common-constants';
+import {CLAASSIFICATION_FILTER, COMMON_CONSTANTS, INITIAL_FILTER_PAYLOAD} from '../../shared/constants/common-constants';
 import {
   catchError,
   debounceTime,
@@ -50,6 +51,11 @@ import {Ripple} from 'primeng/ripple';
 import {MODE} from '../../shared/enums/shared.enum';
 import { LocationTypeActionsService } from './services/location-type-actions.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { LoadingDialogService } from '../../shared/services/loading-dialog.service';
+import { LoadingDialogComponent } from '../../shared/dialogs/loading-dialog/loading-dialog.component';
+import { Dialog } from 'primeng/dialog';
 
 @Component({
   selector: 'app-location-types',
@@ -64,8 +70,12 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
     Button,
     TranslatePipe,
     // Menu,
+    FormsModule,
     MenuModule,
-    Ripple
+    Ripple,
+    MultiSelectModule,
+    Dialog,
+    LoadingDialogComponent,
   ],
   providers: [DialogService],
   standalone: true,
@@ -84,14 +94,22 @@ export class LocationTypesComponent implements OnDestroy {
   readonly #messageService: MessageService = inject(MessageService);
   readonly #translateService: TranslateService = inject(TranslateService);
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
+  readonly loadingDialogService = inject(LoadingDialogService);
 
   // SIGNALS
   items = signal<LocationType[]>([]);
-  locationTypesPayload = signal<ItemFilter>(INITIAL_FILTER_PAYLOAD);
+  locationTypesPayload = signal<ItemFilter>({...INITIAL_FILTER_PAYLOAD});
   isApplyingFilter = signal(false);
   isEmptyState = signal(false);
   isErrorState = signal(false);
   isLoading = signal(true);
+  selectedClassification = signal<string>('');
+  showLoadingDialog = model(false)
+  loadingTitle = signal('');
+  classificationOptions = signal([
+    {name: this.#translateService.instant('employeeLocation'), code: CLAASSIFICATION_FILTER.EMPLOYEE_LOCATION},
+    {name: this.#translateService.instant('generalLocation'), code: CLAASSIFICATION_FILTER.GENERAL_LOCATION},
+  ]);
 
   // SUBJECTS
   private toggle$ = new Subject<LocationServiceEvent>();
@@ -103,6 +121,7 @@ export class LocationTypesComponent implements OnDestroy {
   nameCustomColumn = viewChild<TemplateRef<{$implicit: LocationType}>>('nameCustomColumn');
   locationTypeServicesCustomColumn = viewChild<TemplateRef<{$implicit: LocationType}>>('locationTypeServicesCustomColumn');
   locationTypeActionsColumn = viewChild<TemplateRef<{$implicit: LocationType}>>('locationTypeActionsColumn');
+  dimentionsCustomColumn = viewChild<TemplateRef<{$implicit: LocationType}>>('dimentionsCustomColumn');
 
 
   protected readonly genericCasting = genericCasting<LocationType>;
@@ -125,7 +144,6 @@ export class LocationTypesComponent implements OnDestroy {
           this.genericTableCacheService.totalAvailableItems.set(locationTypesResponse.totalElements);
           this.items.set(locationTypesResponse.content);
           this.clearStates();
-          console.log(locationTypesResponse, 'locationTypesResponse');
         } else {
           this.handleEmptyState();
         }
@@ -145,6 +163,7 @@ export class LocationTypesComponent implements OnDestroy {
       {field: 'name', alias: 'typeName', template: this.nameCustomColumn()},
       {field: 'category', alias: 'classification', template: this.categoryCustomColumn()},
       {field: 'code', alias: 'typeCode', template: this.codeCustomColumn()},
+      {field: 'dimentions', alias: 'Printing Dimensions', template: this.dimentionsCustomColumn()},
       {field: 'services', alias: 'availableServices', template: this.serviceCustomColumn()},
       {field: 'availability', template: this.locationTypeServicesCustomColumn()},
       {field: '', template: this.locationTypeActionsColumn()},
@@ -157,6 +176,24 @@ export class LocationTypesComponent implements OnDestroy {
     this.genericTableCacheService.resetPagination$.next(true);
     this.getLocationTypes();
   }
+
+onClassificationChange(category: string[] | null): void {
+  let categoryValue: string | undefined;
+
+  if (!category || category.length === 0 || category.length > 1) {
+    categoryValue = '';
+  } else {
+    categoryValue = category[0];
+  }
+
+  this.updateFilterPayload({
+    category: categoryValue,
+    page: 0
+  });
+
+  this.genericTableCacheService.resetPagination$.next(true);
+  this.getLocationTypes();
+}
 
   onPageChange(currentPage: number) {
     this.updateFilterPayload({page: currentPage} as ItemFilter);
@@ -192,7 +229,6 @@ export class LocationTypesComponent implements OnDestroy {
 
   updateFilterPayload(newFilters: HubFilters | ItemFilter): void {
     this.locationTypesPayload.update((current) => ({...current, ...newFilters}));
-    console.log(this.locationTypesPayload(), 'UPDATED PAYLOAD');
   }
 
   handleEmptyState(): void {
@@ -213,7 +249,6 @@ export class LocationTypesComponent implements OnDestroy {
   }
 
   openAddLocationTypeModal(mode: ModeType = MODE.ADD, locationTypeData?: LocationType): void {
-    console.log(locationTypeData, 'INSIDE MAIN TABLE')
     const dialogRef = this.#dialogService.open(CreateLocationTypeDialogComponent, {
       header: this.#translateService.instant(mode === MODE.ADD ? 'createNewType' : 'editType'),
       width: '580px',
@@ -243,6 +278,14 @@ export class LocationTypesComponent implements OnDestroy {
           this.openAddLocationTypeModal(MODE.EDIT, row);
         },
         alias: 'edit'
+      },
+       {
+        label: 'archive',
+        command: () => {
+          this.openArchiveConfirmDialog(row.id);
+        },
+        alias: 'archive',
+        visible: row['has-linked-locations']
       },
       {
         label: 'delete',
@@ -277,9 +320,56 @@ export class LocationTypesComponent implements OnDestroy {
     });
   }
 
+  openArchiveConfirmDialog(locationTypeId: number): void {
+    this.startLoading('validating archive...');
+    this.#locationTypeActionsService.validateArchivingLocationTypes(locationTypeId).pipe(
+      tap((res) => {
+       this.stopLoading();
+        if(res.isValid){
+           this.confirmationService.confirm({
+            header: this.#translateService.instant('archiveWarning'),
+            message: this.#translateService.instant('archivingTheLocationTypeWillRemove'),
+            closable: false,
+            closeOnEscape: true,
+            rejectButtonProps: {
+              label: this.#translateService.instant('cancel'),
+              severity: 'secondary',
+              outlined: true,
+            },
+            acceptButtonProps: {
+              label: this.#translateService.instant('confirm'),
+              severity: 'secondary',
+            },
+            acceptVisible: true,
+            accept: (): void => {
+              this.archiveLocationType(locationTypeId);
+            }
+          });
+        }
+        else {
+         this.#messageService.add({
+          severity: 'error',
+          detail: this.#translateService.instant(res.message || 'something went wrong'),
+        });
+      }
+    }),
+     catchError((e) => {
+         this.stopLoading();
+        this.#messageService.add({
+          severity: 'error',
+          detail: this.getBackendErrorMessage(e.error),
+        });
+        
+        return EMPTY;
+      }),
+      takeUntilDestroyed(this.#destroyRef),
+  ).
+  subscribe()
+  }
+
   private getBackendErrorMessage(error: BackendErrorResponse): string {
     return (
-      error?.message?.[0]?.source?.message ||
+      error?.message?.[0]?.source?.message || error?.message ||
       this.#translateService.instant('something went wrong')
     );
   }
@@ -296,5 +386,36 @@ export class LocationTypesComponent implements OnDestroy {
         return EMPTY;
       })
     ).subscribe();
+  }
+
+
+  archiveLocationType(locationTypeId: number): void {
+    this.isLoading.set(true)
+    this.#locationTypeActionsService.archiveLocationType(locationTypeId).pipe(
+      tap(() => {
+        this.isLoading.set(false);
+        this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant('locationTypeArchiveSuccessfully'), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
+        this.getLocationTypes();
+      }),
+      catchError((e) => {
+        this.isLoading.set(false);
+        this.#messageService.add({ severity: 'error', summary: 'Error', detail: this.getBackendErrorMessage(e.error) , life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
+        return EMPTY;
+      })
+    ).subscribe();
+  }
+
+   startLoading(title: string): void {
+    this.showLoadingDialog.set(true);
+    this.loadingTitle.set(title);
+
+    this.loadingDialogService.startFakeProgress();
+  }
+  
+   stopLoading(): void {
+    setTimeout(() => {
+      this.showLoadingDialog.set(false);
+    }, 1500);
+    this.loadingDialogService.completeProgress();
   }
 }

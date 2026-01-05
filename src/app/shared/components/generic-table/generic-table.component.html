@@ -34,10 +34,10 @@
     </tr>
   </ng-template>
   <ng-template #body let-rowData let-columns="columns">
-    <tr>
+    <tr (click)="onRowClickGuard($event, rowData)">
       <!-- TABLE BODY CHECKBOX -->
       @if (hasCheckBoxes()) {
-        <td>
+        <td (click)="$event.stopPropagation()">
           <p-tableCheckbox [value]="rowData" />
         </td>
       }

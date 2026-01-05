@@ -1,0 +1,142 @@
+<div class="location-details" >
+  <div class="location">
+    <div class="location__hq">
+      <app-title-with-icon [iconUrl]="'assets/images/widget.svg'" [background]="'var(--monlight-100)'" />
+      <span class="location__hq-title">HQ</span>
+    </div>
+
+    <div class="location__info">
+      <!-- District -->
+      <div class="location__row">
+        <span class="location__label">{{ "district" | translate }}</span>
+        <span class="location__value">
+          {{ locationDetails().district }}
+        </span>
+      </div>
+
+      <!-- Category -->
+      <div class="location__row">
+        <span class="location__label">{{ "category" | translate }}</span>
+        <span class="location__value">
+          {{ locationDetails().category }}
+        </span>
+      </div>
+
+      <!-- Building -->
+      <div class="location__row">
+        <span class="location__label">{{ "building" | translate }}</span>
+        <span class="location__value">
+          <app-text-with-bg-color [textItems]="locationDetails().building" [bgColor]="'var(--monlight-100)'"
+            [textColor]="'var(--monlight-500)'" />
+        </span>
+      </div>
+
+      <!-- Floor -->
+      <div class="location__row">
+        <span class="location__label">{{ "floor" | translate }}</span>
+        <span class="location__value">
+          {{ locationDetails().floor }}
+        </span>
+      </div>
+
+      <!-- Zone -->
+      <div class="location__row">
+        <span class="location__label">{{ "zone" | translate }}</span>
+        <span class="location__value">
+          {{ locationDetails().zone }}
+        </span>
+      </div>
+
+      <!-- Location Type -->
+      <div class="location__row">
+        <span class="location__label">{{ "locationType" | translate }}</span>
+        <span class="location__value">
+          {{ locationDetails().locationType }}
+        </span>
+      </div>
+
+      <!-- Location Code -->
+      <div class="location__row">
+        <span class="location__label">
+          {{ "locationCodeSystemGenerated" | translate }}
+        </span>
+        <span class="location__value">
+          <app-copy-to-clipboard [textToBeCopied]="locationDetails().locationCode" />
+        </span>
+      </div>
+
+      <!-- Serial -->
+      <div class="location__row">
+        <span class="location__label">
+          {{ "serialSystemGenerated" | translate }}
+        </span>
+        <span class="location__value">
+          {{ locationDetails().serial }}
+        </span>
+      </div>
+
+
+      <!-- QR Status -->
+      <div class="location__row">
+        <span class="location__label">{{ "qrStatus" | translate }}</span>
+        <span class="location__value">
+        <app-custom-status [status]="locationDetails().locationTypeCode ? 'success' : 'danger'" />
+        </span>
+      </div>
+    </div>
+  </div>
+  <!-- SERVICES WARNING MESSAGE -->
+  @if(locationDetails() &&  locationDetails().inheritedServices && locationDetails().inheritedServices.length > 0) {
+        <div class="services">
+      <h4 class="services-title">services</h4>
+     
+      <div class="inherited-service-message">
+        <p-message severity="warn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" class="mx-2">
+            <g clip-path="url(#clip0_2769_16317)">
+              <path
+                d="M7.99967 14.6663C9.84061 14.6663 11.5073 13.9201 12.7137 12.7137C13.9201 11.5073 14.6663 9.84061 14.6663 7.99967C14.6663 6.15874 13.9201 4.49207 12.7137 3.28563C11.5073 2.0792 9.84061 1.33301 7.99967 1.33301C6.15874 1.33301 4.49207 2.0792 3.28563 3.28563C2.0792 4.49207 1.33301 6.15874 1.33301 7.99967C1.33301 9.84061 2.0792 11.5073 3.28563 12.7137C4.49207 13.9201 6.15874 14.6663 7.99967 14.6663Z"
+                stroke="#1D252D" stroke-linejoin="round" />
+              <path
+                d="M8.66699 6.05544H7.58004V4.66699H8.66699V6.05544ZM7.58004 12.0003V8.05988H6.66699V6.98433H8.66699V12.0003H7.58004Z"
+                fill="#1D252D" />
+            </g>
+            <defs>
+              <clipPath id="clip0_2769_16317">
+                <rect width="16" height="16" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+          {{'services displayed from the parent location type'|translate}}
+        </p-message>
+      </div>
+
+    <div class="services-actions">
+      @for (
+      item of locationDetails().inheritedServices;
+      let i = $index;
+      track i
+      ) {
+      <div class="action flex align-items-center justify-content-between">
+        <div class="action-name">
+          <app-text-with-bg-color [textItems]="item.serviceName | lowercase" [bgColor]="'var(--silver-100)'"
+            [textColor]="'var(--onyx-500)'" />
+        </div>
+        <div>
+          <div class="action-status flex align-items-center">
+            <!-- <span>{{item.serviceName}}</span>  -->
+            <p-toggleswitch 
+              [(ngModel)]="item.enabled"
+              (onChange)="toggleLocationServiceStatus(item)"
+            />
+          </div>
+        </div>
+      </div>
+      }
+
+      
+    </div>
+  </div>
+  }
+
+</div>

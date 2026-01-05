@@ -1,4 +1,4 @@
-import {LocationBase, ModeType, TableColumn} from '../../../shared';
+import {LocationBase, ModeType, TableColumn} from '../../../../shared';
 
 export interface LocationType {
   id:       number;
@@ -6,7 +6,6 @@ export interface LocationType {
   code:     string;
   size:     string;
   category: string;
-  dimentions?: string;
   'has-linked-locations'?: boolean;
   services: LocationService[];
 }

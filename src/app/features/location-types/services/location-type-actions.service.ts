@@ -5,8 +5,10 @@ import {API_CONSTANTS} from '../../../shared';
 import {
   LocationTypePayload,
   LocationTypeResponse,
-  ServiceLinkPayload, ServiceLinkResponse
+  ServiceLinkPayload, ServiceLinkResponse,
+  ValidateLocationTypeResponse
 } from '../../../shared/models/create-location-type.model';
+import {GenerateQrPayload} from '../../created-locations/models/created-location.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +32,31 @@ export class LocationTypeActionsService {
     return this.#http.delete(uri);
   }
 
+  archiveLocationType(id: number): Observable<unknown> {
+    const uri = API_CONSTANTS.ARCHIVE_LOCATIONS_TYPE.replace('{id}', id.toString());
+
+    return this.#http.post(uri,{});
+  }
+
+  validateArchiveLocation(body: GenerateQrPayload): Observable<unknown> {
+    const uri = API_CONSTANTS.VALIDATE_ARCHIVE_LOCATIONS;
+    
+    return this.#http.post(uri, body);
+  }
+
+  archiveLocation(body: GenerateQrPayload): Observable<unknown> {
+    const uri = API_CONSTANTS.ARCHIVE_LOCATIONS;
+    
+    return this.#http.post(uri, body);
+  }
+
   validateServiceLink(linkPayload: ServiceLinkPayload): Observable<ServiceLinkResponse> {
     return this.#http.post<ServiceLinkResponse>(API_CONSTANTS.LINK_VALIDATE_QR, linkPayload);
+  }
+
+  validateArchivingLocationTypes(id: number): Observable<ValidateLocationTypeResponse> {
+    const uri = API_CONSTANTS.VALIDATE_ARCHIVE_LOCATION_TYPES.replace('{id}', id.toString());;
+    
+    return this.#http.post<ValidateLocationTypeResponse>(uri, {});
   }
 }

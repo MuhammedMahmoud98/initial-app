@@ -4,30 +4,9 @@
   } @else {
     <!-- FILTERS -->
     <div class="hub-locations-types__filters">
-      <app-hub-filters (filterValues)="onFilterValueChanges($event)"/>
+      <app-hub-filters  [placeHolder]="'searchPlaceholder'" (filterValues)="onFilterValueChanges($event)"/>
 
-      <!-- ADD LOCATION TYPE BUTTON -->
 
-      <div>
-        <p-multiselect 
-          [options]="classificationOptions()"
-          optionLabel="name"
-          optionValue="code"
-          (onChange)="onClassificationChange($event.value)" 
-          [placeholder]="'selectClassification' | translate"
-          [showClear]="true"
-          [showToggleAll]="false"
-          [filter]="false"
-          [ngModel]="selectedClassification()"
-          class="classification" />
-
-        <p-button [severity]="'secondary'" [outlined]="true" [label]="'createNewType' | translate" (onClick)="openAddLocationTypeModal()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 23 23" fill="none">
-            <path d="M12.03 5L12.0117 19" stroke="#FF375E" stroke-linecap="square"/>
-            <path d="M5 12H19" stroke="#FF375E" stroke-linecap="square"/>
-          </svg>
-        </p-button>
-      </div>
     </div>
 
     @if ((!isApplyingFilter() && isEmptyState() && !items().length)) {
@@ -70,8 +49,7 @@
 <!-- NAME CUSTOM COLUMN -->
 <ng-template #nameCustomColumn let-row>
   @let location = genericCasting(row);
-
-  <app-title-with-icon [itemTitle]="location.name" [iconUrl]="'assets/images/location-state.svg'"/>
+  <app-title-with-icon [itemTitle]="location.name" [background]="'#F7F8F9'" [iconUrl]="'assets/images/archived.svg'"/>
 </ng-template>
 
 <!-- SERVICE CUSTOM COLUMN -->
@@ -96,16 +74,6 @@
     [textColor]="'var(--primary-500)'"
   />
 </ng-template>
-
-<ng-template #dimentionsCustomColumn let-row>
-  @let locationType = genericCasting(row);
-  <app-text-with-bg-color
-    [textItems]="locationType.size"
-    [bgColor]="'var(--silver-100)'"
-    [textColor]="'var(--onyx-500)'"
-  />
-</ng-template>
-
 
 
 <!-- CATEGORY CUSTOM COLUMN -->
@@ -133,19 +101,10 @@
     <p-menu [appendTo]="'body'" #menu [model]="locationTypeActions(locationType)" [popup]="true">
       <ng-template #item let-item>
         <a pRipple class="flex items-center p-menu-item-link">
-          @if (item.alias === 'edit') {
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M1.77548 14.4998L4.60382 14.4999L14.9747 4.12895L12.1463 1.30054L1.77539 11.6715L1.77548 14.4998Z" stroke="#1D252D"/>
-              <path d="M9.31641 4.12915L12.1448 6.95758" stroke="#1D252D" stroke-linecap="square"/>
-            </svg>
+          @if (item.alias === 'unarchive') {
+            <img src="assets/images/archived.svg" [alt]="item.label"/>
           }
-          @if (item.alias === 'archive') {
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 13.3333H2.5H2ZM2 14H1.5V14.5H2V14ZM2.66667 4V4.5H13.3333V4V3.5H2.66667V4ZM13.3333 4V4.5C13.4254 4.5 13.5 4.57462 13.5 4.66667H14H14.5C14.5 4.02233 13.9777 3.5 13.3333 3.5V4ZM14 4.66667H13.5V12H14H14.5V4.66667H14ZM12 14V13.5H2.66667V14V14.5H12V14ZM2 13.3333H2.5V4.66667H2H1.5V13.3333H2ZM2 4.66667H2.5C2.5 4.57462 2.57462 4.5 2.66667 4.5V4V3.5C2.02233 3.5 1.5 4.02233 1.5 4.66667H2ZM2.66667 14V13.5H2V14V14.5H2.66667V14ZM2 14H2.5V13.3333H2H1.5V14H2ZM14 12H13.5C13.5 12.8284 12.8284 13.5 12 13.5V14V14.5C13.3807 14.5 14.5 13.3807 14.5 12H14Z" fill="#1D252D"/>
-              <path d="M5.98242 8.00269H9.98242" stroke="#1D252D" stroke-linejoin="round"/>
-              <path d="M2 4.33341L4.33333 1.66675H11.6667L14 4.33341" stroke="#1D252D" stroke-linejoin="round"/>
-            </svg>
-          }
+
           @if (item.alias === 'delete') {
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
               <g clip-path="url(#clip0_115_7262)">
@@ -175,7 +134,3 @@
     </button>
   </div>
 </ng-template>
-
-<p-dialog [(visible)]="showLoadingDialog" [modal]="true" [closable]="false" [style]="{width: '370px', height: '370px'}">
-  <app-loading-dialog [loadingTitle]="loadingTitle()" />
-</p-dialog>

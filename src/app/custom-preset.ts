@@ -301,7 +301,7 @@ const stcPreset = definePreset(Aura, {
           },
         },
       },
-    },
+    }, 
     select: {
       borderRadius: 'var(--stc-radius)',
       shadow: 'none',
@@ -407,6 +407,10 @@ const stcPreset = definePreset(Aura, {
     },
     multiselect: {
       shadow: 'none',
+      padding: {
+        x: '1.2rem',
+        y: '.82rem',
+      }
     },
     datatable: {
       colorScheme: {

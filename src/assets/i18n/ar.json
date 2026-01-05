@@ -154,5 +154,6 @@
   "qrGenerated": "تم الإنشاء",
   "qrNotGenerated": "غير مُنشأ",
   "location details": "تفاصيل المكان",
-  "archiving locations...": "جارٍ أرشفة الأماكن..."
+  "archiving locations...": "جارٍ أرشفة الأماكن...",
+  "unArchiveLocationSuccessMsg": "تمت استعادة المكان بنجاح."
 }

@@ -241,11 +241,6 @@ export class PdfMakerService {
     const pdfMake = await this.initializePdfMake();
 
     console.log(pdfMake, 'PDF MAKE');
-
-    // Preload logos as base64 to avoid multiple network requests
-    const stcPurpleLogoBase64 = await this.loadStcPurpleLogoBase64();
-    const svgLogoBase64 = await this.loadSvgLogoBase64();
-
     const content: unknown[] = [];
 
     // Add each QR code

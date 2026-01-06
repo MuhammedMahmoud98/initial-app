@@ -571,14 +571,14 @@ export class CreatedLocationsComponent implements OnDestroy {
           severity: 'error',
           detail: this.getBackendErrorMessage(e.error),
         });
-        
+
         return EMPTY;
       }),
       takeUntilDestroyed(this.#destroyRef),
       )
       .subscribe();
   }
-  
+
   openArchiveLocationsConfirmDialog(): void {
     const payload = {
       all: this.genericTableCacheService.isSelectingBulkAction(),
@@ -680,7 +680,6 @@ export class CreatedLocationsComponent implements OnDestroy {
   }
 
   archiveLocation(locationTypeId: number): void {
-    this.isLoading.set(true)
     this.#locationTypeActionsService
       .archiveLocation({
         all: false,
@@ -726,7 +725,7 @@ export class CreatedLocationsComponent implements OnDestroy {
     this.viewDetails$.next(row.id);
   }
 
-  
+
   viewDetails(locationTypeId: number): void {
     this.#locationsService.locationTypeDetails(locationTypeId).pipe(
       tap((locationDetails: locationTypeDetails) => {
@@ -735,7 +734,7 @@ export class CreatedLocationsComponent implements OnDestroy {
       }),
       takeUntilDestroyed(this.#destroyRef),
     ).subscribe();
-  }  
+  }
 
  private initViewDetailsListener(): void {
   this.viewDetails$

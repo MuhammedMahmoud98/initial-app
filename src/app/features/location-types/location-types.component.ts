@@ -359,7 +359,7 @@ onClassificationChange(category: string[] | null): void {
           severity: 'error',
           detail: this.getBackendErrorMessage(e.error),
         });
-        
+
         return EMPTY;
       }),
       takeUntilDestroyed(this.#destroyRef),
@@ -390,7 +390,6 @@ onClassificationChange(category: string[] | null): void {
 
 
   archiveLocationType(locationTypeId: number): void {
-    this.isLoading.set(true)
     this.#locationTypeActionsService.archiveLocationType(locationTypeId).pipe(
       tap(() => {
         this.isLoading.set(false);
@@ -411,7 +410,7 @@ onClassificationChange(category: string[] | null): void {
 
     this.loadingDialogService.startFakeProgress();
   }
-  
+
    stopLoading(): void {
     setTimeout(() => {
       this.showLoadingDialog.set(false);

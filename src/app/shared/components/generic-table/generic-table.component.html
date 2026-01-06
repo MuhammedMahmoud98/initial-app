@@ -26,7 +26,7 @@
         </th>
       }
 
-      @for (col of columns; track col?.field) {
+      @for (col of columns; track col?.field || col?.alias || $index) {
         <th [style.width]="col?.columnWidth + '!important'">
           {{ (col.alias ?? col.field) | translate }}
         </th>
@@ -42,7 +42,7 @@
         </td>
       }
 
-      @for (col of columns; track col.field) {
+      @for (col of columns; track col?.field || col?.alias || $index) {
         @if (col?.template) {
           <td>
             <ng-container *ngTemplateOutlet="col.template; context: {$implicit: rowData}"/>

@@ -178,6 +178,7 @@ export class LocationTypesComponent implements OnDestroy {
   }
 
 onClassificationChange(category: string[] | null): void {
+  console.log(category)
   let categoryValue: string | undefined;
 
   if (!category || category.length === 0 || category.length > 1) {

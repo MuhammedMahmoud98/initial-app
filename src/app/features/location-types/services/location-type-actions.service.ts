@@ -33,10 +33,10 @@ export class LocationTypeActionsService {
     return this.#http.delete(uri);
   }
 
-  archiveLocationType(id: number): Observable<unknown> {
+  archiveLocationType(id: number): Observable<{message: string}> {
     const uri = API_CONSTANTS.ARCHIVE_LOCATIONS_TYPE.replace('{id}', id.toString());
 
-    return this.#http.post(uri,{});
+    return this.#http.post<{message: string}>(uri,{});
   }
 
   validateArchiveLocation(body: GenerateQrPayload): Observable<ValidateLocationTypeResponse> {

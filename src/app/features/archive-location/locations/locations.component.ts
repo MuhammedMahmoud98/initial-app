@@ -178,13 +178,13 @@ export class ArchivedLocationsComponent implements OnDestroy {
 
   unArchivedLocation(locationTypeId: number): void {
     this.#ArchivedLocationService.unarchiveLocation([locationTypeId]).pipe(
-      tap(() => {
-        this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant('unArchiveLocationSuccessMsg'), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
+      tap((res) => {
+        this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant(res.message ), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
         this.getAssignedLocationTypes();
       }),
       takeUntilDestroyed(this.#destroyRef),
       catchError((error) => {
-        this.#messageService.add({severity:'error', summary: 'Error', detail: this.getBackendErrorMessage(error), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
+        this.#messageService.add({severity:'error', summary: 'Error', detail: this.getBackendErrorMessage(error.error), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
         return EMPTY;
       })
     ).subscribe();
@@ -193,6 +193,7 @@ export class ArchivedLocationsComponent implements OnDestroy {
   private getBackendErrorMessage(error: BackendErrorResponse): string {
     return (
       error?.message?.[0]?.source?.message ||
+      error.message||
       this.#translateService.instant('something went wrong')
     );
   }

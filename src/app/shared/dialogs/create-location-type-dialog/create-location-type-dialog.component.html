@@ -29,7 +29,7 @@
             @if (getControlError('name', 'maxlength')) {
               <span class="stc-danger">{{ 'maxLengthField' | translate:{length: getErrorRequiredLength('name', 'maxlength')} }}</span>
             }
-            
+
             @if (getControlError('name', 'duplicatedTypeCode')) {
               <span class="stc-danger">{{ 'duplicatedTypeName' | translate }}</span>
             }
@@ -76,7 +76,7 @@
           [labelTooltip]="'qrPrintingTooltip'"
           [isRequired]="true"
         />
-        <app-printing-size-dimensions formControlName="size"/>
+        <app-printing-size-dimensions formControlName="size" [category]="getControl('category')?.value"/>
       </div>
 
       @if (getControl('category')?.value === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION) {

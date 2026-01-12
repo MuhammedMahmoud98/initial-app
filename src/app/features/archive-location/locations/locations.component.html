@@ -24,9 +24,12 @@
     [subTitle]="'please check your network or contact system admin'" [iconUrl]="'assets/images/refresh-state.svg'"
     [showReloadButton]="true" />
   }@else if (isApplyingFilter() && isEmptyState() && !isErrorState()) {
-  <app-component-state [mainTitle]="'no locations found yet'"
-    [subTitle]="'no location code matches the code entered'" [iconUrl]="'assets/images/location-state.svg'"
+  <app-component-state [mainTitle]="'no location code matches the code entered'"
+    [subTitle]="''" [iconUrl]="'assets/images/location-state.svg'"
     [showReloadButton]="false" />
+      <!-- <app-component-state [mainTitle]="'no locations found yet'"
+    [subTitle]="'no location code matches the code entered'" [iconUrl]="'assets/images/location-state.svg'"
+    [showReloadButton]="false" /> -->
   }
   }
   }

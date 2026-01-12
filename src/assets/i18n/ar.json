@@ -140,6 +140,7 @@
   "unArchivedLocationConfirmMessageHeader": "تأكيد إلغاء أرشفة المكان",
   "unArchivedLocationConfirmMessageBody": "إلغاء أرشفة المكان سيتيح للموظفين من مسحه والوصول إلى جميع الخدمات النشطة المرتبطة به",
   "no location code matches the code entered": "لا يوجد رمز مكان مطابق للرمز الذي تم إدخاله",
+  "no location types have the code entered": "لا يوجد نوع مكان مطابق للرمز الذي تم إدخاله",
   "When you archive locations, they will appear here for management and restoration": "عندما تقوم بأرشفة المواقع، ستظهر هنا للإدارة والاستعادة.",
   "No Archived Locations": "لا توجد مواقع مؤرشفة",
   "unarchiveLocationTypeConfirmMessageHeader": "تأكيد إلغاء أرشفة المكان",

@@ -75,3 +75,10 @@ export interface ValidateLocationTypeResponse {
   activeLocationCount?: number;
   invalidLocationIds?:number[];
 }
+
+export interface archiveResponse {
+  archivedCount:number;
+  archivedLocationIds:number[];
+  message:string
+
+}

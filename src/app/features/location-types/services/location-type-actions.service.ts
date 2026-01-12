@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {API_CONSTANTS} from '../../../shared';
 import {
+  archiveResponse,
   LocationTypePayload,
   LocationTypeResponse,
   ServiceLinkPayload, ServiceLinkResponse,
@@ -44,10 +45,10 @@ export class LocationTypeActionsService {
     return this.#http.post<ValidateLocationTypeResponse>(uri, body);
   }
 
-  archiveLocation(body: GenerateQrPayload): Observable<unknown> {
+  archiveLocation(body: GenerateQrPayload): Observable<archiveResponse> {
     const uri = API_CONSTANTS.ARCHIVE_LOCATIONS;
     
-    return this.#http.post(uri, body);
+    return this.#http.post<archiveResponse>(uri, body);
   }
 
   validateServiceLink(linkPayload: ServiceLinkPayload): Observable<ServiceLinkResponse> {

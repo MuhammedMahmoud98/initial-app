@@ -48,7 +48,7 @@ import { LocationTypeActionsService } from '../location-types/services/location-
 import { DrawerModule } from 'primeng/drawer';
 import { ViewLocationDetailsComponent } from './components/header/view-location-details.component';
 import { locationTypeDetails } from '../assigned-locations/models/assigned-location.model';
-import { ValidateLocationTypeResponse } from '../../shared/models/create-location-type.model';
+import { archiveResponse, ValidateLocationTypeResponse } from '../../shared/models/create-location-type.model';
 
 
 @Component({
@@ -688,16 +688,24 @@ export class CreatedLocationsComponent implements OnDestroy {
         filter: '',
       })
       .pipe(
-        tap(() => {
+        tap((res:archiveResponse) => {
           this.isLoading.set(false)
           this.#messageService.add({
             severity: 'success',
             summary: 'Success',
             detail: this.#translateService.instant(
-              'locationArchivedSuccessfully',
+             res.message,
             ),
             life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
           });
+
+          if(this.genericTableCacheService.selectedItemsCounter()>0){
+            this.genericTableCacheService.selectedItemsCache.update(items => 
+              items.filter(item => item !== locationTypeId)
+            );
+            this.selectedItemsCounter.set(this.genericTableCacheService.selectedItemsCache().length)
+            this.genericTableCacheService.selectedItemsCounter.set(this.genericTableCacheService.selectedItemsCache().length)
+          }
           this.getCreatedLocations();
         }),
         catchError((e) => {

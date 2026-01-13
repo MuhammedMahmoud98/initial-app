@@ -651,7 +651,8 @@ export class CreatedLocationsComponent implements OnDestroy {
       .archiveLocation(payload)
       .pipe(
         tap((): void => {
-          this.isLoading.set(false)
+          this.isLoading.set(false);
+          this.resetEmptyStateAfterArchive(payload);
           this.genericTableCacheService.resetBulkActions$.next(true);
           this.#messageService.add({
             severity: 'success',
@@ -700,7 +701,7 @@ export class CreatedLocationsComponent implements OnDestroy {
           });
 
           if(this.genericTableCacheService.selectedItemsCounter()>0){
-            this.genericTableCacheService.selectedItemsCache.update(items => 
+            this.genericTableCacheService.selectedItemsCache.update(items =>
               items.filter(item => item !== locationTypeId)
             );
             this.selectedItemsCounter.set(this.genericTableCacheService.selectedItemsCache().length)
@@ -758,4 +759,14 @@ export class CreatedLocationsComponent implements OnDestroy {
     )
     .subscribe();
  }
+
+  private resetEmptyStateAfterArchive(payload: GenerateQrPayload): void {
+    if (payload.all) {
+      this.genericTableCacheService.selectedItemsCache.set([]);
+      this.selectedItemsCounter.set(0);
+      this.genericTableCacheService.selectedItemsCounter.set(0);
+      this.isApplyingFilter.set(false);
+      this.isEmptyState.set(true);
+    }
+  }
 }

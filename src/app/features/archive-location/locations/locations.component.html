@@ -13,10 +13,8 @@
   </div>
   @if (!isEmptyState() && !isErrorState()) {
   <div class="overflow-x-auto overflow-y-hidden">
-
-    <app-generic-table [columns]="createTableColumns()" [items]="items()" [showRecordInfo]="true"
+    <app-generic-table [columns]="createTableColumns()" [items]="items()" [showRecordInfo]="false"
       [totalRecords]="genericTableCacheService.totalAvailableItems()" (currentPage)="onPageChange($event)" />
-
   </div>
 
   } @else if (isErrorState() && !isEmptyState()) {

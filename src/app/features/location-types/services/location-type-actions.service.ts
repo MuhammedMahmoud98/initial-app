@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {API_CONSTANTS} from '../../../shared';
 import {
+  archiveResponse,
   LocationTypePayload,
   LocationTypeResponse,
   ServiceLinkPayload, ServiceLinkResponse,
@@ -32,10 +33,10 @@ export class LocationTypeActionsService {
     return this.#http.delete(uri);
   }
 
-  archiveLocationType(id: number): Observable<unknown> {
+  archiveLocationType(id: number): Observable<{message: string}> {
     const uri = API_CONSTANTS.ARCHIVE_LOCATIONS_TYPE.replace('{id}', id.toString());
 
-    return this.#http.post(uri,{});
+    return this.#http.post<{message: string}>(uri,{});
   }
 
   validateArchiveLocation(body: GenerateQrPayload): Observable<ValidateLocationTypeResponse> {
@@ -44,10 +45,10 @@ export class LocationTypeActionsService {
     return this.#http.post<ValidateLocationTypeResponse>(uri, body);
   }
 
-  archiveLocation(body: GenerateQrPayload): Observable<unknown> {
+  archiveLocation(body: GenerateQrPayload): Observable<archiveResponse> {
     const uri = API_CONSTANTS.ARCHIVE_LOCATIONS;
     
-    return this.#http.post(uri, body);
+    return this.#http.post<archiveResponse>(uri, body);
   }
 
   validateServiceLink(linkPayload: ServiceLinkPayload): Observable<ServiceLinkResponse> {

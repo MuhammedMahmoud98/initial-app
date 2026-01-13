@@ -30,8 +30,8 @@
         </div>
       } @else if (isEmptyState() && !isErrorState()) {
         <app-component-state
-          [mainTitle]="'noLocationsTypeAvailable'"
-          [subTitle]="'locationTypeSubTitleEmpty'"
+          [mainTitle]="'no location types have the code entered'"
+          [subTitle]="''"
           [iconUrl]="'assets/images/location-state.svg'"
         />
       } @else if (isErrorState() && !isEmptyState()) {

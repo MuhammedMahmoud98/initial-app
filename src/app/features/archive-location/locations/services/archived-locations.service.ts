@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_CONSTANTS, ItemFilter } from '../../../../shared';
 import { CreatedArchivedLocationResponse } from '../models/locations.model';
+import { archiveResponse } from '../../../../shared/models/create-location-type.model';
 
 
 @Injectable({
@@ -17,8 +18,8 @@ export class ArchivedLocationService {
     return this.#httpClient.get<CreatedArchivedLocationResponse>(API_CONSTANTS.ARCHIVED_LOCATIONS, { params });
   }
 
-  unarchiveLocation(locationIdS: number[]): Observable<void> {
-    return this.#httpClient.post<void>(`${API_CONSTANTS.UNARCHIVED_LOCATIONS_ITEMS}`, locationIdS);
+  unarchiveLocation(locationIdS: number[]): Observable<archiveResponse> {
+    return this.#httpClient.post<archiveResponse>(`${API_CONSTANTS.UNARCHIVED_LOCATIONS_ITEMS}`, locationIdS);
   }
 
   unarchiveLocationType(locationTypeId: number): Observable<void> {

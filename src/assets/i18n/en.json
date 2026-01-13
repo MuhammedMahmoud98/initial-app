@@ -140,6 +140,7 @@
   "unArchivedLocationConfirmMessageHeader": "confirm unarchive location",
   "unArchivedLocationConfirmMessageBody": "unarchiving the location will enable employees to scan it and access all active services related to it",
   "no location code matches the code entered": "no location code matches the code entered",
+  "no location types have the code entered": "no location types have the code entered",
   "When you archive locations, they will appear here for management and restoration": "when you archive locations, they will appear here for management and restoration.",
   "No Archived Locations": "no archived locations",
   "unarchiveLocationTypeConfirmMessageHeader": "confirm unarchive location",

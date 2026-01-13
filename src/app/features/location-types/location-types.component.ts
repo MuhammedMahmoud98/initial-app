@@ -178,6 +178,7 @@ export class LocationTypesComponent implements OnDestroy {
   }
 
 onClassificationChange(category: string[] | null): void {
+  console.log(category)
   let categoryValue: string | undefined;
 
   if (!category || category.length === 0 || category.length > 1) {
@@ -391,9 +392,9 @@ onClassificationChange(category: string[] | null): void {
 
   archiveLocationType(locationTypeId: number): void {
     this.#locationTypeActionsService.archiveLocationType(locationTypeId).pipe(
-      tap(() => {
+      tap((res) => {
         this.isLoading.set(false);
-        this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant('locationTypeArchiveSuccessfully'), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
+        this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant(res.message), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
         this.getLocationTypes();
       }),
       catchError((e) => {

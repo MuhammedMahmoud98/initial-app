@@ -80,7 +80,7 @@
       <div class="location__row">
         <span class="location__label">{{ "qrStatus" | translate }}</span>
         <span class="location__value">
-        <app-custom-status [status]="locationDetails().locationTypeCode ? 'success' : 'danger'" />
+        <app-custom-status [status]="(locationDetails().qrStatus === 'Generated') ? 'success' : 'danger'" />
         </span>
       </div>
     </div>

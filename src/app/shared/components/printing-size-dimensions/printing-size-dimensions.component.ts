@@ -4,6 +4,7 @@ import {
   Component, effect,
   forwardRef,
   inject,
+  input,
   signal,
   WritableSignal
 } from '@angular/core';
@@ -31,6 +32,10 @@ import {TranslatePipe} from '@ngx-translate/core';
 export class PrintingSizeDimensionsComponent implements ControlValueAccessor{
   // INJECTIONS
   readonly #cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
+  // INPUTS
+  category = input<string>();
+
   // SIGNALS
   printingSizeOptions: WritableSignal<PrintingSizeDimension[]> = signal([
     // { label: 'A4', value: 'A4', isSelected: true },
@@ -88,7 +93,7 @@ export class PrintingSizeDimensionsComponent implements ControlValueAccessor{
   // Public API: call this when the user selects/changes the category in the template
   // Templates should call this method (e.g. (click)="select(category)")
   select(value: string) {
-    if (this.disabled) return;
+    if (this.disabled || this.isEmployeeLocation()) return;
     this._value.set(value);
 
     this.printingSizeOptions.update((options: PrintingSizeDimension[]) => {
@@ -101,5 +106,9 @@ export class PrintingSizeDimensionsComponent implements ControlValueAccessor{
     this.onChange(this._value());
     this.onTouched();
     this.#cdr.markForCheck();
+  }
+
+  isEmployeeLocation(): boolean {
+    return this.category() === 'Employee Location';
   }
 }

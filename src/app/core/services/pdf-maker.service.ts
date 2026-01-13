@@ -16,6 +16,7 @@ import {environment} from '../../environment/environment';
 import {DatePipe} from '@angular/common';
 import {QrCodeStylingService} from '../../shared/services/qr-code-styling.service';
 import {whiteQRwithSharpCornersOptions, pinkBgPurpleDotsWithLogoOptions, purpleBgPurpleDotsWithLogoOptions } from '../../shared/constants/qr-code-styling-options';
+import {LOCATION_TYPE_CATEGORIES} from '../../shared/enums/shared.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -460,31 +461,49 @@ export class PdfMakerService {
   }
 
   async generatePdfTwoColumns(records: PrintQRCodeDto[]) {
-    // Group records by size - pdfMake requires all pages to have the same size
-    const recordsBySize = records.reduce((acc, record) => {
-      const sizeKey = record.size?.includes('A6') ? 'A6' : 'other';
-      if (!acc[sizeKey]) {
-        acc[sizeKey] = [];
-      }
-      acc[sizeKey].push(record);
-      return acc;
-    }, {} as Record<string, PrintQRCodeDto[]>);
+    // Group records by category and size
+    const recordsByCategoryAndSize = records.reduce((acc, record) => {
+      const category = record.category || LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION;
+      const sizeKey = record.size?.includes('A6') ? 'A6' : '6x9';
 
-    // Generate a PDF for each size group sequentially
-    const sizeGroups = Object.keys(recordsBySize);
-    for (const size of sizeGroups) {
-      await this.generatePdfForSize(recordsBySize[size]);
-      // Add small delay between downloads to prevent browser issues
-      if (sizeGroups.length > 1) {
+      if (!acc[category]) {
+        acc[category] = {};
+      }
+      if (!acc[category][sizeKey]) {
+        acc[category][sizeKey] = [];
+      }
+      acc[category][sizeKey].push(record);
+      return acc;
+    }, {} as Record<string, Record<string, PrintQRCodeDto[]>>);
+
+    // Generate PDFs for each category and size combination
+    for (const category of Object.keys(recordsByCategoryAndSize)) {
+      const sizeGroups = recordsByCategoryAndSize[category];
+
+      for (const size of Object.keys(sizeGroups)) {
+        // For GENERAL_LOCATION, use A6 design for both A6 and 6x9 sizes
+        // For EMPLOYEE_LOCATION, use current 6x9 design only
+        const recordsToProcess = sizeGroups[size];
+        await this.generatePdfForSize(recordsToProcess, category, size);
+
+        // Add small delay between downloads to prevent browser issues
         await new Promise(resolve => setTimeout(resolve, 500));
       }
     }
   }
 
-  private async generatePdfForSize(records: PrintQRCodeDto[]) {
+  private async generatePdfForSize(records: PrintQRCodeDto[], category: string, size: string) {
     const pdfMake = await this.initializePdfMake();
-    const isA6Size = records[0]?.size?.includes('A6') ?? false;
-    const illustrationSvg = isA6Size ? await this.loadMobileSvg() : await this.loadEmployeeLocationSvg();
+    const isGeneralLocation = category === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION;
+    const isEmployeeLocation = category === LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION;
+
+    // For GENERAL_LOCATION: use A6 design for both A6 and 6x9 sizes
+    // For EMPLOYEE_LOCATION: use 6x9 design only
+    const useA6Design = isGeneralLocation && (size === 'A6' || size === '6x9');
+    const isA6Size = size === 'A6';
+    const is6x9Size = size === '6x9';
+
+    const illustrationSvg = useA6Design ? await this.loadMobileSvg() : await this.loadEmployeeLocationSvg();
     // Preload logos as base64 to avoid multiple network requests
     const stcPurpleLogoBase64 = await this.loadStcPurpleLogoBase64();
     const svgLogoBase64 = await this.loadSvgLogoBase64();
@@ -493,37 +512,37 @@ export class PdfMakerService {
     // Use for...of loop to handle async QR code generation
     for (const [index, record] of records.entries()) {
 
-      // Generate styled QR code image - use different styling based on size
+      // Generate styled QR code image - use different styling based on category and size
       // Generate at 5x resolution for maximum sharpness, pdfmake will scale down for display
-      const qrOptions = isA6Size ? purpleBgPurpleDotsWithLogoOptions : pinkBgPurpleDotsWithLogoOptions;
+      const qrOptions = useA6Design ? purpleBgPurpleDotsWithLogoOptions : pinkBgPurpleDotsWithLogoOptions;
       const qrResolutionMultiplier = 5;
       const qrDisplaySize = displayQrDimension(handlePDFSize(records) as never);
       const qrGenerationSize = qrDisplaySize * qrResolutionMultiplier;
       const qrImage = await this.#qrCodeStylingService.generateQRCodePNG(
         `${environment.qrCodeUrl}/qr-guest/user-guest/${record.qrCode}`, {
           ...qrOptions,
-          image: isA6Size ? stcPurpleLogoBase64 : svgLogoBase64,
+          image: useA6Design ? stcPurpleLogoBase64 : svgLogoBase64,
           width: qrGenerationSize,
           height: qrGenerationSize,
         },
       );
 
-      // Define colors based on size
-      const textColor = isA6Size ? '#512B84' : '#fff';
-      const iconFillColor = isA6Size ? '#512B84' : 'white';
-      const lineColor = isA6Size ? '#512B84' : 'white';
+      // Define colors based on design type
+      const textColor = useA6Design ? '#512B84' : '#fff';
+      const iconFillColor = useA6Design ? '#512B84' : 'white';
+      const lineColor = useA6Design ? '#512B84' : 'white';
 
       content.push({
         columns: [
           // Left column - Text and Info
           {
             stack: [
-              // Main text section - different text for A6 vs 9x11
-              ...(isA6Size ? [
+              // Main text section - different text for A6 design vs 6x9 design
+              ...(useA6Design ? [
                 // A6 text: "scan to enhance the experience!"
                      {
                   text: '',
-                margin: [0, 80, 0, 0]
+                margin: isA6Size ? [0, 80, 0, 0] : [0, 20, 0, 0]
               },
                 {
                   text: 'scan to enhance',
@@ -531,7 +550,7 @@ export class PdfMakerService {
                   style: 'qrSubtext',
                   alignment: 'start',
                   bold: true,
-                  fontSize: 21,
+                  fontSize: isA6Size ? 21 : 13,
                   margin: [0, 30, 0, 2],
                   font: 'STCFontMedium'
                 },
@@ -543,7 +562,7 @@ export class PdfMakerService {
                   ],
                   style: 'qrSubtext',
                   alignment: 'start',
-                  fontSize: 21,
+                  fontSize: isA6Size ? 21 : 13,
                   margin: [0, 0, 0, 0],
                   font: 'STCFontMedium'
                 },
@@ -590,7 +609,7 @@ export class PdfMakerService {
               // Spacer to push footer to bottom
               {
                 text: '',
-                margin: [0, 0, 0, isA6Size ? 50 : handleMiddleSpacing(records)]
+                margin: [0, 0, 0,  handleMiddleSpacing(records)]
               },
               // Location code section
               {
@@ -600,16 +619,16 @@ export class PdfMakerService {
   <path d="M13.0711 34.5532C15.7251 29.0632 19.5591 23.9342 22.2921 18.5282C24.3961 14.3642 24.7431 10.0062 21.7871 6.10116C14.0721 -4.09084 -3.08289 5.01816 3.46211 18.2052L13.0711 34.5532ZM11.5891 0.169156C21.7981 -0.925844 28.6391 9.28416 24.2061 18.5282C21.3031 24.5802 16.7761 30.4832 13.7571 36.5532C13.2831 37.2652 12.6261 37.2652 12.1521 36.5532C9.19711 30.3462 4.27211 24.2132 1.45911 18.0542C-2.18589 10.0742 2.90211 1.10016 11.5891 0.169156Z" fill="${iconFillColor}"/>
   <path d="M18.4367 12.6277H17.7157C17.7157 13.9537 17.1807 15.1467 16.3117 16.0167C15.4427 16.8847 14.2487 17.4197 12.9237 17.4197C11.5977 17.4197 10.4047 16.8847 9.53471 16.0167C8.66671 15.1467 8.13171 13.9537 8.13171 12.6277C8.13171 11.3027 8.66671 10.1087 9.53471 9.2387C10.4047 8.3707 11.5977 7.8357 12.9237 7.8357C14.2487 7.8357 15.4427 8.3707 16.3117 9.2387C17.1807 10.1087 17.7157 11.3027 17.7157 12.6277H18.4367H19.1577C19.1577 10.9087 18.4587 9.3457 17.3317 8.2197C16.2057 7.0927 14.6427 6.3937 12.9237 6.3937C11.2047 6.3937 9.64071 7.0927 8.51571 8.2197C7.38771 9.3457 6.68871 10.9087 6.68971 12.6277C6.68871 14.3467 7.38771 15.9097 8.51571 17.0357C9.64071 18.1627 11.2047 18.8627 12.9237 18.8617C14.6427 18.8627 16.2057 18.1627 17.3317 17.0357C18.4587 15.9097 19.1577 14.3467 19.1577 12.6277H18.4367Z" fill="${iconFillColor}"/>
 </svg>`,
-                    width: isA6Size ? 14 : handleIconsWidth(records),
-                    margin: [0, isA6Size ? 0 : handleIconTopMargin(records), 8, 0]
+                    width: handleIconsWidth(records),
+                    margin: [0,  handleIconTopMargin(records), 8, 0]
                   },
                   {
                     stack: [
                       {
                         text: 'location code',
                         color: textColor,
-                        fontSize: isA6Size ? 9 : handleFooterFontSize(records),
-                        margin: [isA6Size ? 0 : handleFooterTextRightMargin(records), 0, 0, isA6Size ? 4 : handleTextMarginBottom(records)],
+                        fontSize:  handleFooterFontSize(records),
+                        margin: [ handleFooterTextRightMargin(records), 0, 0, useA6Design ? 4 : handleTextMarginBottom(records)],
                         bold: false,
                         font: 'STCFont'
 
@@ -617,9 +636,9 @@ export class PdfMakerService {
                       {
                         text: record.locationCode,
                         color: '#EB4B62',
-                        fontSize: isA6Size ? 9: handleFooterFontSize(records),
+                        fontSize:  handleFooterFontSize(records),
                         bold: false,
-                        margin: [isA6Size ? 0 : handleFooterTextRightMargin(records), 0, 0, 0],
+                        margin: [handleFooterTextRightMargin(records), 0, 0, 0],
                         font: 'STCFont',
                         maxHeight:  40,
                         lineHeight: 1.2
@@ -659,8 +678,8 @@ export class PdfMakerService {
   <path d="M24.131 14.5679H22.755C22.755 14.3239 22.743 14.0839 22.716 13.8409C22.558 12.3509 21.91 10.9039 20.766 9.75986C19.621 8.61986 18.179 7.96686 16.689 7.80986C16.445 7.78186 16.205 7.76986 15.961 7.76986V6.39386C18.049 6.39386 20.144 7.19186 21.741 8.78886C23.333 10.3809 24.135 12.4759 24.131 14.5679Z" fill="${iconFillColor}"/>
   <path d="M15.9617 4.02957C18.6607 4.03057 21.3527 5.05657 23.4117 7.11557C25.4707 9.17457 26.4977 11.8666 26.4977 14.5656H27.8737C27.8747 11.5196 26.7097 8.46657 24.3847 6.14257C22.0607 3.81756 19.0077 2.65257 15.9617 2.65357V4.02957Z" fill="${iconFillColor}"/>
 </svg>`,
-                    width: isA6Size ? 14 : handleIconsWidth(records),
-                    margin: [0, isA6Size ? 0 : 3, 8, 0]
+                    width:  handleIconsWidth(records),
+                    margin: [0, useA6Design ? 0 : 3, 8, 0]
                   },
                   {
                     stack: [
@@ -712,8 +731,8 @@ export class PdfMakerService {
       // Illustration at bottom right - using absolute position (employee for 9x11, mobile for A6)
       content.push({
         svg: illustrationSvg,
-        width: isA6Size ? 100 : handleEmployeeIconWidth(records),
-        absolutePosition: isA6Size ? { x: 182, y: 220 } : handleEmployeeIconPosition(records),
+        width: handleEmployeeIconWidth(records),
+        absolutePosition:  handleEmployeeIconPosition(records),
         pageBreak: (index < (records.length - 1)) ? 'after' : undefined
       } as unknown as never);
     }
@@ -724,10 +743,10 @@ export class PdfMakerService {
       pageMargins: handlePDFMargins(records),
       content: content,
       header: () => {
-        if (isA6Size) {
+        if (useA6Design) {
           return {
             svg: '<svg width="56" height="28" viewBox="0 0 56 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.19198 28C12.1121 28 14.5091 27.085 16.0784 25.5548C17.2566 24.3755 17.9523 22.8046 17.9523 20.9746C17.9523 19.3174 17.3429 17.833 16.2104 16.6993C15.0779 15.5657 13.463 14.7371 11.4163 14.3457L8.05949 13.6899C6.66292 13.4306 5.88084 12.7291 5.88084 11.7683C5.88084 10.5025 7.09966 9.63326 9.05994 9.63326C10.2788 9.63326 11.3249 10.0247 12.0258 10.7262C12.4625 11.2041 12.7672 11.8192 12.8535 12.5156L17.6933 11.4227C17.5613 10.0247 16.9112 8.80465 15.9057 7.8032C14.3364 6.23239 11.8988 5.23094 9.01932 5.23094C6.36329 5.23094 4.13893 6.1053 2.6154 7.49818C1.31024 8.71823 0.568786 10.3755 0.568786 12.2106C0.568786 13.8272 1.09187 15.1794 2.13803 16.2215C3.18418 17.2687 4.70772 18.0516 6.7137 18.5345L10.0248 19.3174C11.6804 19.7088 12.4219 20.3188 12.4219 21.4118C12.4219 22.764 11.203 23.5468 9.19706 23.5468C7.75986 23.5468 6.58166 23.069 5.84021 22.281C5.31713 21.7574 5.01242 21.061 4.96672 20.2731L0 21.366C0.13204 22.8504 0.827787 24.1569 1.87395 25.2041C3.52952 26.9477 6.19062 27.9949 9.19706 27.9949L9.19198 28ZM45.9752 28C49.2 28 51.6833 26.8206 53.3846 25.1634C54.7355 23.8569 55.5633 22.3268 56 20.756L50.9012 19.053C50.6829 19.8359 50.2461 20.6696 49.5504 21.3203C48.7226 22.1031 47.5901 22.6725 45.9752 22.6725C44.4922 22.6725 43.1008 22.1031 42.0952 21.1017C41.0948 20.0545 40.4803 18.5294 40.4803 16.6078C40.4803 14.6863 41.0897 13.1612 42.0952 12.114C43.0957 11.1126 44.4465 10.589 45.9294 10.589C47.4987 10.589 48.5855 11.1126 49.3726 11.8954C50.0278 12.5512 50.4188 13.3798 50.6778 14.2084L55.8629 12.4648C55.4718 10.9397 54.6441 9.40959 53.4202 8.14379C51.6782 6.44081 49.1492 5.22077 45.7923 5.22077C42.6996 5.22077 39.9115 6.40015 37.9055 8.40305C35.8995 10.4517 34.6807 13.2883 34.6807 16.6028C34.6807 19.9172 35.9452 22.7538 37.9918 24.8025C39.9978 26.8105 42.8316 27.9848 45.965 27.9848L45.9752 28ZM28.3682 28C30.6332 28 32.2481 27.3036 32.9439 26.6935V21.9811C32.4208 22.3726 31.3746 22.8555 30.0238 22.8555C29.0639 22.8555 28.3682 22.6369 27.8451 22.159C27.4084 21.7219 27.19 20.9797 27.19 19.9782V0H21.4361V5.88671H32.9388V11.4684H21.4361V21.3711C21.4361 23.3791 22.0455 24.9906 23.1374 26.1242C24.3562 27.3442 26.1438 28 28.3682 28Z" fill="#4D2C87"/></svg>',
-            width: 55,
+            width: isA6Size ? 55 : 41,
             margin: handleLogoMargins(records)
           };
         }
@@ -747,7 +766,7 @@ export class PdfMakerService {
               y: 0,
               w: pageSize?.width,
               h: pageSize?.height,
-              color: isA6Size ? '#FFFFFF' : '#512B84'
+              color: useA6Design ? '#FFFFFF' : '#512B84'
             }
           ]
         };

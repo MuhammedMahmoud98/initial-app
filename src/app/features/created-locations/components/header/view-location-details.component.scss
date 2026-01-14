@@ -54,7 +54,10 @@
       margin-bottom: 24px;
       font-size: 13px;
       letter-spacing: 0.3px;
-
+      background-color: var(--warning-100);
+      border: 1px solid var(--warning-300);
+      display: flex;
+      padding: 12px;
     }
 
   .services-actions {

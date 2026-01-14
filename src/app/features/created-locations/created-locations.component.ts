@@ -651,7 +651,7 @@ export class CreatedLocationsComponent implements OnDestroy {
     this.#locationTypeActionsService
       .archiveLocation(payload)
       .pipe(
-        tap((): void => {
+        tap((archiveResponse: archiveResponse): void => {
           this.isLoading.set(false);
           this.resetEmptyStateAfterArchive(payload);
           this.genericTableCacheService.resetBulkActions$.next(true);
@@ -659,9 +659,7 @@ export class CreatedLocationsComponent implements OnDestroy {
           this.#messageService.add({
             severity: 'success',
             summary: 'Success',
-            detail: this.#translateService.instant(
-              'locationTypeArchiveSuccessfully',
-            ),
+            detail: archiveResponse.message?.toLowerCase(),
             life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
           });
           this.getCreatedLocations();

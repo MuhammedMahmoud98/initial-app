@@ -187,6 +187,7 @@ export class CreatedLocationsComponent implements OnDestroy {
   }
 
   onFilterValueChanges(filterValues: HubFilters) {
+    console.log(filterValues)
     this.isApplyingFilter.set(!!filterValues.filter);
     this.updateFilterPayload({...filterValues, page: 0});
     this.genericTableCacheService.resetPagination$.next(true);
@@ -646,7 +647,7 @@ export class CreatedLocationsComponent implements OnDestroy {
       excludedLocationIds: this.genericTableCacheService.unSelectedItemsCache(),
       filter: this.locationsPayload().filter,
     } as GenerateQrPayload;
-    this.isLoading.set(true)
+    // this.isLoading.set(true)
     this.#locationTypeActionsService
       .archiveLocation(payload)
       .pipe(

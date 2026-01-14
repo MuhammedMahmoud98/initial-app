@@ -1,3 +1,9 @@
 td {
     cursor: pointer;
+    
+    tr {
+     &:hover {
+      background-color: var(--silver-100)
+    }
+  }  
 }

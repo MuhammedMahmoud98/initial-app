@@ -8,7 +8,6 @@ import {
   locationTypeDetails,
 } from '../../../assigned-locations/models/assigned-location.model';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MessageModule } from 'primeng/message';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { LocalizationService } from '../../../../core/services';
 import { LocationsService } from '../../services/locations.service';
@@ -26,7 +25,6 @@ import { LowerCasePipe } from '@angular/common';
     TextWithBgColorComponent,
     TitleWithIconComponent,
     TranslatePipe,
-    MessageModule,
     ToggleSwitchModule,
     FormsModule,
     LowerCasePipe

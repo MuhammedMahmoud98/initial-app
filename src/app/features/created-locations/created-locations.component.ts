@@ -187,6 +187,7 @@ export class CreatedLocationsComponent implements OnDestroy {
   }
 
   onFilterValueChanges(filterValues: HubFilters) {
+    console.log(filterValues)
     this.isApplyingFilter.set(!!filterValues.filter);
     this.updateFilterPayload({...filterValues, page: 0});
     this.genericTableCacheService.resetPagination$.next(true);
@@ -654,6 +655,7 @@ export class CreatedLocationsComponent implements OnDestroy {
           this.isLoading.set(false);
           this.resetEmptyStateAfterArchive(payload);
           this.genericTableCacheService.resetBulkActions$.next(true);
+          this.genericTableCacheService.resetBulkActions()
           this.#messageService.add({
             severity: 'success',
             summary: 'Success',

@@ -654,6 +654,7 @@ export class CreatedLocationsComponent implements OnDestroy {
           this.isLoading.set(false);
           this.resetEmptyStateAfterArchive(payload);
           this.genericTableCacheService.resetBulkActions$.next(true);
+          this.genericTableCacheService.resetBulkActions()
           this.#messageService.add({
             severity: 'success',
             summary: 'Success',

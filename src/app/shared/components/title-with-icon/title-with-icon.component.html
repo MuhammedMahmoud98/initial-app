@@ -1,9 +1,9 @@
-<div class="title-with-icon">
+<div class="title-with-icon" [pTooltip]="itemTitle()" [tooltipPosition]="'left'" [tooltipDisabled]="(itemTitle()?.length ?? 0) < COMMON_CONSTANTS.CELL_CHAR_MAX_LENGTH">
   <div class="title-with-icon__box"  [style.background-color]="background()">
     <img [src]="iconUrl()" width="24" height="24" alt="widget-icon">
   </div>
 
   <div class="title-with-icon__title">
-    {{itemTitle()}}
+    {{titleMaxLength()}}
   </div>
 </div>

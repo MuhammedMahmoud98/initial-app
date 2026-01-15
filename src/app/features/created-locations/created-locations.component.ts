@@ -141,7 +141,7 @@ export class CreatedLocationsComponent implements OnDestroy {
       {field: 'type', alias: 'locationTypeCode', template: this.locationTypeCustomColumn()},
       {field: 'code', alias: 'locationCode', template: this.codeCustomColumn(), columnWidth: '15%'},
       {field: '', template: this.qrStatusCustomColumn(), columnWidth: '15%'},
-      {field: '', template: this.locationTypeActionsColumn()},
+      {field: '', template: this.locationTypeActionsColumn(), columnWidth: '50px'},
     ]
   }
 

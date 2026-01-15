@@ -160,5 +160,6 @@
   "unArchiveLocationSuccessMsg": "location restored successfully.",
   "services displayed from the parent location type": "services displayed from the parent location type",
   "validating archive...": "validating archive...",
-  "services": "services"
+  "services": "services",
+  "classificationsSelected": "2 items selected"
 }

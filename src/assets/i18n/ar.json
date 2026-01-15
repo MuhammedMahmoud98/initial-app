@@ -159,5 +159,6 @@
   "unArchiveLocationSuccessMsg": "تمت استعادة المكان بنجاح.",
   "services displayed from the parent location type": "الخدمات مضمنة من نوع الموقع التابع للمكان",
   "validating archive...": "جارٍ التحقق من الأرشفة...",
-  "services": "الخدمات المتاحة"
+  "services": "الخدمات المتاحة",
+  "classificationsSelected": "تم اختيار عنصرين"
 }

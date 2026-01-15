@@ -7,20 +7,21 @@
       <app-hub-filters (filterValues)="onFilterValueChanges($event)"/>
 
       <!-- ADD LOCATION TYPE BUTTON -->
-
       <div>
-        <p-multiselect 
+        <p-multiSelect
           [options]="classificationOptions()"
           optionLabel="name"
           optionValue="code"
-          (onChange)="onClassificationChange($event.value)" 
+          [maxSelectedLabels]="1"
+          [selectedItemsLabel]="('classificationsSelected' | translate)"
+          (onChange)="onClassificationChange($event.value)"
           (onClear)="onClassificationChange([])"
           [placeholder]="'selectClassification' | translate"
           [showClear]="true"
           [showToggleAll]="false"
           [filter]="false"
           [ngModel]="selectedClassification()"
-          class="classification" />
+          class="classification"></p-multiSelect>
 
         <p-button [severity]="'secondary'" [outlined]="true" [label]="'createNewType' | translate" (onClick)="openAddLocationTypeModal()">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 23 23" fill="none">

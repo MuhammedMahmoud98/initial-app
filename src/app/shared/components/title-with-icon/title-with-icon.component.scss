@@ -10,10 +10,13 @@
     height: 35px;
     width: 35px;
     border-radius: var(--stc-radius);
-    background-color: var(--primary-100);
+    background-color: var(--primary-100) !important;
+    flex-basis: 35px;
   }
 
   &__title {
     color: var(--onyx-500);
+    flex-basis: calc(100% - 35px - 0.8rem);
+    white-space: nowrap;
   }
 }

@@ -1,5 +1,4 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-error-message-template',
@@ -11,6 +10,8 @@ import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 })
 
 export class ErrorMessageTemplateComponent {
-    constructor(public dialogConfig: DynamicDialogConfig) {
-    }
+  // readonly #dialogRef: DynamicDialogRef = inject(DynamicDialogRef);
+  // readonly #dialogConfig: DynamicDialogConfig = inject(DynamicDialogConfig);
+    // constructor(public dialogConfig: DynamicDialogConfig) {
+    // }
 }

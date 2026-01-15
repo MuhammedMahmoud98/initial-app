@@ -27,7 +27,7 @@ import {GenericTableCacheService} from '../../shared/services';
 import {HubFiltersComponent} from '../../shared/components/hub-filters/hub-filters.component';
 import {ConfirmationService, MenuItem, MessageService} from 'primeng/api';
 import {HubFilters} from '../../shared/components/hub-filters/models/hub-filters.model';
-import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
+import {DialogService} from 'primeng/dynamicdialog';
 import {LoadingDialogComponent} from '../../shared/dialogs/loading-dialog/loading-dialog.component';
 import {LoadingDialogService} from '../../shared/services/loading-dialog.service';
 import {catchError, concatMap, EMPTY, generate, Observable, Subject, switchMap, tap} from 'rxjs';
@@ -72,7 +72,7 @@ import { ErrorMessageTemplateComponent } from '../../shared/components/error-mes
     Menu,
     DrawerModule,
     ViewLocationDetailsComponent,
-    FormsModule
+    FormsModule,
   ],
   providers: [DialogService, DatePipe, PdfMakerService],
   standalone: true,
@@ -94,7 +94,7 @@ export class CreatedLocationsComponent implements OnDestroy {
   readonly #locationTypeActionsService = inject(LocationTypeActionsService);
   readonly localizationService = inject(LocalizationService);
   readonly dialogService = inject(DialogService);
-  ref: DynamicDialogRef | undefined;
+  // ref: DynamicDialogRef | undefined;
 
   // SIGNALS
   columns: WritableSignal<TableColumn<CreatedLocation>[]> = signal([]);
@@ -541,7 +541,7 @@ export class CreatedLocationsComponent implements OnDestroy {
       .pipe(
         tap((res:ValidateLocationTypeResponse) => {
           this.stopLoading();
-          if(res.isValid){
+          if(!res.isValid){
             setTimeout(() => {
               this.confirmationService.confirm({
                 header: this.#translateService.instant('archiveWarning'),
@@ -565,12 +565,25 @@ export class CreatedLocationsComponent implements OnDestroy {
                 },
             });
            }, 1500);
-          }else {
-            this.ref = this.dialogService.open(ErrorMessageTemplateComponent, { header: 'Select a Product'});
+          } else {
+            const dialogRef = this.dialogService.open(ErrorMessageTemplateComponent, {
+              header:  'createNewType',
+              width: '580px',
+              modal: true,
+              closable: true,
+              data: {
+              }
+            });
 
+            dialogRef.onClose.pipe(
+              tap((dialogCloseResponse: {refresh: boolean}) => {
+                console.log('dialogCloseResponse', dialogCloseResponse);
+              }),
+              takeUntilDestroyed(this.#destroyRef),
+            ).subscribe()
             // this.isDialogVisible.set(true)
             // this.errorMessage.set(res.message  || this.#translateService.instant ('something went wrong'))
-            
+
             // this.#messageService.add({
             //   severity: 'warn',
             //   detail:this.#translateService.instant(res.message || 'something went wrong'),

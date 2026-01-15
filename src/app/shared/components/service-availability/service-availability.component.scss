@@ -6,11 +6,12 @@
   &__item {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 2rem;
     padding: 0.3rem 0.5rem;
 
     &--title {
       color: var(--onyx-500);
+      white-space: nowrap;
     }
   }
 }

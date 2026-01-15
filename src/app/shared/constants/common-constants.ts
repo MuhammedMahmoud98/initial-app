@@ -10,6 +10,7 @@ export const COMMON_CONSTANTS = {
     SEARCH_MAX_LENGTH: 40,
     ROWS_PER_PAGE: 50,
     TOKEN_LESS_URLS: ['auth/validate', 'refresh_token'] as TokenLessUrls[],
+    CELL_CHAR_MAX_LENGTH: 30,
 };
 
 
@@ -30,7 +31,7 @@ export const CORE_APP_ROUTES: CoreAppRoutes[] = [
     path:MAIN_ROUTES.ARCHIVED_LOCATIONS,
     title:'archived'
   }
-  
+
 ];
 
 export enum CLAASSIFICATION_FILTER {

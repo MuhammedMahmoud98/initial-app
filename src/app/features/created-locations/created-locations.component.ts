@@ -541,7 +541,7 @@ export class CreatedLocationsComponent implements OnDestroy {
       .pipe(
         tap((res:ValidateLocationTypeResponse) => {
           this.stopLoading();
-          if(!res.isValid){
+          if(res.isValid){
             setTimeout(() => {
               this.confirmationService.confirm({
                 header: this.#translateService.instant('archiveWarning'),
@@ -567,20 +567,17 @@ export class CreatedLocationsComponent implements OnDestroy {
            }, 1500);
           } else {
             const dialogRef = this.dialogService.open(ErrorMessageTemplateComponent, {
-              header:  'createNewType',
+              header:  '',
               width: '580px',
               modal: true,
-              closable: true,
+              closable: false,
               data: {
+                message: res.message
               }
             });
-
             dialogRef.onClose.pipe(
-              tap((dialogCloseResponse: {refresh: boolean}) => {
-                console.log('dialogCloseResponse', dialogCloseResponse);
-              }),
-              takeUntilDestroyed(this.#destroyRef),
-            ).subscribe()
+                takeUntilDestroyed(this.#destroyRef),
+              ).subscribe()
             // this.isDialogVisible.set(true)
             // this.errorMessage.set(res.message  || this.#translateService.instant ('something went wrong'))
 
@@ -642,10 +639,22 @@ export class CreatedLocationsComponent implements OnDestroy {
                 },
             });
           } else {
-             this.#messageService.add({
-              severity: 'warn',
-              detail:this.#translateService.instant(res.message || 'something went wrong'),
-            });
+              const dialogRef = this.dialogService.open(ErrorMessageTemplateComponent, {
+                header:  '',
+                width: '580px',
+                modal: true,
+                closable: false,
+                data: {
+                  message: res.message
+                }
+              });
+              dialogRef.onClose.pipe(
+                takeUntilDestroyed(this.#destroyRef),
+              ).subscribe()
+            //  this.#messageService.add({
+            //   severity: 'warn',
+            //   detail:this.#translateService.instant(res.message || 'something went wrong'),
+            // });
           }
         }),
         catchError((e) => {

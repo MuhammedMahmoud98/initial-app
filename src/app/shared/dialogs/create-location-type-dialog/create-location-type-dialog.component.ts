@@ -196,14 +196,6 @@ listenToCategoryChanges(): void {
         internalLinkControl?.updateValueAndValidity({ emitEvent: false });
         externalLinkControl?.updateValueAndValidity({ emitEvent: false });
       }
-
-
-        // if (this.dialogMode() === MODE.EDIT) {
-        //   this.form.markAsUntouched();
-        //   this.form.markAsPristine();
-        //   this.form.updateValueAndValidity({ emitEvent: false });
-        // }
-
       console.log(this.form);
     }),
     takeUntilDestroyed(this.#destroyRef),

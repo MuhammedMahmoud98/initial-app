@@ -11,7 +11,7 @@ export const COMMON_CONSTANTS = {
     ROWS_PER_PAGE: 50,
     TOKEN_LESS_URLS: ['auth/validate', 'refresh_token'] as TokenLessUrls[],
     CELL_CHAR_MAX_LENGTH: 30,
-    ERROR_MESSAGES_POPUPUP_WIDTH: '460px',
+    ERROR_MESSAGES_POPUP_WIDTH: '460px',
 };
 
 

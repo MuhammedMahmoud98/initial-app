@@ -351,7 +351,7 @@ onClassificationChange(category: string[] | null): void {
         else {
           const dialogRef = this.#dialogService.open(ErrorMessageTemplateComponent, {
             header:  '',
-            width: '580px',
+            width: COMMON_CONSTANTS.ERROR_MESSAGES_POPUPUP_WIDTH,
             modal: true,
             closable: false,
             data: {

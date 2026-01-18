@@ -93,7 +93,7 @@ export class CreatedLocationsComponent implements OnDestroy {
   readonly #localizaitionService: LocalizationService = inject(LocalizationService);
   readonly #locationTypeActionsService = inject(LocationTypeActionsService);
   readonly localizationService = inject(LocalizationService);
-  readonly dialogService = inject(DialogService);
+  readonly #dialogService: DialogService = inject(DialogService);
   // ref: DynamicDialogRef | undefined;
 
   // SIGNALS
@@ -566,7 +566,7 @@ export class CreatedLocationsComponent implements OnDestroy {
             });
            }, 1500);
           } else {
-            const dialogRef = this.dialogService.open(ErrorMessageTemplateComponent, {
+            const dialogRef = this.#dialogService.open(ErrorMessageTemplateComponent, {
               header:  '',
               width: '580px',
               modal: true,
@@ -639,7 +639,7 @@ export class CreatedLocationsComponent implements OnDestroy {
                 },
             });
           } else {
-              const dialogRef = this.dialogService.open(ErrorMessageTemplateComponent, {
+              const dialogRef = this.#dialogService.open(ErrorMessageTemplateComponent, {
                 header:  '',
                 width: '580px',
                 modal: true,

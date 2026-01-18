@@ -5,8 +5,6 @@
     <!-- FILTERS -->
     <div class="hub-locations-types__filters">
       <app-hub-filters  [placeHolder]="'searchPlaceholder'" (filterValues)="onFilterValueChanges($event)"/>
-
-
     </div>
 
     @if ((!isApplyingFilter() && isEmptyState() && !items().length)) {

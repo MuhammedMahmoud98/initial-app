@@ -167,7 +167,7 @@ export class LocationTypesComponent implements OnDestroy {
       {field: 'dimentions', alias: 'Printing Dimensions', template: this.dimentionsCustomColumn()},
       {field: 'services', alias: 'availableServices', template: this.serviceCustomColumn()},
       {field: 'availability', template: this.locationTypeServicesCustomColumn()},
-      {field: '', template: this.locationTypeActionsColumn()},
+      {field: '', template: this.locationTypeActionsColumn(), columnWidth: '50px'},
     ]
   }
 

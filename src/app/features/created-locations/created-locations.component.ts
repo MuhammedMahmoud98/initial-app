@@ -49,6 +49,8 @@ import { DrawerModule } from 'primeng/drawer';
 import { ViewLocationDetailsComponent } from './components/header/view-location-details.component';
 import { locationTypeDetails } from '../assigned-locations/models/assigned-location.model';
 import { archiveResponse, ValidateLocationTypeResponse } from '../../shared/models/create-location-type.model';
+import { FormsModule } from '@angular/forms';
+import { ErrorMessageTemplateComponent } from '../../shared/components/error-message-template/error-message-template.component';
 
 
 @Component({
@@ -69,7 +71,8 @@ import { archiveResponse, ValidateLocationTypeResponse } from '../../shared/mode
     TranslatePipe,
     Menu,
     DrawerModule,
-    ViewLocationDetailsComponent
+    ViewLocationDetailsComponent,
+    FormsModule,
   ],
   providers: [DialogService, DatePipe, PdfMakerService],
   standalone: true,
@@ -90,6 +93,8 @@ export class CreatedLocationsComponent implements OnDestroy {
   readonly #localizaitionService: LocalizationService = inject(LocalizationService);
   readonly #locationTypeActionsService = inject(LocationTypeActionsService);
   readonly localizationService = inject(LocalizationService);
+  readonly #dialogService: DialogService = inject(DialogService);
+  // ref: DynamicDialogRef | undefined;
 
   // SIGNALS
   columns: WritableSignal<TableColumn<CreatedLocation>[]> = signal([]);
@@ -108,6 +113,9 @@ export class CreatedLocationsComponent implements OnDestroy {
   isLoading = signal(true);
   isViewLocationDetailsVisible = signal(false);
   locationDetails = signal<locationTypeDetails >({} as locationTypeDetails);
+  isDialogVisible =signal(false);
+  errorMessage = signal('');
+
   // VIEW CHILDREN
   qrStatusCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('qrStatusCustomColumn');
   codeCustomColumn = viewChild<TemplateRef<{$implicit: CreatedLocation}>>('codeCustomColumn');
@@ -187,7 +195,6 @@ export class CreatedLocationsComponent implements OnDestroy {
   }
 
   onFilterValueChanges(filterValues: HubFilters) {
-    console.log(filterValues)
     this.isApplyingFilter.set(!!filterValues.filter);
     this.updateFilterPayload({...filterValues, page: 0});
     this.genericTableCacheService.resetPagination$.next(true);
@@ -558,11 +565,26 @@ export class CreatedLocationsComponent implements OnDestroy {
                 },
             });
            }, 1500);
-          }else {
-            this.#messageService.add({
-              severity: 'warn',
-              detail:this.#translateService.instant(res.message || 'something went wrong'),
+          } else {
+            const dialogRef = this.#dialogService.open(ErrorMessageTemplateComponent, {
+              header:  '',
+              width: COMMON_CONSTANTS.ERROR_MESSAGES_POPUPUP_WIDTH,
+              modal: true,
+              closable: false,
+              data: {
+                message: res.message
+              }
             });
+            dialogRef.onClose.pipe(
+                takeUntilDestroyed(this.#destroyRef),
+              ).subscribe()
+            // this.isDialogVisible.set(true)
+            // this.errorMessage.set(res.message  || this.#translateService.instant ('something went wrong'))
+
+            // this.#messageService.add({
+            //   severity: 'warn',
+            //   detail:this.#translateService.instant(res.message || 'something went wrong'),
+            // });
           }
       }),
       catchError((e) => {
@@ -617,10 +639,22 @@ export class CreatedLocationsComponent implements OnDestroy {
                 },
             });
           } else {
-             this.#messageService.add({
-              severity: 'warn',
-              detail:this.#translateService.instant(res.message || 'something went wrong'),
-            });
+              const dialogRef = this.#dialogService.open(ErrorMessageTemplateComponent, {
+                header:  '',
+                width: COMMON_CONSTANTS.ERROR_MESSAGES_POPUPUP_WIDTH,
+                modal: true,
+                closable: false,
+                data: {
+                  message: res.message
+                }
+              });
+              dialogRef.onClose.pipe(
+                takeUntilDestroyed(this.#destroyRef),
+              ).subscribe()
+            //  this.#messageService.add({
+            //   severity: 'warn',
+            //   detail:this.#translateService.instant(res.message || 'something went wrong'),
+            // });
           }
         }),
         catchError((e) => {

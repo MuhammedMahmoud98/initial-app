@@ -1,9 +1,9 @@
 <div class="location-details" >
   <div class="location">
-    <div class="location__hq">
+    <!-- <div class="location__hq">
       <app-title-with-icon [iconUrl]="'assets/images/widget.svg'" [background]="'var(--monlight-100)'" />
       <span class="location__hq-title">HQ</span>
-    </div>
+    </div> -->
 
     <div class="location__info">
       <!-- District -->
@@ -47,11 +47,21 @@
         </span>
       </div>
 
+     <!-- Serial -->
+      <div class="location__row">
+        <span class="location__label">
+          {{ "serialSystemGenerated" | translate }}
+        </span>
+        <span class="location__value">
+          {{ locationDetails().serial }}
+        </span>
+      </div>
+
       <!-- Location Type -->
       <div class="location__row">
         <span class="location__label">{{ "locationType" | translate }}</span>
         <span class="location__value">
-          {{ locationDetails().locationType }}
+          {{ locationDetails().locationType }}- {{ locationDetails().locationTypeCode }}
         </span>
       </div>
 
@@ -64,17 +74,6 @@
           <app-copy-to-clipboard [textToBeCopied]="locationDetails().locationCode" />
         </span>
       </div>
-
-      <!-- Serial -->
-      <div class="location__row">
-        <span class="location__label">
-          {{ "serialSystemGenerated" | translate }}
-        </span>
-        <span class="location__value">
-          {{ locationDetails().serial }}
-        </span>
-      </div>
-
 
       <!-- QR Status -->
       <div class="location__row">

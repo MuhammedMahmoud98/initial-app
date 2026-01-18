@@ -56,6 +56,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { LoadingDialogService } from '../../shared/services/loading-dialog.service';
 import { LoadingDialogComponent } from '../../shared/dialogs/loading-dialog/loading-dialog.component';
 import { Dialog } from 'primeng/dialog';
+import { ErrorMessageTemplateComponent } from '../../shared/components/error-message-template/error-message-template.component';
 
 @Component({
   selector: 'app-location-types',
@@ -348,10 +349,22 @@ onClassificationChange(category: string[] | null): void {
           });
         }
         else {
-         this.#messageService.add({
-          severity: 'warn',
-          detail: this.#translateService.instant(res.message || 'something went wrong'),
-        });
+          const dialogRef = this.#dialogService.open(ErrorMessageTemplateComponent, {
+            header:  '',
+            width: COMMON_CONSTANTS.ERROR_MESSAGES_POPUPUP_WIDTH,
+            modal: true,
+            closable: false,
+            data: {
+              message: res.message
+            }
+          });
+          dialogRef.onClose.pipe(
+            takeUntilDestroyed(this.#destroyRef),
+          ).subscribe()
+        //  this.#messageService.add({
+        //   severity: 'warn',
+        //   detail: this.#translateService.instant(res.message || 'something went wrong'),
+        // });
       }
     }),
      catchError((e) => {

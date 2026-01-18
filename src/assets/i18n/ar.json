@@ -127,7 +127,7 @@
   "errorLimitMessage": "يرجى إصلاح هذه الأخطاء العشرة أولاً وإعادة تحميل الورقة لمزيد من التحقق",
   "reUpload": "إعادة إرفاق الملف",
   "Bulk upload completed successfully!": "تم التحميل الجماعي بنجاح!",
-  "selectClassification": "حدد التصنيف",
+  "selectClassification": "التصنيف",
   "allClassifications": "كل التصنيفات",
   "locationAssignedSubTitleEmptyForSearch": "لا توجد مواقع معينة مطابقة لرمز المكان او بريد الموظف الذي تم إدخاله.",
   "kindlyArchiveAllTheRelatedLocations": "يرجى أرشفة جميع المواقع المرتبطة بنوع الموقع هذا أولاً لتتمكن من أرشفته.",

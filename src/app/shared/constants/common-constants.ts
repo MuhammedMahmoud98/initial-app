@@ -83,3 +83,4 @@ export const HEADER_LESS_ROUTES = [
 ];
 
 export const PDF_BG_COLOR = '#512B84';
+export const WHITE_BG_COLOR = '#FFF';

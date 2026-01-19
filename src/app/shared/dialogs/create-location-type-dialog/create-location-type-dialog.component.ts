@@ -212,12 +212,12 @@ listenToCategoryChanges(): void {
   }
 
   handleLocationTypePayload() {
-    const categoryValue = this.getControl('category').value;
-    const {services, ...restPayload} = this.form.getRawValue();
-
-    if (categoryValue === this.LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION) {
-      return restPayload as LocationTypePayload;
-    }
+    // const categoryValue = this.getControl('category').value;
+    const {services} = this.form.getRawValue();
+    //
+    // if (categoryValue === this.LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION) {
+    //   return restPayload as LocationTypePayload;
+    // }
 
     return {
       ...this.form.getRawValue(),

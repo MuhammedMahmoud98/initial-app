@@ -24,7 +24,7 @@
     position: relative;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 16vh auto;
+    grid-template-rows: 25vh auto 1fr;
     gap: var(--layout-gap);
     overflow-x: hidden;
 

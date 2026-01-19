@@ -13,6 +13,7 @@ import {SpinnerLoaderComponent} from './shared/components/spinner-loader/spinner
 import {DatePipe} from '@angular/common';
 import {filter, map} from 'rxjs';
 import {toSignal} from '@angular/core/rxjs-interop';
+import {StatisticsWidgetsComponent} from './core/components/statistics-widgets/statistics-widgets.component';
 
 @Component({
   selector: 'app-root',
@@ -26,6 +27,7 @@ import {toSignal} from '@angular/core/rxjs-interop';
     ConfirmDialog,
     Toast,
     SpinnerLoaderComponent,
+    StatisticsWidgetsComponent,
   ],
   providers: [ConfirmationService, MessageService, PdfMakerService, DatePipe],
   templateUrl: './app.component.html',

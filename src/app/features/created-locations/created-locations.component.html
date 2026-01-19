@@ -101,17 +101,17 @@
 <!--          }-->
         </div>
          <!-- && isApplyingFilter() -->
-      } @else if (isEmptyState() && !isErrorState()) {
+      } @else if (isEmptyState() && isApplyingFilter() && !isErrorState()) {
         <app-component-state
           [mainTitle]="'no result found'"
           [subTitle]="'no location code matches the code entered'"
           [iconUrl]="'assets/images/search-state.svg'"
         />
-      <!-- } @else if (isEmptyState() && !isErrorState() ) {
+      } @else if (isEmptyState() && !isApplyingFilter() && !isErrorState() ) {
         <app-component-state
           [mainTitle]="'no locations found yet'"
-          [subTitle]="''"
-          [iconUrl]="'assets/images/search-state.svg'"/> -->
+          [subTitle]="'Start by creating a new location to manage and track your records here'"
+          [iconUrl]="'assets/images/search-state.svg'"/>
       } @else if (isErrorState() && !isEmptyState()) {
         <app-component-state
           [mainTitle]="'data could not be retrieved'"

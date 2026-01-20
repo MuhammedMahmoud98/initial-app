@@ -1,5 +1,5 @@
 import { QRCodeOptions } from '../models/qr-code-styling.model';
-import { PDF_BG_COLOR } from './common-constants';
+import {PDF_BG_COLOR, WHITE_BG_COLOR} from './common-constants';
 
 export const whiteQRwithSharpCornersOptions = {
   image: '',
@@ -37,18 +37,18 @@ export const whiteQRwithSharpCornersOptions = {
 export const pinkBgPurpleDotsWithLogoOptions = {
   image: '', // Logo will be provided as base64 at runtime to avoid multiple network requests
   backgroundOptions: {
-    color: PDF_BG_COLOR, // Purple background (#512B84) - matches page background
+    color: WHITE_BG_COLOR, // Purple background (#512B84) - matches page background
   } as never,
   dotsOptions: {
-    color: '#EB4B62', // Pink/coral dots
+    color: '#1D252D', // Pink/coral dots
     type: 'square' as const
   },
   cornersSquareOptions: {
-    color: '#EB4B62', // Pink/coral corner squares
+    color: '#1D252D', // Pink/coral corner squares
     type: 'square' as const
   },
   cornersDotOptions: {
-    color: '#EB4B62', // Pink/coral corner dots
+    color: '#1D252D', // Pink/coral corner dots
     type: 'square' as const
   },
   qrOptions: {

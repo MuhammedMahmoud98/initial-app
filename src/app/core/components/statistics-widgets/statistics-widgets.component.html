@@ -38,7 +38,7 @@
                 <div class="sub-title">
                   <div class="sub-metric">{{ card.subMetric }}</div>
                   <div class="metric-value" [class.zero-metric-value]="card.subValue === 0">
-                    {{ card.subValue }}
+                    {{ card.subValue | number }}
                     @if (card.subValue > 0) {
                       <span>+</span>
                     }
@@ -46,7 +46,7 @@
                 </div>
               </div>
               <div class="statistics-widgets__widget-card-footer-value">
-                <div @valueAnimation>{{ card.mainMetric }}</div>
+                <div @valueAnimation>{{ card.mainMetric | number }}</div>
               </div>
             </div>
           </div>

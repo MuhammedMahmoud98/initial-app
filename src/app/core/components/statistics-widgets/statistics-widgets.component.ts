@@ -2,13 +2,14 @@ import {ChangeDetectionStrategy, Component, afterNextRender, AfterRenderRef, inj
 import {Skeleton} from 'primeng/skeleton';
 import {animate, query, stagger, style, transition, trigger} from '@angular/animations';
 import {StatisticMainCardsService} from './services/statistic-main-cards.service';
-import {NgOptimizedImage} from '@angular/common';
+import {DecimalPipe, NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-statistics-widgets',
   imports: [
     Skeleton,
-    NgOptimizedImage
+    NgOptimizedImage,
+    DecimalPipe
   ],
   standalone: true,
   templateUrl: './statistics-widgets.component.html',

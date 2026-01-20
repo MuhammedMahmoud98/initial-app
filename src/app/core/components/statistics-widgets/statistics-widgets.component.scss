@@ -59,9 +59,14 @@
           }
 
           .metric-value {
+            display: flex;
             font-family: STCForward-Medium, sans-serif;
             color: var(--oases-500);
             font-size: 1rem;
+          }
+
+          .zero-metric-value {
+            color: var(--onyx-500) !important;
           }
         }
       }
@@ -73,4 +78,12 @@
       }
     }
   }
+}
+
+.remove-initial-padding {
+  padding-inline-start: 0 !important;
+}
+
+.remove-final-padding {
+  padding-inline-end: 0 !important;
 }

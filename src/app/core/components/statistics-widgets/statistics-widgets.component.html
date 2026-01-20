@@ -1,49 +1,57 @@
 <section class="statistics-widgets mx-0 lg:mx-5">
   <div class="flex flex-wrap h-full">
-    @for (item of [1, 2, 3, 4]; track item) {
-      <div class="md:col-3 col-12">
-        <div class="statistics-widgets__widget-card">
-          <!-- CARD ICON -->
-          <div class="statistics-widgets__widget-card-icon" [@listAnimation]="!isLoading()">
-            <!-- TODO:: REPLACE WITH IMG -->
-            @if (isLoading()) {
+    @if (isLoading()) {
+      @for (item of [1,2,3,4]; track item; let first = $first; let last = $last) {
+        <div class="md:col-3 col-12" [class.remove-initial-padding]="first" [class.remove-end-padding]="last">
+          <div class="statistics-widgets__widget-card">
+            <!-- CARD ICON -->
+            <div class="statistics-widgets__widget-card-icon">
               <p-skeleton [height]="'100%'" [width]="'100%'"/>
-            } @else {
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M9.33008 1.47852C11.0574 0.865659 12.9426 0.865659 14.6699 1.47852C16.3672 2.08079 17.8118 3.27452 18.7324 4.8252C20.3413 7.53553 20.1918 10.9718 18.332 13.5107L12 22.1533L5.66797 13.5107C3.80824 10.9718 3.65867 7.53554 5.26758 4.8252C6.1882 3.27452 7.63276 2.08079 9.33008 1.47852Z" stroke="#4F008C"/>
-                <ellipse cx="12" cy="8.66443" rx="1.5" ry="1.46643" fill="#4F008C"/>
-              </svg>
-            }
-          </div>
-          <!-- CARD FOOTER -->
-          <div class="statistics-widgets__widget-card-footer">
-            <div class="statistics-widgets__widget-card-footer-metric" [@listAnimation]="!isLoading()">
-              @if (isLoading()) {
+            </div>
+            <!-- CARD FOOTER -->
+            <div class="statistics-widgets__widget-card-footer">
+              <div class="statistics-widgets__widget-card-footer-metric">
                 <p-skeleton [height]="'1rem'" [width]="'120px'"/>
                 <p-skeleton [height]="'1rem'" [width]="'4rem'"/>
-
-              } @else {
-                <div class="main-title">
-                  Total Likes
-                </div>
-
-                <div class="sub-title">
-                  <div class="sub-metric">last 10 days</div>
-                  <div class="metric-value">200+</div>
-                </div>
-              }
-            </div>
-
-            <div class="statistics-widgets__widget-card-footer-value">
-              @if (isLoading()) {
+              </div>
+              <div class="statistics-widgets__widget-card-footer-value">
                 <p-skeleton [height]="'32px'" [width]="'32px'"/>
-              } @else {
-                <div [@valueAnimation]="true">3400</div>
-              }
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      }
+    } @else {
+      @for (card of mainCardsVM(); track card.iconName; let first = $first; let last = $last) {
+        <div class="md:col-3 col-12" [class.remove-initial-padding]="first" [class.remove-end-padding]="last">
+          <div class="statistics-widgets__widget-card">
+            <!-- CARD ICON -->
+            <div class="statistics-widgets__widget-card-icon"
+                 [style.background-color]="card.iconBgColor"
+                 >
+              <img [ngSrc]="'assets/images/' + card.iconName + '.svg'" width="24" height="24" [alt]="card.iconName" [loading]="'eager'"/>
+            </div>
+            <!-- CARD FOOTER -->
+            <div class="statistics-widgets__widget-card-footer">
+              <div class="statistics-widgets__widget-card-footer-metric" @listAnimation>
+                <div class="main-title">{{ card.title }}</div>
+                <div class="sub-title">
+                  <div class="sub-metric">{{ card.subMetric }}</div>
+                  <div class="metric-value" [class.zero-metric-value]="card.subValue === 0">
+                    {{ card.subValue }}
+                    @if (card.subValue > 0) {
+                      <span>+</span>
+                    }
+                  </div>
+                </div>
+              </div>
+              <div class="statistics-widgets__widget-card-footer-value">
+                <div @valueAnimation>{{ card.mainMetric }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
     }
   </div>
 </section>

@@ -568,7 +568,7 @@ export class CreatedLocationsComponent implements OnDestroy {
           } else {
             const dialogRef = this.#dialogService.open(ErrorMessageTemplateComponent, {
               header:  '',
-              width: COMMON_CONSTANTS.ERROR_MESSAGES_POPUPUP_WIDTH,
+              width: COMMON_CONSTANTS.ERROR_MESSAGES_POPUP_WIDTH,
               modal: true,
               closable: false,
               data: {
@@ -641,7 +641,7 @@ export class CreatedLocationsComponent implements OnDestroy {
           } else {
               const dialogRef = this.#dialogService.open(ErrorMessageTemplateComponent, {
                 header:  '',
-                width: COMMON_CONSTANTS.ERROR_MESSAGES_POPUPUP_WIDTH,
+                width: COMMON_CONSTANTS.ERROR_MESSAGES_POPUP_WIDTH,
                 modal: true,
                 closable: false,
                 data: {

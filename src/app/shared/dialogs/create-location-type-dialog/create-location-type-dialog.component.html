@@ -79,94 +79,92 @@
         <app-printing-size-dimensions formControlName="size" [category]="getControl('category')?.value"/>
       </div>
 
-      @if (getControl('category')?.value === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION) {
-        <!-- SERVICES SEPARATOR -->
-        <div class="services-label">{{ 'service' | translate }}</div>
+      <!-- SERVICES SEPARATOR -->
+      <div class="services-label">{{ 'service' | translate }}</div>
 
-        <!-- SURVEY TYPES SELECTORS -->
-        <div [formArrayName]="'services'" #test>
-          @for (service of servicesArray?.controls;track service;let i = $index) {
-            <div class="flex flex-column gap-3" [formGroupName]="i">
-              <!-- SERVICE TYPE -->
-              <div class="md:col-6 col-12 p-0">
+      <!-- SURVEY TYPES SELECTORS -->
+      <div [formArrayName]="'services'" #test>
+        @for (service of servicesArray?.controls;track service;let i = $index) {
+          <div class="flex flex-column gap-3" [formGroupName]="i">
+            <!-- SERVICE TYPE -->
+            <div class="md:col-6 col-12 p-0">
+              <app-input-label
+                [label]="'type'"
+                [isRequired]="false"
+                [labelTooltip]="'serviceTypeTooltip'"
+              >
+                <p-select
+                  [options]="surveyOptions()"
+                  optionLabel="name"
+                  optionValue="code"
+                  formControlName="serviceType"
+                  [placeholder]="'selectServiceTypePlaceholder' | translate"
+                  [showClear]="true"
+                  class="" />
+              </app-input-label>
+            </div>
+
+
+            @if (service.get('serviceType')?.value === 'Feedback') {
+              <!-- INTERNAL LINK SURVEY -->
+              <div class="col-12 internal-link-survey p-0">
+                @let internalLinkControl = service.get('internalLink');
                 <app-input-label
-                  [label]="'type'"
-                  [isRequired]="false"
-                  [labelTooltip]="'serviceTypeTooltip'"
+                  [label]="'internal survey link'"
+                  [isRequired]="true"
+                  [helperText]="'max 500 characters'"
+                  [hasError]="(internalLinkControl?.invalid && !internalLinkControl?.pristine) ?? false"
                 >
-                  <p-select
-                    [options]="surveyOptions()"
-                    optionLabel="name"
-                    optionValue="code"
-                    formControlName="serviceType"
-                    [placeholder]="'selectServiceTypePlaceholder' | translate"
-                    [showClear]="true"
-                    class="" />
+                  <input pInputText placeholder="https://mygate.stc.com.sa/forms/eforms/..." formControlName="internalLink"/>
+                  @if (getServicesControlError(internalLinkControl, 'required')) {
+                    <span class="stc-danger">{{'requiredField' | translate }}</span>
+                  }
+
+                  @if (getServicesControlError(internalLinkControl, 'minlength')) {
+                    <span class="stc-danger">{{ 'minLengthField' | translate:{length: getServiceErrorRequiredLength(internalLinkControl, 'minlength')} }}</span>
+                  }
+
+                  @if (getServicesControlError(internalLinkControl, 'maxlength')) {
+                    <span class="stc-danger">{{ 'maxLengthField' | translate:{length: getServiceErrorRequiredLength(internalLinkControl, 'maxlength')} }}</span>
+                  }
+
+                  @if (getServicesControlError(internalLinkControl, 'invalidServiceLink')) {
+                    <span class="stc-danger">{{ internalLinkControl?.errors?.['invalidServiceLink'] }}</span>
+                  }
                 </app-input-label>
               </div>
 
-
-              @if (service.get('serviceType')?.value === 'Feedback') {
-                <!-- INTERNAL LINK SURVEY -->
-                <div class="col-12 internal-link-survey p-0">
-                @let internalLinkControl = service.get('internalLink');
-                  <app-input-label
-                    [label]="'internal survey link'"
-                    [isRequired]="true"
-                    [helperText]="'max 500 characters'"
-                    [hasError]="(internalLinkControl?.invalid && !internalLinkControl?.pristine) ?? false"
-                  >
-                    <input pInputText placeholder="https://mygate.stc.com.sa/forms/eforms/..." formControlName="internalLink"/>
-                    @if (getServicesControlError(internalLinkControl, 'required')) {
-                      <span class="stc-danger">{{'requiredField' | translate }}</span>
-                    }
-
-                    @if (getServicesControlError(internalLinkControl, 'minlength')) {
-                      <span class="stc-danger">{{ 'minLengthField' | translate:{length: getServiceErrorRequiredLength(internalLinkControl, 'minlength')} }}</span>
-                    }
-
-                    @if (getServicesControlError(internalLinkControl, 'maxlength')) {
-                      <span class="stc-danger">{{ 'maxLengthField' | translate:{length: getServiceErrorRequiredLength(internalLinkControl, 'maxlength')} }}</span>
-                    }
-
-                    @if (getServicesControlError(internalLinkControl, 'invalidServiceLink')) {
-                      <span class="stc-danger">{{ internalLinkControl?.errors?.['invalidServiceLink'] }}</span>
-                    }
-                  </app-input-label>
-                </div>
-
-                <!-- EXTERNAL LINK SURVEY -->
-                <div class="col-12 p-0">
+              <!-- EXTERNAL LINK SURVEY -->
+              <div class="col-12 p-0">
                 @let externalLinkControl = service.get('externalLink');
-                  <app-input-label
-                    [label]="'external survey link'"
-                    [isRequired]="true"
-                    [helperText]="'max 500 characters'"
-                    [hasError]="(externalLinkControl?.invalid && !externalLinkControl?.pristine) ?? false"
-                  >
-                    <input pInputText placeholder="https://web.hubplatforms.com/forms/eforms/..." formControlName="externalLink"/>
-                    @if (getServicesControlError(externalLinkControl, 'required')) {
-                      <span class="stc-danger">{{'requiredField' | translate }}</span>
-                    }
+                <app-input-label
+                  [label]="'external survey link'"
+                  [isRequired]="true"
+                  [helperText]="'max 500 characters'"
+                  [hasError]="(externalLinkControl?.invalid && !externalLinkControl?.pristine) ?? false"
+                >
+                  <input pInputText placeholder="https://web.hubplatforms.com/forms/eforms/..." formControlName="externalLink"/>
+                  @if (getServicesControlError(externalLinkControl, 'required')) {
+                    <span class="stc-danger">{{'requiredField' | translate }}</span>
+                  }
 
-                    @if (getServicesControlError(externalLinkControl, 'minlength')) {
-                      <span class="stc-danger">{{ 'minLengthField' | translate:{length: getServiceErrorRequiredLength(externalLinkControl, 'minlength')} }}</span>
-                    }
+                  @if (getServicesControlError(externalLinkControl, 'minlength')) {
+                    <span class="stc-danger">{{ 'minLengthField' | translate:{length: getServiceErrorRequiredLength(externalLinkControl, 'minlength')} }}</span>
+                  }
 
-                    @if (getServicesControlError(externalLinkControl, 'maxlength')) {
-                      <span class="stc-danger">{{ 'maxLengthField' | translate:{length: getServiceErrorRequiredLength(externalLinkControl, 'maxlength')} }}</span>
-                    }
+                  @if (getServicesControlError(externalLinkControl, 'maxlength')) {
+                    <span class="stc-danger">{{ 'maxLengthField' | translate:{length: getServiceErrorRequiredLength(externalLinkControl, 'maxlength')} }}</span>
+                  }
 
-                    @if (getServicesControlError(externalLinkControl, 'invalidServiceLink')) {
-                      <span class="stc-danger">{{ externalLinkControl?.errors?.['invalidServiceLink'] }}</span>
-                    }
-                  </app-input-label>
-                </div>
-              }
-            </div>
-          }
-        </div>
-      }
+                  @if (getServicesControlError(externalLinkControl, 'invalidServiceLink')) {
+                    <span class="stc-danger">{{ externalLinkControl?.errors?.['invalidServiceLink'] }}</span>
+                  }
+                </app-input-label>
+              </div>
+            }
+          </div>
+        }
+      </div>
     </form>
     @if (isLoading()) {
       <div class="create-location-type__body--loader">

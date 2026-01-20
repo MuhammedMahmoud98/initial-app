@@ -9,6 +9,7 @@
   <main class="qr-container__main" [class.qr-container__blank--main]="!isSubHeaderVisible()">
     @if (isSubHeaderVisible()) {
       <app-sub-header />
+      <app-statistics-widgets />
     }
     <!-- MAIN ROUTES -->
     @if (hasCredentials()) {

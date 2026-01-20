@@ -4,7 +4,7 @@ import {TranslatePipe} from '@ngx-translate/core';
 @Component({
   selector: 'app-sub-header',
   imports: [
-    TranslatePipe
+    TranslatePipe,
   ],
   standalone: true,
   templateUrl: './sub-header.component.html',

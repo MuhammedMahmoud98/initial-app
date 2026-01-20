@@ -196,14 +196,6 @@ listenToCategoryChanges(): void {
         internalLinkControl?.updateValueAndValidity({ emitEvent: false });
         externalLinkControl?.updateValueAndValidity({ emitEvent: false });
       }
-
-
-        // if (this.dialogMode() === MODE.EDIT) {
-        //   this.form.markAsUntouched();
-        //   this.form.markAsPristine();
-        //   this.form.updateValueAndValidity({ emitEvent: false });
-        // }
-
       console.log(this.form);
     }),
     takeUntilDestroyed(this.#destroyRef),
@@ -220,12 +212,12 @@ listenToCategoryChanges(): void {
   }
 
   handleLocationTypePayload() {
-    const categoryValue = this.getControl('category').value;
-    const {services, ...restPayload} = this.form.getRawValue();
-
-    if (categoryValue === this.LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION) {
-      return restPayload as LocationTypePayload;
-    }
+    // const categoryValue = this.getControl('category').value;
+    const {services} = this.form.getRawValue();
+    //
+    // if (categoryValue === this.LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION) {
+    //   return restPayload as LocationTypePayload;
+    // }
 
     return {
       ...this.form.getRawValue(),

@@ -45,9 +45,11 @@ export const API_CONSTANTS = {
   CREATE_LOCATION_BY_FILEID: serverUrl + '/locations/upload/preview',
   DISCARD_LOCATION_BY_FILEID: serverUrl + '/locations/upload/discard',
   SAVE_LOCATION_BY_FILEID: serverUrl + '/locations/upload/save',
-
+  // ARCHIVED
   ARCHIVED_LOCATIONS_TYPE: serverUrl +'/location-types/archived',
   ARCHIVED_LOCATIONS : serverUrl+ '/locations/archived',
   UNARCHIVED_LOCATIONS_ITEMS : serverUrl+ '/locations/unarchive',
-  UNARCHIVED_LOCATION_TYPE : serverUrl+ '/location-types/{id}/unarchive'
+  UNARCHIVED_LOCATION_TYPE : serverUrl+ '/location-types/{id}/unarchive',
+  // DASHBOARD MAIN CARDS
+  DASHBOARD_MAIN_CARDS: serverUrl + '/dashboard/main-cards',
 };

@@ -159,8 +159,8 @@ listenToCategoryChanges(): void {
       }
 
       if (categoryValue === LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION) {
-        internalLinkControl?.clearAsyncValidators();
-        externalLinkControl?.clearAsyncValidators();
+        // internalLinkControl?.clearAsyncValidators();
+        // externalLinkControl?.clearAsyncValidators();
 
         internalLinkControl?.markAsTouched();
         internalLinkControl?.markAsDirty();
@@ -175,14 +175,14 @@ listenToCategoryChanges(): void {
         externalLinkControl?.updateValueAndValidity({ emitEvent: false });
       }
 
-      if (categoryValue === LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION && surveyControl?.value) {
-        internalLinkControl?.setValidators([noScriptValidator, noSqlInjectionValidator]);
-        externalLinkControl?.setValidators([noScriptValidator, noSqlInjectionValidator]);
-
-        // Update validity
-        internalLinkControl?.updateValueAndValidity({ emitEvent: false });
-        externalLinkControl?.updateValueAndValidity({ emitEvent: false });
-      }
+      // if (categoryValue === LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION && surveyControl?.value) {
+      //   internalLinkControl?.setValidators([noScriptValidator, noSqlInjectionValidator]);
+      //   externalLinkControl?.setValidators([noScriptValidator, noSqlInjectionValidator]);
+      //
+      //   // Update validity
+      //   internalLinkControl?.updateValueAndValidity({ emitEvent: false });
+      //   externalLinkControl?.updateValueAndValidity({ emitEvent: false });
+      // }
 
       if (categoryValue === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION && surveyControl?.value) {
         internalLinkControl?.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(500), noScriptValidator, noSqlInjectionValidator]);

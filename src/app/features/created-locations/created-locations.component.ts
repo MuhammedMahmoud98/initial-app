@@ -51,6 +51,9 @@ import { locationTypeDetails } from '../assigned-locations/models/assigned-locat
 import { archiveResponse, ValidateLocationTypeResponse } from '../../shared/models/create-location-type.model';
 import { FormsModule } from '@angular/forms';
 import { ErrorMessageTemplateComponent } from '../../shared/components/error-message-template/error-message-template.component';
+import {
+  StatisticMainCardsService
+} from '../../core/components/statistics-widgets/services/statistic-main-cards.service';
 
 
 @Component({
@@ -94,6 +97,7 @@ export class CreatedLocationsComponent implements OnDestroy {
   readonly #locationTypeActionsService = inject(LocationTypeActionsService);
   readonly localizationService = inject(LocalizationService);
   readonly #dialogService: DialogService = inject(DialogService);
+  readonly #statisticMainCardsService: StatisticMainCardsService = inject(StatisticMainCardsService);
   // ref: DynamicDialogRef | undefined;
 
   // SIGNALS
@@ -358,6 +362,7 @@ export class CreatedLocationsComponent implements OnDestroy {
             this.genericTableCacheService.resetBulkActions$.next(true);
             // this.updateFilterPayload(INITIAL_FILTER_PAYLOAD);
             this.getCreatedLocations();
+            this.#statisticMainCardsService.updateMainCards();
           } else {
             this.#messageService.add({
               severity: 'warn',
@@ -405,6 +410,7 @@ export class CreatedLocationsComponent implements OnDestroy {
 
           this.updateFilterPayload(INITIAL_FILTER_PAYLOAD);
           this.getCreatedLocations();
+          this.#statisticMainCardsService.updateMainCards();
         }),
         takeUntilDestroyed(this.#destroyRef),
         catchError((err: HttpErrorResponse) => {
@@ -697,6 +703,7 @@ export class CreatedLocationsComponent implements OnDestroy {
             life: COMMON_CONSTANTS.TOASTER_LIFE_TIME,
           });
           this.getCreatedLocations();
+          this.#statisticMainCardsService.updateMainCards();
         }),
         catchError(() => {
           this.isLoading.set(false)
@@ -742,6 +749,7 @@ export class CreatedLocationsComponent implements OnDestroy {
             this.genericTableCacheService.selectedItemsCounter.set(this.genericTableCacheService.selectedItemsCache().length)
           }
           this.getCreatedLocations();
+          this.#statisticMainCardsService.updateMainCards();
         }),
         catchError((e) => {
           this.isLoading.set(false)

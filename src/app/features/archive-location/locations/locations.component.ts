@@ -40,6 +40,9 @@ import { TextWithBgColorComponent } from '../../../shared/components/text-with-b
 import { MenuModule } from 'primeng/menu';
 import {Ripple} from 'primeng/ripple';
 import {BackendErrorResponse} from '../location-types/models/location-types.model';
+import {
+  StatisticMainCardsService
+} from '../../../core/components/statistics-widgets/services/statistic-main-cards.service';
 
 @Component({
   selector: 'app-location-type',
@@ -70,7 +73,7 @@ export class ArchivedLocationsComponent implements OnDestroy {
   readonly #ArchivedLocationService: ArchivedLocationService = inject(ArchivedLocationService);
   readonly #messageService: MessageService = inject(MessageService);
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
-
+  readonly #statisticMainCardsService: StatisticMainCardsService = inject(StatisticMainCardsService);
   // readonly #messageService: MessageService = inject(MessageService);
   readonly #translateService: TranslateService = inject(TranslateService);
 
@@ -97,21 +100,6 @@ export class ArchivedLocationsComponent implements OnDestroy {
 
   init: AfterRenderRef = afterNextRender(() => {
     this.getAssignedLocationTypes();
-    // this.items.set([{
-    //   id: 1,
-    //   district: 'Nasr City',
-    //   category: 'Office',
-    //   building: 'B1',
-    //   floor: '3',
-    //   zone: 'Z2',
-    //   code: 'LC-001',
-    //   qrCode: 'QR-001',
-    //   serial: 'SR-001',
-    //   typeTitle: 'Archive',
-    //   typeCode: 'AR',
-    //   isSelected: false
-    // }]);
-    // this.isLoading.set(false)
   });
 
 
@@ -181,6 +169,7 @@ export class ArchivedLocationsComponent implements OnDestroy {
       tap((res) => {
         this.#messageService.add({severity:'success', summary: 'Success', detail: this.#translateService.instant(res.message ), life: COMMON_CONSTANTS.TOASTER_LIFE_TIME});
         this.getAssignedLocationTypes();
+        this.#statisticMainCardsService.updateMainCards();
       }),
       takeUntilDestroyed(this.#destroyRef),
       catchError((error) => {

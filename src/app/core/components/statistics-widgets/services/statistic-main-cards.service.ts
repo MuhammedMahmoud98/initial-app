@@ -47,4 +47,8 @@ export class StatisticMainCardsService {
         this.isLoading.set(false);
       })).subscribe();
   }
+
+  updateMainCards(): void {
+    this.loadMainCardsStatistics();
+  }
 }

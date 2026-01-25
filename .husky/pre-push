@@ -1,5 +1,5 @@
 branch_name="$(git rev-parse --abbrev-ref HEAD)"
-regex="^((feature|feat|chore|fix|bug|enhance|release)\/([a-z0-9]+[-])*[a-z0-9]+)$"
+regex="^((feature|feat|chore|fix|bug|enhance|release|revert)\/([a-z0-9]+[-])*[a-z0-9]+)$"
 max_length=80
 
 if [[ ! $branch_name =~ $regex ]] || [ ${#branch_name} -gt $max_length ]; then

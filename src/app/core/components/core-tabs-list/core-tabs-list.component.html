@@ -1,7 +1,7 @@
 <div class="hub-custom-tabs" *ngIf="!isUploadPage">
   <div class="tab-sections">
     @for (tab of tabsList(); track tab) {
-    <a [routerLink]="'/' + tab.path" [routerLinkActive]="'active-route'" class="hub-custom-tabs__item">
+    <a [routerLink]="'/' + tab.path" (click)="updateCardStatistics(tab.path)" [routerLinkActive]="'active-route'" class="hub-custom-tabs__item">
       {{ tab.title | translate }}
     </a>
     }

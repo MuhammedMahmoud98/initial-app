@@ -32,7 +32,6 @@ export const CORE_APP_ROUTES: CoreAppRoutes[] = [
     path: MAIN_ROUTES.ARCHIVED_LOCATIONS,
     title:'archived'
   }
-
 ];
 
 export enum CLAASSIFICATION_FILTER {

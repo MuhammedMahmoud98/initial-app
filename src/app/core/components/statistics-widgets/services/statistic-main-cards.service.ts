@@ -1,6 +1,6 @@
-import {computed, inject, Injectable, Signal, signal} from '@angular/core';
+import {computed, DestroyRef, inject, Injectable, Signal, signal} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {catchError, finalize, Observable, shareReplay, tap, throwError} from 'rxjs';
+import {catchError, exhaustMap, finalize, Observable, shareReplay, Subject, tap, throwError} from 'rxjs';
 import {API_CONSTANTS} from '../../../../shared';
 import {
   MainWidgetCard,
@@ -8,6 +8,7 @@ import {
   MainWidgetCardType,
   MainWidgetCardVM
 } from '../models/main-widget-card.model';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,32 @@ export class StatisticMainCardsService {
       iconBgColor: MainWidgetCardType[card.iconName]
     }));
   });
+
+  // SUBJECTS AND OBSERVABLES
+  readonly reloadStatisticsCards: Subject<void> = new Subject<void>();
+  readonly #destroyRef = inject(DestroyRef);
+
+  constructor() {
+    this.reloadStatisticsCards.pipe(
+      exhaustMap(() => {
+        this.hasError.set(false);
+        return this.getMainCardsStatistics().pipe(
+          tap((response: MainWidgetCardsResponse) => {
+            this.mainCardsStatistics.set(response.mainWidgets);
+          }),
+          shareReplay(1),
+          takeUntilDestroyed(this.#destroyRef),
+          catchError((error: HttpErrorResponse) => {
+            this.hasError.set(true);
+            return throwError(() => error);
+          }),
+          finalize(() => {
+            this.isLoading.set(false);
+          })
+        );
+      })
+    ).subscribe();
+  }
 
   private getMainCardsStatistics(): Observable<MainWidgetCardsResponse> {
     return this.#http.get<MainWidgetCardsResponse>(API_CONSTANTS.DASHBOARD_MAIN_CARDS);

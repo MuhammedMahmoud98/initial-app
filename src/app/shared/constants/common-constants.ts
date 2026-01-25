@@ -29,7 +29,7 @@ export const CORE_APP_ROUTES: CoreAppRoutes[] = [
     title:'assignedLocations',
   },
   {
-    path:MAIN_ROUTES.ARCHIVED_LOCATIONS,
+    path: MAIN_ROUTES.ARCHIVED_LOCATIONS,
     title:'archived'
   }
 

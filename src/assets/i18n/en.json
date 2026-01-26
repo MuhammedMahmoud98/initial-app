@@ -161,5 +161,6 @@
   "services displayed from the parent location type": "services displayed from the parent location type",
   "validating archive...": "validating archive...",
   "services": "services",
-  "classificationsSelected": "2 items selected"
+  "classificationsSelected": "2 items selected",
+  "cardsErrorMsg": "no data found to be displayed"
 }

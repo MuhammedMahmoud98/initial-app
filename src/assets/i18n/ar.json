@@ -161,5 +161,5 @@
   "validating archive...": "جارٍ التحقق من الأرشفة...",
   "services": "الخدمات المتاحة",
   "classificationsSelected": "تم اختيار عنصرين",
-  "cardsErrorMsg": "لم يتم العثور على أي بيانات لعرضها"
+  "cardsErrorMsg": "البيانات غير متوفرة"
 }

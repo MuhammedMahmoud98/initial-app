@@ -40,6 +40,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { TimezoneDatePipe } from '../../shared/pipes/timezone-date.pipe';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  StatisticMainCardsService
+} from '../../core/components/statistics-widgets/services/statistic-main-cards.service';
 
 @Component({
   selector: 'app-assigned-qr',
@@ -67,7 +70,7 @@ export class AssignedLocationsComponent implements OnDestroy {
   protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
   readonly #locationsService: LocationsService = inject(LocationsService);
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
-
+  readonly #statisticMainCardsService: StatisticMainCardsService = inject(StatisticMainCardsService);
   readonly #messageService: MessageService = inject(MessageService);
   readonly #translateService: TranslateService = inject(TranslateService);
 
@@ -177,6 +180,7 @@ export class AssignedLocationsComponent implements OnDestroy {
       tap((res: LinkAssignedLocation) => {
         this.#messageService.add({ severity: 'success', summary: 'Success', detail: res?.message , life: 3000});
         this.getAssignedLocationTypes();
+        this.#statisticMainCardsService.updateMainCards();
       }),
       catchError((e) => {
         this.#messageService.add({severity:'error', summary: 'Error', detail: e.error.message[0].source.message , life: 3000});

@@ -3,13 +3,15 @@ import {Skeleton} from 'primeng/skeleton';
 import {animate, query, stagger, style, transition, trigger} from '@angular/animations';
 import {StatisticMainCardsService} from './services/statistic-main-cards.service';
 import {DecimalPipe, NgOptimizedImage} from '@angular/common';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-statistics-widgets',
   imports: [
     Skeleton,
     NgOptimizedImage,
-    DecimalPipe
+    DecimalPipe,
+    TranslatePipe
   ],
   standalone: true,
   templateUrl: './statistics-widgets.component.html',
@@ -39,6 +41,7 @@ export class StatisticsWidgetsComponent {
   // SIGNALS
   mainCardsVM = this.statisticMainCardsService.mainCardsVM;
   isLoading = this.statisticMainCardsService.isLoading;
+  hasError = this.statisticMainCardsService.hasError;
 
   init: AfterRenderRef = afterNextRender(() => {
     this.statisticMainCardsService.loadMainCardsStatistics();

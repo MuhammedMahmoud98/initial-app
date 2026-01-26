@@ -51,5 +51,5 @@ export const API_CONSTANTS = {
   UNARCHIVED_LOCATIONS_ITEMS : serverUrl+ '/locations/unarchive',
   UNARCHIVED_LOCATION_TYPE : serverUrl+ '/location-types/{id}/unarchive',
   // DASHBOARD MAIN CARDS
-  DASHBOARD_MAIN_CARDS: serverUrl + '/dashboard/main-cards',
+  DASHBOARD_MAIN_CARDS: serverUrl + '/dashboard/main-cardssss',
 };

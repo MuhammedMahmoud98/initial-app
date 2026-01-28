@@ -4,7 +4,7 @@ import {Router, RouterLink, RouterLinkActive, NavigationEnd} from '@angular/rout
 import { TranslatePipe } from '@ngx-translate/core';
 import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
-import {Subscription, tap} from 'rxjs';
+import {distinctUntilChanged, Subscription, tap} from 'rxjs';
 import {MAIN_ROUTES} from '../../../shared/enums/shared.enum';
 import {StatisticMainCardsService} from '../statistics-widgets/services/statistic-main-cards.service';
 
@@ -23,6 +23,7 @@ export class CoreTabsListComponent implements OnInit, OnDestroy {
   private routeSub!: Subscription;
 
   previousUrl: string | null = null;
+  currentPath: string | null = null;
 
   constructor(private router: Router, private cdr: ChangeDetectorRef) { }
 
@@ -31,7 +32,16 @@ export class CoreTabsListComponent implements OnInit, OnDestroy {
     this.routeSub = this.router.events
       .pipe(
         filter(event => event instanceof NavigationEnd),
-        tap(() => {
+        distinctUntilChanged(),
+        tap((event) => {
+          const newPath = event.urlAfterRedirects || event.url;
+
+          // Only update if the path has actually changed
+          if (this.currentPath !== newPath) {
+            this.#statisticMainCardsService.updateMainCards();
+            this.currentPath = newPath;
+          }
+
           this.cdr.markForCheck();
         })
       ).subscribe();
@@ -55,13 +65,15 @@ export class CoreTabsListComponent implements OnInit, OnDestroy {
   }
 
   protected updateCardStatistics(path: string): void {
+    console.log(this.router.isActive(path, false), 'isActiveRoute');
+      this.#statisticMainCardsService.updateMainCards();
     if (!this.previousUrl) {
       this.previousUrl = path;
     }
 
     if (this.previousUrl !== path) {
       this.#statisticMainCardsService.updateMainCards();
-      this.previousUrl = null;
+      this.previousUrl = path;
     }
   }
 }

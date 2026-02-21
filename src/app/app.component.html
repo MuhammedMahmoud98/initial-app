@@ -20,7 +20,7 @@
           </div>
         }
 
-        @if (isAppReady() && !isAppLoading()) {
+        @if (isAppReady() && !isAppLoading() && isSubHeaderVisible()) {
           <div class="core-tabs-list">
             <app-core-tabs-list />
           </div>

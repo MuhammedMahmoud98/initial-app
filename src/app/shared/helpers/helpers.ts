@@ -1,6 +1,6 @@
 import {COMMON_CONSTANTS} from '../constants/common-constants';
 import {PrintQRCodeDto} from '../../features/created-locations/models/created-location.model';
-import {LOCATION_TYPE_CATEGORIES} from "../enums/shared.enum";
+import {LOCATION_TYPE_CATEGORIES} from '../enums/shared.enum';
 
 
 export const isTokenLessUrl: (url: string) => Readonly<boolean> = (url: string): boolean => {
@@ -568,7 +568,7 @@ export const handleMiddleSpacing = (items: PrintQRCodeDto[]) => {
       return 50;
     }
     if (currentSize?.includes('6x9') ) {
-      return 50;
+      return 40;
     }
   }
 
@@ -600,10 +600,10 @@ export const handleEmployeeIconWidth = (items: PrintQRCodeDto[]) => {
 
   if (category === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION) {
     if (currentSize?.includes('A6') ) {
-      return 100;
+      return 70;
     }
     if (currentSize?.includes('6x9') ) {
-      return 50;
+      return 45;
     }
   }
 
@@ -633,10 +633,10 @@ export const handleEmployeeIconPosition = (items: PrintQRCodeDto[]) => {
 
   if (category === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION) {
     if (currentSize?.includes('A6') ) {
-      return { x: 182, y: 220 };
+      return { x: 205, y: 280 };
     }
     if (currentSize?.includes('6x9') ) {
-      return { x: 110, y: 145 };
+      return { x: 110, y: 165 };
     }
   }
 

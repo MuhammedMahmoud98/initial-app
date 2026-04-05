@@ -6,8 +6,7 @@ import QRCodeStyling from 'qr-code-styling';
   providedIn: 'root'
 })
 export class QrCodeStylingService {
-
-  async generateQRCodePNG(data: string, options?: Partial<QRCodeOptions>): Promise<string> {
+  async generateQRCodePNG(data: string, options?: Partial<QRCodeOptions>, hideLogo?: boolean): Promise<string> {
     const defaultOptions = {
       width: 280,
       height: 280,
@@ -37,9 +36,30 @@ export class QrCodeStylingService {
       },
     } as Partial<QRCodeOptions>;
 
-    const qrCode = new QRCodeStyling({
+    const mergedOptions = {
       ...defaultOptions,
-      ...options
+      ...options,
+      imageOptions: {
+        ...(defaultOptions.imageOptions || {}),
+        ...(options?.imageOptions || {})
+      },
+      qrOptions: {
+        ...(defaultOptions.qrOptions || {}),
+        ...(options)?.qrOptions || {}
+      }
+    } as Partial<QRCodeOptions>;
+
+    if (hideLogo) {
+      delete (mergedOptions)?.image;
+      mergedOptions.imageOptions = {
+        ...(mergedOptions.imageOptions || {}),
+        imageSize: 0,
+        hideBackgroundDots: true
+      };
+    }
+
+    const qrCode = new QRCodeStyling({
+      ...mergedOptions
     });
 
 

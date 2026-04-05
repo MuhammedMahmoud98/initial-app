@@ -515,7 +515,7 @@ export const handleFooterTextRightMargin= (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('6x9')) {
-    return -4;
+    return 0;
   }
 
   if (currentSize.includes('*')) {
@@ -608,7 +608,7 @@ export const handleEmployeeIconWidth = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('6x9')) {
-    return 80;
+    return 70;
   }
 
   if (currentSize.includes('*')) {
@@ -641,7 +641,7 @@ export const handleEmployeeIconPosition = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('6x9')) {
-    return { x: 80, y: 170 };
+    return { x: 90, y: 175 };
   }
 
   if (currentSize.includes('*')) {

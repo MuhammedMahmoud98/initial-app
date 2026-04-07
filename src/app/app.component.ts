@@ -62,7 +62,7 @@ export class AppComponent {
   isAppLoading = computed(() => this.#userService.isUserLoading());
 
   constructor() {
-    console.log('%c APP COMPONENT INITIALIZED 05 APR 26', 'color: orange; font-weight: bold;');
+    console.log('%c APP COMPONENT INITIALIZED 07 APR 26', 'color: yellow; font-weight: bold;');
     this.localizationService.initialize();
     // Start warming pdfMake/font in background to avoid first-use delay
     try { this.#pdfMakerService.warmUpPdfMake(); } catch (e) {

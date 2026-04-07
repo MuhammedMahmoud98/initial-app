@@ -255,6 +255,41 @@ export const handleFooterFontSize= (items: PrintQRCodeDto[]) => {
   return 5;
 }
 
+
+export const handlePhoneNumberFontSize= (items: PrintQRCodeDto[]) => {
+  const currentSize = getPdfSize(items);
+  const category = getPdfCategory(items);
+
+
+  if (currentSize?.includes('A4')) {
+    return 30;
+  }
+
+  if (currentSize?.includes('A5')) {
+    return 18;
+  }
+
+  if (category === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION) {
+    if (currentSize?.includes('A6') ) {
+      return 11;
+    }
+    if (currentSize?.includes('6x9') ) {
+      return 7;
+    }
+  }
+
+
+  if (currentSize.includes('6x9')) {
+    return 7;
+  }
+
+  if (currentSize.includes('*')) {
+    return 5;
+  }
+
+  return 5;
+}
+
 export const handleLineSeparatorWidth = (items: PrintQRCodeDto[]) => {
   const currentSize = getPdfSize(items);
 
@@ -298,12 +333,12 @@ export const handleIconsWidth = (items: PrintQRCodeDto[]) => {
       return 14;
     }
     if (currentSize?.includes('6x9') ) {
-      return 10;
+      return 6;
     }
   }
 
   if (currentSize.includes('6x9')) {
-    return 6;
+    return 7;
   }
 
   if (currentSize.includes('*')) {
@@ -333,7 +368,7 @@ export const handleIconTopMargin = (items: PrintQRCodeDto[]) => {
       return 0;
     }
     if (currentSize?.includes('6x9') ) {
-      return 0;
+      return 2;
     }
   }
 
@@ -350,6 +385,7 @@ export const handleIconTopMargin = (items: PrintQRCodeDto[]) => {
 
 export const handlePhoneIconTopMargin = (items: PrintQRCodeDto[]) => {
   const currentSize = getPdfSize(items);
+  const category = getPdfCategory(items);
 
   if (currentSize?.includes('A4')) {
     return 17;
@@ -361,6 +397,12 @@ export const handlePhoneIconTopMargin = (items: PrintQRCodeDto[]) => {
 
   if (currentSize?.includes('A6')) {
     return 8;
+  }
+
+  if (category === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION) {
+    if (currentSize.includes('6x9')) {
+      return 7;
+    }
   }
 
   if (currentSize.includes('6x9')) {
@@ -510,12 +552,12 @@ export const handleFooterTextRightMargin= (items: PrintQRCodeDto[]) => {
       return 0;
     }
     if (currentSize?.includes('6x9') ) {
-      return 0;
+      return -3;
     }
   }
 
   if (currentSize.includes('6x9')) {
-    return 0;
+    return -3;
   }
 
   if (currentSize.includes('*')) {
@@ -565,10 +607,10 @@ export const handleMiddleSpacing = (items: PrintQRCodeDto[]) => {
 
   if(category === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION) {
     if (currentSize?.includes('A6') ) {
-      return 50;
+      return 40;
     }
     if (currentSize?.includes('6x9') ) {
-      return 40;
+      return 25;
     }
   }
 
@@ -608,7 +650,7 @@ export const handleEmployeeIconWidth = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('6x9')) {
-    return 70;
+    return 85;
   }
 
   if (currentSize.includes('*')) {
@@ -641,7 +683,7 @@ export const handleEmployeeIconPosition = (items: PrintQRCodeDto[]) => {
   }
 
   if (currentSize.includes('6x9')) {
-    return { x: 90, y: 175 };
+    return { x: 75, y: 170 };
   }
 
   if (currentSize.includes('*')) {

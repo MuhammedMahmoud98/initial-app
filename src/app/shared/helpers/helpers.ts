@@ -280,7 +280,7 @@ export const handlePhoneNumberFontSize= (items: PrintQRCodeDto[]) => {
 
 
   if (currentSize.includes('6x9')) {
-    return 5;
+    return 7;
   }
 
   if (currentSize.includes('*')) {
@@ -607,7 +607,7 @@ export const handleMiddleSpacing = (items: PrintQRCodeDto[]) => {
 
   if(category === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION) {
     if (currentSize?.includes('A6') ) {
-      return 50;
+      return 40;
     }
     if (currentSize?.includes('6x9') ) {
       return 25;

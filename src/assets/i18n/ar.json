@@ -161,5 +161,6 @@
   "validating archive...": "جارٍ التحقق من الأرشفة...",
   "services": "الخدمات المتاحة",
   "classificationsSelected": "تم اختيار عنصرين",
-  "cardsErrorMsg": "البيانات غير متوفرة"
+  "cardsErrorMsg": "البيانات غير متوفرة",
+  "addType": "إضافة نوع"
 }

@@ -85,26 +85,42 @@
       <!-- SURVEY TYPES SELECTORS -->
       <div [formArrayName]="'services'" #test>
         @for (service of servicesArray?.controls;track service;let i = $index) {
-          <div class="flex flex-column gap-3" [formGroupName]="i">
-            <!-- SERVICE TYPE -->
-            <div class="md:col-6 col-12 p-0">
-              <app-input-label
-                [label]="'type'"
-                [isRequired]="false"
-                [labelTooltip]="'serviceTypeTooltip'"
-              >
-                <p-select
-                  [options]="surveyOptions()"
-                  optionLabel="name"
-                  optionValue="code"
-                  formControlName="serviceType"
-                  [placeholder]="'selectServiceTypePlaceholder' | translate"
-                  [showClear]="true"
-                  class="" />
-              </app-input-label>
+          <div class="flex flex-column gap-3 mb-3" [formGroupName]="i">
+            <!-- SERVICE TYPE ROW: select + remove button -->
+            <div class="flex align-items-end gap-2">
+              <div class="md:col-6 col-12 p-0 flex-1">
+                <app-input-label
+                  [label]="'type'"
+                  [isRequired]="false"
+                  [labelTooltip]="'serviceTypeTooltip'"
+                >
+                  <p-select
+                    [options]="getAvailableOptionsForIndex(i)"
+                    optionLabel="name"
+                    optionValue="code"
+                    appendTo="body"
+                    formControlName="serviceType"
+                    [placeholder]="'selectServiceTypePlaceholder' | translate"
+                    [showClear]="true"
+                  />
+                </app-input-label>
+              </div>
+
+              <!-- REMOVE ROW BUTTON — only visible when there's more than one row -->
+              @if (servicesArray.length > 1) {
+                <p-button
+                  icon="pi pi-trash"
+                  severity="danger"
+                  [outlined]="true"
+                  [rounded]="true"
+                  size="small"
+                  class="mb-1"
+                  (onClick)="removeService(i)"
+                />
+              }
             </div>
 
-
+            <!-- FEEDBACK LINKS — only shown when serviceType is Feedback -->
             @if (service.get('serviceType')?.value === 'Feedback') {
               <!-- INTERNAL LINK SURVEY -->
               <div class="col-12 internal-link-survey p-0">
@@ -162,6 +178,21 @@
                 </app-input-label>
               </div>
             }
+
+          </div>
+        }
+
+        <!-- ADD TYPE BUTTON — hidden when all options are already selected -->
+        @if (canAddService) {
+          <div class="flex mt-1">
+
+            <p-button
+              [label]="'addType' | translate"
+              icon="pi pi-plus"
+              severity="secondary"
+              [outlined]="true"
+              (onClick)="addService()"
+            />
           </div>
         }
       </div>

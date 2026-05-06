@@ -63,6 +63,7 @@ export class CreateLocationTypeDialogComponent {
   // SIGNALS
   surveyOptions = signal([
     {name: this.#translateService.instant('Feedback'), code: 'Feedback'},
+    {name: this.#translateService.instant('hajj'), code: 'CREATE_TICKET'},
   ]);
 
   isLoading = signal(false);
@@ -95,7 +96,7 @@ export class CreateLocationTypeDialogComponent {
       category: new FormControl<LocationTypePayload['category']>(LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION),
       size: new FormControl<LocationTypePayload['size']>('A6'),
       name: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(50), noScriptValidator, noSqlInjectionValidator]),
-      code: new FormControl('', [Validators.required,Validators.minLength(2), Validators.maxLength(10), noScriptValidator, noSqlInjectionValidator, noWhitespaceValidator()]),
+      code: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(10), noScriptValidator, noSqlInjectionValidator, noWhitespaceValidator()]),
       services: new FormArray([serviceFormGroup])
     } as unknown as LocationTypeForm));
   }
@@ -129,9 +130,13 @@ export class CreateLocationTypeDialogComponent {
           internalLink?.setAsyncValidators([ServiceLinkValidator(this.#locationTypeActionsService)]);
           externalLink?.setAsyncValidators([ServiceLinkValidator(this.#locationTypeActionsService)]);
         } else {
-          // Remove required validator for other service types
-          internalLink?.setValidators([noScriptValidator, noSqlInjectionValidator]);
-          externalLink?.setValidators([noScriptValidator, noSqlInjectionValidator]);
+          // CREATE_TICKET or null — no link validation needed
+          internalLink?.clearValidators();
+          internalLink?.clearAsyncValidators();
+          externalLink?.clearValidators();
+          externalLink?.clearAsyncValidators();
+          internalLink?.reset('');
+          externalLink?.reset('');
         }
 
         // Update validity
@@ -144,36 +149,79 @@ export class CreateLocationTypeDialogComponent {
     return serviceFormGroup;
   }
 
-listenToCategoryChanges(): void {
-  this.getControl('category').valueChanges.pipe(
-    tap((categoryValue: CategoryTypes) => {
-      const surveyControl = this.getControl('services')?.get('0')?.get('serviceType');
-      const internalLinkControl = this.getControl('services')?.get('0')?.get('internalLink');
-      const externalLinkControl = this.getControl('services')?.get('0')?.get('externalLink');
+  /**
+   * Returns the max number of service rows allowed = total survey options count.
+   */
+  get maxServicesCount(): number {
+    return this.surveyOptions().length;
+  }
+
+  /**
+   * Returns true if a new service row can be added.
+   */
+  get canAddService(): boolean {
+    return this.servicesArray.length < this.maxServicesCount;
+  }
+
+  /**
+   * Returns the list of survey options that are NOT yet selected in OTHER rows,
+   * for the given row index. The currently selected value of this row is always included
+   * so the dropdown doesn't lose its displayed value.
+   */
+  getAvailableOptionsForIndex(index: number): { name: string; code: string }[] {
+    const selectedCodes: string[] = this.servicesArray.controls
+      .map((ctrl, i) => i !== index ? (ctrl.get('serviceType')?.value as string | null) : null)
+      .filter((code): code is string => !!code);
+
+    return this.surveyOptions().filter(opt => !selectedCodes.includes(opt.code as string));
+  }
+
+  /**
+   * Adds a new empty service row to the FormArray.
+   */
+  addService(): void {
+    if (!this.canAddService) return;
+    this.servicesArray.push(this.createServiceFormGroup());
+  }
+
+  /**
+   * Removes a service row at the given index.
+   */
+  removeService(index: number): void {
+    if (this.servicesArray.length <= 1) return; // always keep at least one row
+    this.servicesArray.removeAt(index);
+  }
+
+  listenToCategoryChanges(): void {
+    this.getControl('category').valueChanges.pipe(
+      tap((categoryValue: CategoryTypes) => {
+        const surveyControl = this.getControl('services')?.get('0')?.get('serviceType');
+        const internalLinkControl = this.getControl('services')?.get('0')?.get('internalLink');
+        const externalLinkControl = this.getControl('services')?.get('0')?.get('externalLink');
 
       // AUTOMATICALLY UPDATE PRINT SIZE BASED ON CATEGORY
-      if (categoryValue === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION) {
-        this.getControl('size').setValue('A6');
-      } else if (categoryValue === LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION) {
-        this.getControl('size').setValue('6x9');
-      }
+        if (categoryValue === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION) {
+          this.getControl('size').setValue('A6');
+        } else if (categoryValue === LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION) {
+          this.getControl('size').setValue('6x9');
+        }
 
-      if (categoryValue === LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION) {
+        if (categoryValue === LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION) {
         // internalLinkControl?.clearAsyncValidators();
         // externalLinkControl?.clearAsyncValidators();
 
-        internalLinkControl?.markAsTouched();
-        internalLinkControl?.markAsDirty();
-        internalLinkControl?.setErrors(null);
+          internalLinkControl?.markAsTouched();
+          internalLinkControl?.markAsDirty();
+          internalLinkControl?.setErrors(null);
 
-        externalLinkControl?.markAsTouched();
-        externalLinkControl?.markAsDirty();
-        externalLinkControl?.setErrors(null);
+          externalLinkControl?.markAsTouched();
+          externalLinkControl?.markAsDirty();
+          externalLinkControl?.setErrors(null);
 
         // Update validity
-        internalLinkControl?.updateValueAndValidity({ emitEvent: false });
-        externalLinkControl?.updateValueAndValidity({ emitEvent: false });
-      }
+          internalLinkControl?.updateValueAndValidity({ emitEvent: false });
+          externalLinkControl?.updateValueAndValidity({ emitEvent: false });
+        }
 
       // if (categoryValue === LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION && surveyControl?.value) {
       //   internalLinkControl?.setValidators([noScriptValidator, noSqlInjectionValidator]);
@@ -184,23 +232,23 @@ listenToCategoryChanges(): void {
       //   externalLinkControl?.updateValueAndValidity({ emitEvent: false });
       // }
 
-      if (categoryValue === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION && surveyControl?.value) {
-        internalLinkControl?.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(500), noScriptValidator, noSqlInjectionValidator]);
+        if (categoryValue === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION && surveyControl?.value) {
+          internalLinkControl?.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(500), noScriptValidator, noSqlInjectionValidator]);
 
-        externalLinkControl?.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(500), noScriptValidator, noSqlInjectionValidator]);
+          externalLinkControl?.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(500), noScriptValidator, noSqlInjectionValidator]);
 
         // SET ASYNC VALIDATOR
-        internalLinkControl?.setAsyncValidators([ServiceLinkValidator(this.#locationTypeActionsService)]);
-        externalLinkControl?.setAsyncValidators([ServiceLinkValidator(this.#locationTypeActionsService)]);
+          internalLinkControl?.setAsyncValidators([ServiceLinkValidator(this.#locationTypeActionsService)]);
+          externalLinkControl?.setAsyncValidators([ServiceLinkValidator(this.#locationTypeActionsService)]);
         // Update validity
-        internalLinkControl?.updateValueAndValidity({ emitEvent: false });
-        externalLinkControl?.updateValueAndValidity({ emitEvent: false });
-      }
-      console.log(this.form);
-    }),
-    takeUntilDestroyed(this.#destroyRef),
-  ).subscribe();
-}
+          internalLinkControl?.updateValueAndValidity({ emitEvent: false });
+          externalLinkControl?.updateValueAndValidity({ emitEvent: false });
+        }
+        console.log(this.form);
+      }),
+      takeUntilDestroyed(this.#destroyRef),
+    ).subscribe();
+  }
 
   saveChanges(): void {
     console.log(this.form.getRawValue(), 'form value');
@@ -211,17 +259,32 @@ listenToCategoryChanges(): void {
     this.invokeUpdateLocationType(this.dialogData()?.id, payload);
   }
 
-  handleLocationTypePayload() {
-    // const categoryValue = this.getControl('category').value;
-    const {services} = this.form.getRawValue();
-    //
-    // if (categoryValue === this.LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION) {
-    //   return restPayload as LocationTypePayload;
-    // }
+  handleLocationTypePayload(): LocationTypePayload {
+    const { services, ...restForm } = this.form.getRawValue();
+
+    // Map each service to its correct shape based on serviceType
+    const mappedServices = services
+      .filter(s => !!s.serviceType) // skip rows with no type selected
+      .map(s => {
+        if (s.serviceType === 'Feedback') {
+          return {
+            available: true,
+            serviceType: s.serviceType,
+            internalLink: s.internalLink ?? '',
+            externalLink: s.externalLink ?? '',
+          };
+        } else {
+          // CREATE_TICKET — only available + serviceType
+          return {
+            available: true,
+            serviceType: s.serviceType,
+          };
+        }
+      });
 
     return {
-      ...this.form.getRawValue(),
-      services: this.servicesArray.getRawValue()?.[0].serviceType ? services : [],
+      ...restForm,
+      services: mappedServices,
     } as LocationTypePayload;
   }
 

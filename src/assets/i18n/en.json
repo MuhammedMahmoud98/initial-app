@@ -162,5 +162,6 @@
   "validating archive...": "validating archive...",
   "services": "services",
   "classificationsSelected": "2 items selected",
-  "cardsErrorMsg": "data unavailable"
+  "cardsErrorMsg": "data unavailable",
+  "addType": "add type"
 }

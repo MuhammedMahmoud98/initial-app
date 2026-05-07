@@ -13,7 +13,8 @@ import {
   LocationTypeForm,
   LocationTypeKeys,
   LocationTypePayload, LocationTypeResponse,
-  ServiceDto
+  ServiceDto,
+  ServiceType
 } from '../../models/create-location-type.model';
 import {Select} from 'primeng/select';
 import {FormControlsOf, FormErrorType, ModeType} from '../../models';
@@ -244,14 +245,12 @@ export class CreateLocationTypeDialogComponent {
           internalLinkControl?.updateValueAndValidity({ emitEvent: false });
           externalLinkControl?.updateValueAndValidity({ emitEvent: false });
         }
-        console.log(this.form);
       }),
       takeUntilDestroyed(this.#destroyRef),
     ).subscribe();
   }
 
   saveChanges(): void {
-    console.log(this.form.getRawValue(), 'form value');
     const payload = this.handleLocationTypePayload();
 
     this.isLoading.set(true);
@@ -300,7 +299,6 @@ export class CreateLocationTypeDialogComponent {
         catchError((err) => {
           this.handleTypeCodeDuplicationError(err);
           this.isLoading.set(false);
-          console.log(err, 'CREATE ERROR');
           return EMPTY;
         })
       ).subscribe();
@@ -314,7 +312,6 @@ export class CreateLocationTypeDialogComponent {
           this.closeWithSuccessMsg(this.#translateService.instant('updateLocationTypeSuccessMsg', {typeName: this.form.getRawValue().name}));
         }),
         catchError((error) => {
-          console.log(error, 'UPDATE ERROR');
           this.handleTypeCodeDuplicationError(error);
           this.isLoading.set(false);
           return EMPTY;
@@ -376,15 +373,44 @@ export class CreateLocationTypeDialogComponent {
   private activateEditMode(): void {
     if (this.dialogMode() === MODE.EDIT) {
       const dialogData = (this.#dialogConfig?.data as LocationTypeDialogData);
-      console.log(dialogData, 'DIALOG DATA');
-      this.form.patchValue(dialogData?.locationTypeData as Partial<LocationType | unknown>);
+      const locationTypeData = dialogData?.locationTypeData as LocationType & { services?: ServiceDto[] };
+
+      const savedServices: ServiceDto[] = locationTypeData?.services ?? [];
+      this.rebuildServicesArray(savedServices);
+
+      this.form.patchValue(locationTypeData as Partial<LocationType | unknown>);
+
+      savedServices.forEach((service, i) => {
+        const group = this.servicesArray.at(i);
+        if (!group) return;
+
+        const normalizedType = service.serviceType
+          ? this.surveyOptions().find(
+              opt => opt.code.toLowerCase() === service.serviceType!.toLowerCase()
+            )?.code ?? service.serviceType
+          : null;
+        group.get('serviceType')?.setValue(normalizedType as ServiceType, { emitEvent: true });
+
+        if (service.serviceType === 'Feedback') {
+          group.get('internalLink')?.setValue(service.internalLink ?? '');
+          group.get('externalLink')?.setValue(service.externalLink ?? '');
+        }
+
+        group.get('available')?.setValue(service.available ?? true);
+      });
+
       this.handleDisableControlsForLinkedLocations();
-      console.log(this.hasLinkedLocations(), 'HAS LINKED LOCATIONS');
 
       this.initialFormValue.set(this.form.getRawValue());
       this.form.updateValueAndValidity();
+    }
+  }
 
-      console.log(this.form.getRawValue(), 'EDIT MODE');
+  private rebuildServicesArray(savedServices: ServiceDto[]): void {
+    this.servicesArray.clear({ emitEvent: false });
+    const rowCount = savedServices.length > 0 ? savedServices.length : 1;
+    for (let i = 0; i < rowCount; i++) {
+      this.servicesArray.push(this.createServiceFormGroup(), { emitEvent: false });
     }
   }
 

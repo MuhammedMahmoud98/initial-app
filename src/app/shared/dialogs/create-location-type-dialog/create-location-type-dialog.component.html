@@ -95,10 +95,13 @@
                     [options]="getAvailableOptionsForIndex(i)"
                     optionLabel="name"
                     optionValue="code"
-                    appendTo="body"
+                    appendTo="formBod"
+                    styleClass="service-type-dropdown"
                     formControlName="serviceType"
                     [placeholder]="'selectServiceTypePlaceholder' | translate"
                     [showClear]="true"
+                    styleClass="w-full"
+                    [overlayOptions]="{ style: { width: '100%' } }"
                   />
                 </app-input-label>
               </div>

@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, input, InputSignal } from '@angular/core';
 import { CopyToClipboardComponent } from '../../../../shared/components/copy-to-clipboard/copy-to-clipboard.component';
-import { TitleWithIconComponent } from '../../../../shared/components/title-with-icon/title-with-icon.component';
 import { CustomStatusComponent } from '../../../../shared/components/custom-status/custom-status.component';
 import { TextWithBgColorComponent } from '../../../../shared/components/text-with-bg-color/text-with-bg-color.component';
 import {
@@ -23,7 +22,6 @@ import { LowerCasePipe } from '@angular/common';
     CopyToClipboardComponent,
     CustomStatusComponent,
     TextWithBgColorComponent,
-    TitleWithIconComponent,
     TranslatePipe,
     ToggleSwitchModule,
     FormsModule,

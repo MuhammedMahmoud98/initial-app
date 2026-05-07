@@ -1,9 +1,10 @@
 import {ChangeDetectionStrategy, Component, computed, input, InputSignal, Signal} from '@angular/core';
 import {genericCasting} from '../../helpers/helpers';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-text-with-bg-color',
-  imports: [],
+  imports: [ TranslatePipe],
   standalone: true,
   templateUrl: './text-with-bg-color.component.html',
   styleUrl: './text-with-bg-color.component.scss',
@@ -21,4 +22,14 @@ export class TextWithBgColorComponent<T> {
   // SIGNALS
   isArray: Signal<boolean> = computed(() => Array.isArray(this.textItems()));
   isObject: (item: unknown) => boolean = (item: unknown) => typeof item === 'object' && item !== null && !Array.isArray(item);
+
+
+  getItemValue(item: T): string {
+    const val = (item as Record<string, unknown>)?.[this.mapTextKey() as string];
+    return (val as string) ?? '';
+  }
+
+  asString(item: T): string {
+    return (item as unknown as string) ?? '';
+  }
 }

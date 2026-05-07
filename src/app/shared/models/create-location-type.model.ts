@@ -7,14 +7,18 @@ import {LOCATION_TYPE_CATEGORIES} from '../enums/shared.enum';
 
 // TYPES
 export type CategoryTypes = typeof LOCATION_TYPE_CATEGORIES[keyof typeof LOCATION_TYPE_CATEGORIES];
-export type ServiceType = 'Feedback';
-export type ServiceResponse = ServiceDto & 'id';
+
+// All valid service type codes — must match optionValue codes in surveyOptions
+export type ServiceType = 'Feedback' | 'CREATE_TICKET' |null;
+
+export type ServiceResponse = ServiceDto & { id: number };
 
 export interface ServiceDto {
   serviceType: ServiceType;
-  internalLink: string;
-  externalLink: string;
   available: boolean;
+  // Only present for Feedback service type
+  internalLink?: string;
+  externalLink?: string;
 }
 
 export interface LocationTypePayload {
@@ -54,7 +58,6 @@ export interface LinkInfo {
   message: string;
 }
 
-
 export type ServiceLinkKeys = keyof ServiceLink;
 export type ServiceLinkPayload = Partial<Record<ServiceLinkKeys, string>>;
 
@@ -73,12 +76,11 @@ export interface ValidateLocationTypeResponse {
   message: string,
   isValid: boolean
   activeLocationCount?: number;
-  invalidLocationIds?:number[];
+  invalidLocationIds?: number[];
 }
 
 export interface archiveResponse {
-  archivedCount:number;
-  archivedLocationIds:number[];
-  message:string
-
+  archivedCount: number;
+  archivedLocationIds: number[];
+  message: string;
 }

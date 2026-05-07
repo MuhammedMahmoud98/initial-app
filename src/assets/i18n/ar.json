@@ -162,5 +162,6 @@
   "services": "الخدمات المتاحة",
   "classificationsSelected": "تم اختيار عنصرين",
   "cardsErrorMsg": "البيانات غير متوفرة",
-  "addType": "إضافة نوع"
+  "addType": "إضافة نوع",
+  "serviceType": "نوع الخدمة"
 }

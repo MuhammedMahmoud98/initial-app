@@ -40,7 +40,6 @@ import {
 import {ComponentStateComponent} from '../../../shared/components/component-state/component-state.component';
 import {SkeletonLoaderComponent} from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 import {TranslatePipe, TranslateService} from '@ngx-translate/core';
-import {Button} from 'primeng/button';
 
 import {MenuModule} from 'primeng/menu';
 import {Ripple} from 'primeng/ripple';
@@ -59,7 +58,6 @@ import {ArchivedLocationService} from '../locations/services/archived-locations.
     ServiceAvailabilityComponent,
     ComponentStateComponent,
     SkeletonLoaderComponent,
-    Button,
     TranslatePipe,
     // Menu,
     MenuModule,
@@ -200,7 +198,6 @@ export class ArchivedLocationTypesComponent  implements OnDestroy {
 
   updateFilterPayload(newFilters: HubFilters | ItemFilter): void {
     this.locationTypesPayload.update((current) => ({...current, ...newFilters}));
-    console.log(this.locationTypesPayload(), 'UPDATED PAYLOAD');
   }
 
   handleEmptyState(): void {

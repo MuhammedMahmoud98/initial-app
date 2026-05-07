@@ -163,5 +163,8 @@
   "services": "services",
   "classificationsSelected": "2 items selected",
   "cardsErrorMsg": "data unavailable",
-  "addType": "add type"
+  "addType": "add type",
+  "createTicket": "create ticket",
+  "serviceType": "service type",
+  "Create_Ticket": "create ticket"
 }

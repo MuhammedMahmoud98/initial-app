@@ -21,7 +21,6 @@ import { GenericTableComponent } from '../../shared/components/generic-table/gen
 import { ComponentStateComponent } from '../../shared/components/component-state/component-state.component';
 import { SkeletonLoaderComponent } from '../../shared/components/skeleton-loader/skeleton-loader.component';
 import { TitleWithIconComponent } from '../../shared/components/title-with-icon/title-with-icon.component';
-import { HubFiltersComponent } from '../../shared/components/hub-filters/hub-filters.component';
 import { GenericTableCacheService } from '../../shared/services';
 import { CreatedLocation, CreatedLocationColumnType, CreatedLocationResponse } from '../created-locations/models/created-location.model';
 import { ItemFilter, TableColumn } from '../../shared';
@@ -50,7 +49,6 @@ import { Message } from 'primeng/message';
     ComponentStateComponent,
     SkeletonLoaderComponent,
     TitleWithIconComponent,
-    HubFiltersComponent,
     TextWithBgColorComponent,
     CustomStatusComponent,
     CopyToClipboardComponent,
@@ -314,7 +312,6 @@ export class UploadFileComponent {
     this.isUploadedScreen.set(true);
     this.#locationsUploadService.getCreatedLocationsByFileID(this.locationsPayload()).pipe(
       tap((createdLocations: CreatedLocationResponse) => {
-        console.log(createdLocations, 'CREATED LOCATIONS FROM API');
         this.isLoading.set(false);
         if (createdLocations) {
           this.genericTableCacheService.totalAvailableItems.set(createdLocations.totalElements);
@@ -338,7 +335,6 @@ export class UploadFileComponent {
 
   updateFilterPayload(newFilters: HubFilters | ItemFilter): void {
     this.locationsPayload.update((current) => ({ ...current, ...newFilters }));
-    console.log(this.locationsPayload(), 'UPDATED PAYLOAD');
   }
 
   onFilterValueChanges(filterValues: HubFilters) {
@@ -348,7 +344,6 @@ export class UploadFileComponent {
   }
 
   onPageChange(currentPage: number) {
-    console.log(currentPage, 'CURRENT PAGE FROM CREATED LOCATIONS');
     this.updateFilterPayload({ page: currentPage } as ItemFilter);
     this.getCreatedLocations();
   }

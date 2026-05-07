@@ -76,21 +76,18 @@
           [labelTooltip]="'qrPrintingTooltip'"
           [isRequired]="true"
         />
-        <app-printing-size-dimensions formControlName="size" [category]="getControl('category')?.value"/>
+        <app-printing-size-dimensions formControlName="size" [category]="getControl('category').value"/>
       </div>
-
-      <!-- SERVICES SEPARATOR -->
-      <div class="services-label">{{ 'service' | translate }}</div>
 
       <!-- SURVEY TYPES SELECTORS -->
       <div [formArrayName]="'services'" #test>
-        @for (service of servicesArray?.controls;track service;let i = $index) {
+        @for (service of servicesArray.controls;track service;let i = $index) {
           <div class="flex flex-column gap-3 mb-3" [formGroupName]="i">
             <!-- SERVICE TYPE ROW: select + remove button -->
             <div class="flex align-items-end gap-2">
               <div class="md:col-6 col-12 p-0 flex-1">
                 <app-input-label
-                  [label]="'type'"
+                  [label]="'serviceType'"
                   [isRequired]="false"
                   [labelTooltip]="'serviceTypeTooltip'"
                 >

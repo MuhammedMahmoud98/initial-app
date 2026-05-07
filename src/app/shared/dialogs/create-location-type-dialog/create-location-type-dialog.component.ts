@@ -63,7 +63,7 @@ export class CreateLocationTypeDialogComponent {
   // SIGNALS
   surveyOptions = signal([
     {name: this.#translateService.instant('Feedback'), code: 'Feedback'},
-    {name: this.#translateService.instant('hajj'), code: 'CREATE_TICKET'},
+    {name: this.#translateService.instant('createTicket'), code: 'CREATE_TICKET'},
   ]);
 
   isLoading = signal(false);
@@ -193,7 +193,7 @@ export class CreateLocationTypeDialogComponent {
     if (this.servicesArray.length <= 1) {
       // If only one row left, just clear the serviceType so the row stays empty
       const group = this.servicesArray.at(0);
-      group.get('serviceType')?.setValue(null as null, { emitEvent: true });
+      (group.get('serviceType') as FormControl)?.setValue(null, { emitEvent: true });
       this.form.markAsDirty();
       this.isFormHadChanges.set(true);
       return;
@@ -366,7 +366,7 @@ export class CreateLocationTypeDialogComponent {
     return false;
   }
 
-  getServiceErrorRequiredLength(serviceControl: AbstractControl<string, string> | null, errorCode: FormErrorType): number {
+  getServiceErrorRequiredLength(serviceControl: AbstractControl<unknown> | null, errorCode: FormErrorType): number {
     if (serviceControl && errorCode) {
       return serviceControl.errors?.[errorCode]?.requiredLength;
     }
@@ -435,11 +435,11 @@ export class CreateLocationTypeDialogComponent {
     const typeName = this.getControl('name');
 
     if (err?.error?.message?.[0]?.code === DUPLICATE_RECORD_CODE) {
-      if(err?.error.message?.[0].source.message.includes(DUPLICATE_LOCATION_TYPE_NAME_MSG)){
-        typeName.addValidators(duplicatedTypeCodeValidator(typeName.value))
+      if (err?.error.message?.[0].source.message.includes(DUPLICATE_LOCATION_TYPE_NAME_MSG)) {
+        typeName.addValidators(duplicatedTypeCodeValidator(typeName.value));
         typeName.updateValueAndValidity();
       }
-      if(err?.error.message?.[0].source.message.includes(DUPLICATE_LOCATION_TYPE_CODE_MSG)){
+      if (err?.error.message?.[0].source.message.includes(DUPLICATE_LOCATION_TYPE_CODE_MSG)) {
         ctrl.addValidators(duplicatedTypeCodeValidator(ctrl.value));
       }
     } else {

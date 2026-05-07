@@ -9,7 +9,7 @@
 
     @for (item of textItemsIterator; track item) {
       <div class="text-container__item" [style]="{'background-color': bgColor(), 'color': textColor()}">
-        {{isObject(item) ? item?.[mapTextKey()] : item}}
+        {{isObject(item) ? (getItemValue(item) | translate) : (asString(item) | translate)}}
       </div>
     } @empty {
       -

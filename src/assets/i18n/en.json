@@ -165,5 +165,6 @@
   "cardsErrorMsg": "data unavailable",
   "addType": "add type",
   "createTicket": "create ticket",
-  "serviceType": "service type"
+  "serviceType": "service type",
+  "Create_Ticket": "create ticket"
 }

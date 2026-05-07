@@ -358,7 +358,7 @@ export class CreateLocationTypeDialogComponent {
     return 0;
   }
 
-  getServicesControlError(serviceControl: AbstractControl<string, string> | null, errorCode: FormErrorType): boolean {
+  getServicesControlError(serviceControl: AbstractControl | null, errorCode: FormErrorType): boolean {
     if (serviceControl && errorCode) {
       return serviceControl.hasError(errorCode) && !serviceControl?.pristine;
     }

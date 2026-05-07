@@ -13,8 +13,7 @@ import {
   LocationTypeForm,
   LocationTypeKeys,
   LocationTypePayload, LocationTypeResponse,
-  ServiceDto,
-  ServiceType
+  ServiceDto
 } from '../../models/create-location-type.model';
 import {Select} from 'primeng/select';
 import {FormControlsOf, FormErrorType, ModeType} from '../../models';
@@ -183,14 +182,25 @@ export class CreateLocationTypeDialogComponent {
   addService(): void {
     if (!this.canAddService) return;
     this.servicesArray.push(this.createServiceFormGroup());
+    this.form.markAsDirty();
+    this.isFormHadChanges.set(true);
   }
 
   /**
    * Removes a service row at the given index.
    */
   removeService(index: number): void {
-    if (this.servicesArray.length <= 1) return; // always keep at least one row
+    if (this.servicesArray.length <= 1) {
+      // If only one row left, just clear the serviceType so the row stays empty
+      const group = this.servicesArray.at(0);
+      group.get('serviceType')?.setValue(null as null, { emitEvent: true });
+      this.form.markAsDirty();
+      this.isFormHadChanges.set(true);
+      return;
+    }
     this.servicesArray.removeAt(index);
+    this.form.markAsDirty();
+    this.isFormHadChanges.set(true);
   }
 
   listenToCategoryChanges(): void {
@@ -223,7 +233,6 @@ export class CreateLocationTypeDialogComponent {
           internalLinkControl?.updateValueAndValidity({ emitEvent: false });
           externalLinkControl?.updateValueAndValidity({ emitEvent: false });
         }
-
       // if (categoryValue === LOCATION_TYPE_CATEGORIES.EMPLOYEE_LOCATION && surveyControl?.value) {
       //   internalLinkControl?.setValidators([noScriptValidator, noSqlInjectionValidator]);
       //   externalLinkControl?.setValidators([noScriptValidator, noSqlInjectionValidator]);
@@ -232,7 +241,6 @@ export class CreateLocationTypeDialogComponent {
       //   internalLinkControl?.updateValueAndValidity({ emitEvent: false });
       //   externalLinkControl?.updateValueAndValidity({ emitEvent: false });
       // }
-
         if (categoryValue === LOCATION_TYPE_CATEGORIES.GENERAL_LOCATION && surveyControl?.value) {
           internalLinkControl?.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(500), noScriptValidator, noSqlInjectionValidator]);
 
@@ -389,7 +397,7 @@ export class CreateLocationTypeDialogComponent {
               opt => opt.code.toLowerCase() === service.serviceType!.toLowerCase()
             )?.code ?? service.serviceType
           : null;
-        group.get('serviceType')?.setValue(normalizedType as ServiceType, { emitEvent: true });
+        group.get('serviceType')?.setValue(normalizedType as null, { emitEvent: true });
 
         if (service.serviceType === 'Feedback') {
           group.get('internalLink')?.setValue(service.internalLink ?? '');

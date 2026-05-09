@@ -1,4 +1,14 @@
-import {ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, Signal, signal} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  effect, ElementRef,
+  inject,
+  Signal,
+  signal,
+  viewChild
+} from '@angular/core';
 import {Button} from 'primeng/button';
 import {LocationTypeCategoryComponent} from '../../components/location-type-category/location-type-category.component';
 import {AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -67,6 +77,8 @@ export class CreateLocationTypeDialogComponent {
   ]);
 
   isLoading = signal(false);
+  formBody = viewChild<ElementRef>('formBody');
+
 
   // COMPUTED
   dialogMode: Signal<ModeType> = computed(() => this.#dialogConfig?.data?.mode as ModeType);
@@ -182,6 +194,7 @@ export class CreateLocationTypeDialogComponent {
   addService(): void {
     if (!this.canAddService) return;
     this.servicesArray.push(this.createServiceFormGroup());
+    this.scrollToBottom();
     this.form.markAsDirty();
     this.isFormHadChanges.set(true);
   }
@@ -456,5 +469,17 @@ export class CreateLocationTypeDialogComponent {
       }),
       takeUntilDestroyed(this.#destroyRef),
     ).subscribe();
+  }
+
+  scrollToBottom() {
+    setTimeout(() => {
+      const el = this.formBody()?.nativeElement;
+      if (!el) return;
+
+      el.scrollTo({
+        top: el.scrollHeight,
+        behavior: 'smooth'
+      });
+    }, 20);
   }
 }

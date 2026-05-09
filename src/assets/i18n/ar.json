@@ -163,5 +163,7 @@
   "classificationsSelected": "تم اختيار عنصرين",
   "cardsErrorMsg": "البيانات غير متوفرة",
   "addType": "إضافة نوع",
-  "serviceType": "نوع الخدمة"
+  "serviceType": "نوع الخدمة",
+  "Create_Ticket": "إنشاء تذكره",
+  "createTicket": "إنشاء تذكره"
 }

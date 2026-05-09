@@ -52,8 +52,36 @@ export const DUPLICATE_LOCATION_TYPE_CODE_MSG = 'Location Type code';
 export const DUPLICATE_LOCATION_TYPE_NAME_MSG = 'Location Type name';
 
 export const SQL_INJECTION_PATTERNS: RegExp[] = [
-  /('|(\\')|(;)|(\\;)|(--|#|\/\*|\*\/))/gi,
-  /(union|select|insert|update|delete|drop|create|alter|exec|execute)/gi
+  // SQL comments, statement chaining, dangerous quoting
+  /(--|#|\/\*|\*\/|;|'|"|`)/i,
+
+  // Common tautology attacks
+  /\b(or|and)\b\s+\d+\s*=\s*\d+/i,
+
+  // UNION-based injection
+  /\bunion\b\s+(all\s+)?select\b/i,
+
+  // Dangerous SQL commands with actual SQL-like structure
+  /\b(drop|truncate)\b\s+(table|database)\b/i,
+  /\b(insert)\b\s+into\b/i,
+  /\b(delete)\b\s+from\b/i,
+  /\b(update)\b\s+\w+\s+set\b/i,
+  /\b(create|alter)\b\s+(table|database|procedure|function|trigger|view)\b/i,
+
+  // Execution attempts
+  /\b(exec|execute)\b\s*(\(|xp_|sp_)/i,
+
+  // Information schema / metadata probing
+  /\binformation_schema\b/i,
+  /\bsysobjects\b/i,
+  /\bsyscolumns\b/i,
+
+  // Common login bypass payloads
+  /('|")\s*or\s*('|")?\d+('|")?\s*=\s*('|")?\d+/i,
+  /('|")\s*or\s*1\s*=\s*1/i,
+
+  // Encoded / hex attempts
+  /\b0x[0-9a-f]+\b/i
 ];
 
 export const XSS_PATTERNS: RegExp[] = [

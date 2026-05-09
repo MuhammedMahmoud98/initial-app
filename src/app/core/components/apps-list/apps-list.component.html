@@ -13,7 +13,7 @@
               <img [ngSrc]="item.iconUrl"
                    width="20"
                    height="20"
-                   [loading]="'eager'"
+                   [loading]="'lazy'"
                    fetchpriority="high"
                    alt="app-icon"
                    (error)="handleBrokenImage($event);" />

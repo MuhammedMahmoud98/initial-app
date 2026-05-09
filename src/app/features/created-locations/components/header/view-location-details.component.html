@@ -88,7 +88,7 @@
   @if(locationDetails() &&  locationDetails().inheritedServices && locationDetails().inheritedServices.length > 0) {
         <div class="services">
       <h4 class="services-title">{{'services' | translate}}</h4>
-     
+
       <div class="inherited-service-message">
         <!-- <p-message severity="warn"> -->
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" class="mx-2">
@@ -118,13 +118,13 @@
       ) {
       <div class="action flex align-items-center justify-content-between">
         <div class="action-name">
-          <app-text-with-bg-color [textItems]="item.serviceName | lowercase" [bgColor]="'var(--silver-100)'"
+          <app-text-with-bg-color [textItems]="item.serviceName | translate | lowercase" [bgColor]="'var(--silver-100)'"
             [textColor]="'var(--onyx-500)'" />
         </div>
         <div>
           <div class="action-status flex align-items-center">
             <!-- <span>{{item.serviceName}}</span>  -->
-            <p-toggleswitch 
+            <p-toggleswitch
               [(ngModel)]="item.enabled"
               (onChange)="toggleLocationServiceStatus(item)"
             />
@@ -133,7 +133,7 @@
       </div>
       }
 
-      
+
     </div>
   </div>
   }

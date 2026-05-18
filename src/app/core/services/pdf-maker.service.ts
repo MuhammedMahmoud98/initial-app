@@ -578,22 +578,32 @@ export class PdfMakerService {
                 // 6x9 text: "everything your workspace needs starts here!"
                 {
                   text: '',
-                margin: [0, 30, 0, 0]
+                margin: [0, 15, 0, 0]
               },
                 {
-                  text: 'scan to enhance',
+                  text: 'everything your',
                   color: '#512B84',
                   style: 'qrSubtext',
                   alignment: 'start',
                   bold: true,
                   fontSize: isA6Size ? 21 : 13,
-                  margin: [0, 30, 0, 2],
+                  margin: [0, 30, 0, 3],
+                  font: 'STCFontMedium'
+                },
+                {
+                  text: 'workspace needs',
+                  color: '#512B84',
+                  style: 'qrSubtext',
+                  alignment: 'start',
+                  bold: true,
+                  fontSize: isA6Size ? 21 : 13,
+                  margin: [0, 0, 0, 3],
                   font: 'STCFontMedium'
                 },
                 {
                   text: [
-                    { text: 'the ', color: '#512B84', bold: true },
-                    { text: 'experience', color: '#FF375E', bold: true },
+                    { text: 'starts', color: '#512B84', bold: true },
+                    { text: ' here ', color: '#FF375E', bold: true },
                     { text: '!', color: '#512B84', bold: true }
                   ],
                   style: 'qrSubtext',

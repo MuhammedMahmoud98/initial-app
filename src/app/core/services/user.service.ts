@@ -4,6 +4,7 @@ import { catchError, switchMap, of, throwError } from 'rxjs';
 import { User } from '../models';
 import { CookieService } from 'ngx-cookie-service';
 import { API_CONSTANTS } from '../../shared';
+import { TokenKeyConstants } from '../constants/token-key.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -104,6 +105,6 @@ export class UserService {
   getMygateGateAuthToken() {
     return localStorage.getItem('myGateToken')
       ? localStorage.getItem('myGateToken')
-      : this.cookiesService.get('myGateToken');
+      : this.cookiesService.get(TokenKeyConstants.THIRD_PARTY_TOKEN_KEY);
   }
 }

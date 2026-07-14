@@ -21,7 +21,7 @@ export const errorInterceptor: HttpInterceptorFn = (
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       // REFRESH TOKEN IS FAILED CASE
-      if (isAuthError(error) && error?.url?.includes('v3/public/auth/refresh_token')) {
+      if (isAuthError(error) && error?.url?.includes('v3.1/public/auth/refresh_token')) {
         handleRefreshFailure(authService);
       }
 

@@ -6,18 +6,15 @@ import { CookieService } from 'ngx-cookie-service';
 import { AuthorizationToken } from '../models/auth-interceptor.model';
 import {isTokenLessUrl} from '../../shared/helpers/helpers';
 import {AuthenticationService} from '../../features/auth/services/authentication.service';
-import { UserService } from '../services';
+import { COOKIES_KEY } from '../constants/enums/cookies-key.enums';
+import { TokenKeyConstants } from '../constants/token-key.constants';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const jsEncryptService: JsEncryptService = inject(JsEncryptService);
   const cookiesService = inject(CookieService);
   const authService = inject(AuthenticationService);
-  const userService = inject(UserService);
-  // const Authorization: AuthorizationToken | string = isTokenLessUrl(req.url) ? '' : `Bearer ${cookiesService.get('token')}` as AuthorizationToken;
   const alreadyHasAuthorization = req.headers.has('Authorization');
   const shouldSetToken = !alreadyHasAuthorization && !isTokenLessUrl(req.url);
-
-  console.log(shouldSetToken, 'SHOULD SET TOKEN');
 
   const Authorization: AuthorizationToken | string = shouldSetToken
     ? `Bearer ${authService.getAccessToken()}` as AuthorizationToken
@@ -33,7 +30,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   });
 
   const urlsNeedThirdPartyToken = [
-    { pattern: /^.*\/header\/employees\/[^/]+\/nav\/items$/, methods: ['GET'] }
+    { pattern: /^.*\/header\/employees\/[^/]+\/nav\/items$/, methods: ['GET'] },
+    { pattern: /^.*\/v2\/private\/users\/[^/]+$/, methods: ['GET'] },
   ];
 
   const shouldModifyThirdPartyToken = urlsNeedThirdPartyToken.some(
@@ -47,12 +45,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     'Expires': '0',
     'API-CLIENT': jsEncryptService.encrypt(`${environment.API_CLIENT};${new Date().toUTCString()}`),
     ...(Authorization ? { Authorization } : {}),
-    'Accept-Language': cookiesService.get('lang'),
-    'locale': cookiesService.get('lang'),
+    'Accept-Language': cookiesService.get(COOKIES_KEY.LANG),
+    'locale': cookiesService.get(COOKIES_KEY.LANG),
     'API-DATE': new Date().toUTCString(),
     Agent: 'web',
     ...(shouldModifyThirdPartyToken && {
-       'third-party-token': userService.getMygateGateAuthToken() || '',
+       'third-party-token': cookiesService.get(TokenKeyConstants.THIRD_PARTY_TOKEN_KEY) || '',
     }),
   };
 
@@ -66,4 +64,3 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     }),
   );
 };
-

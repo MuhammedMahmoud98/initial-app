@@ -5,6 +5,7 @@ import {
   DEFAULT_LANG,
 } from '../../initializers';
 import {CookieService} from 'ngx-cookie-service';
+import { COOKIES_KEY } from '../../constants/enums/cookies-key.enums';
 
 export type SupportedLanguage = 'en' | 'ar';
 
@@ -39,7 +40,7 @@ export class LocalizationService {
   }
 
   getCurrentLang(): SupportedLanguage {
-    return (this.cookiesService.get('lang') || localStorage.getItem(APP_LANGUAGE_LOCAL_STORAGE_KEY)) as SupportedLanguage;
+    return (this.cookiesService.get(COOKIES_KEY.LANG) || localStorage.getItem(APP_LANGUAGE_LOCAL_STORAGE_KEY)) as SupportedLanguage;
   }
 
   initialize(): void {
@@ -64,6 +65,6 @@ export class LocalizationService {
 
   private updateLocalStorageLanguage(lang: SupportedLanguage): void {
     localStorage.setItem(APP_LANGUAGE_LOCAL_STORAGE_KEY, lang);
-    this.cookiesService.set('lang', lang);
+    this.cookiesService.set(COOKIES_KEY.LANG, lang);
   }
 }

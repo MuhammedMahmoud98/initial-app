@@ -1,7 +1,6 @@
 import {ApplicationConfig, importProvidersFrom, LOCALE_ID, provideAppInitializer, provideZoneChangeDetection} from '@angular/core';
-import {provideRouter, withViewTransitions} from '@angular/router';
+import {provideRouter} from '@angular/router';
 
-import { routes } from './app.routes';
 import {providePrimeNG} from 'primeng/config';
 import {stcPreset} from './custom-preset';
 import {HttpClient, provideHttpClient, withInterceptors} from '@angular/common/http';
@@ -23,7 +22,8 @@ registerLocaleData(localeAr);
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes, withViewTransitions()),
+    // COMMENTED BECAUSE THIS APP WILL BE USED FOR EXPORTING ANGULAR ELEMENTS
+    provideRouter([]),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(
       // TODO APPLYING ERROR INTERCEPTOR HERE..
@@ -60,6 +60,5 @@ export const appConfig: ApplicationConfig = {
         return lang === 'ar' ? 'ar' : 'en';
       }
     }
-
   ]
 };

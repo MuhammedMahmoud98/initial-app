@@ -15,6 +15,7 @@ export const environment = {
   emcProjectId: 3311,
   mygateprod: true,
   chatHost: 'wss://chat.hubplatforms.com/ws-xmpp',
+  // TODO:: REPLACE BASE HREF WITH THE ACTUAL BASE HREF OF THE APPLICATION
   baseHref: '/qr-code',
   qrCodeUrl: 'https://web.hubplatforms.com'
 };

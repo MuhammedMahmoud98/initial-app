@@ -4,8 +4,8 @@ import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { LocalizationService } from '../../services';
 import { TranslateService } from '@ngx-translate/core';
-import {AuthenticationService} from '../../../features/auth/services/authentication.service';
 import {environment} from '../../../environment/environment';
+import {AuthenticationService} from '../../services/authentication.service';
 
 @Component({
   selector: 'app-profile-menu',

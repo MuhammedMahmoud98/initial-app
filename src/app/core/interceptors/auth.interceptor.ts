@@ -5,9 +5,9 @@ import { environment } from '../../environment/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthorizationToken } from '../models/auth-interceptor.model';
 import {isTokenLessUrl} from '../../shared/helpers/helpers';
-import {AuthenticationService} from '../../features/auth/services/authentication.service';
 import { COOKIES_KEY } from '../constants/enums/cookies-key.enums';
 import { TokenKeyConstants } from '../constants/token-key.constants';
+import {AuthenticationService} from '../services/authentication.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const jsEncryptService: JsEncryptService = inject(JsEncryptService);

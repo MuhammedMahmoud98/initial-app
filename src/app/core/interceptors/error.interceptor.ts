@@ -6,11 +6,11 @@ const refreshTokenSubject = new BehaviorSubject<RefreshTokenResponse| null>(null
 
 
 import { HttpHandlerFn, HttpEvent } from '@angular/common/http';
-import {AuthenticationService} from '../../features/auth/services/authentication.service';
 import {inject} from '@angular/core';
-import {RefreshTokenResponse} from '../../features/auth/models/auth.model';
 import {HttpErrorResponse} from '@angular/common/http';
 import {isTokenLessUrl} from '../../shared/helpers/helpers';
+import {RefreshTokenResponse} from '../models/auth.model';
+import {AuthenticationService} from '../services/authentication.service';
 
 export const errorInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,

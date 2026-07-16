@@ -15,7 +15,9 @@
     "lint-current-changes": "npx eslint $(git diff --name-only HEAD | xargs)",
     "stylelint": "stylelint 'src/**/*.scss' --fix",
     "lint": "npx eslint",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "build:elements": "ng run unified-qr-code:elements-build:production --single-bundle true --output-hashing=none",
+    "bundle:elements": "node esbuild.elements.js"
   },
   "private": true,
   "dependencies": {
@@ -23,6 +25,7 @@
     "@angular/common": "^19.2.7",
     "@angular/compiler": "^19.2.7",
     "@angular/core": "^19.2.7",
+    "@angular/elements": "^19.2.25",
     "@angular/forms": "^19.2.7",
     "@angular/platform-browser": "^19.2.7",
     "@angular/platform-browser-dynamic": "^19.2.7",
@@ -50,6 +53,7 @@
     "@types/jasmine": "~5.1.0",
     "@types/pdfmake": "^0.2.11",
     "angular-eslint": "^19.3.0",
+    "esbuild": "^0.18.11",
     "eslint": "^9.25.1",
     "eslint-config-prettier": "^10.1.2",
     "husky": "^9.1.7",
@@ -60,6 +64,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "lint-staged": "^15.5.1",
+    "ngx-build-plus": "^19.0.0",
     "prettier": "^3.5.3",
     "stylelint": "^16.19.1",
     "stylelint-order": "^7.0.0",
